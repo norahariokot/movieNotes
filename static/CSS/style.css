@@ -1,0 +1,160 @@
+* {box-sizing: border-box;}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+
+}
+
+/* ===============
+    Typography    
+    ============== */
+
+
+/* ===============
+    Layout   
+    ============== */    
+nav {
+    display: flex;
+    justify-content: space-between;
+    border: solid red;
+}  
+
+.logo {
+    width: 100px;
+    height: 100px;
+}
+
+.nav-list {
+    display: flex;
+
+    & li {
+        list-style: none;
+        border: solid black;
+        margin-right: 1em;
+    }
+}
+
+
+
+/* --- Login Page --- */
+/* Login form & Create Account form*/
+
+.create-act-title,
+.log-in-title{
+    text-align: center;
+}
+
+
+.login-form,
+.create-account-form {
+    width: 20%;
+    margin-top: 2em;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    /*border: solid black;*/
+}
+
+.login-lbl,
+.create-act-lbl {
+
+}
+
+.login-input,
+.create-act-input {
+    margin-bottom: 1em;
+    padding: .5em;
+}
+
+.login-submit-btn,
+.create-act-submit-btn {
+    align-self: center;
+}
+
+
+/* --- Login Page --- */
+.user-dashboard-container {
+    display: grid;
+    grid-template-columns: minmax(2em,1fr) minmax(20%,1fr) minmax(60%,1fr) minmax(2em,1fr);
+    margin-inline: auto;
+}
+
+.user-menu {
+    grid-column: 2;
+    border: solid black;
+}
+
+.user-content{
+    grid-column: 3;
+    border: solid green;
+}
+
+/* --- Search Page --- */
+
+.movie-info-container {
+    /*border: solid red;*/
+    display: flex;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 5em;
+    border-bottom: solid 1px gainsboro;
+    padding-inline: 1em;
+    padding-bottom: .5em;
+}
+
+.movie_info_text{
+    /*border: solid blue;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: .5em;
+
+    & * {
+        /*border: solid black;*/
+        margin-bottom: 0;
+        margin-top: 0;
+
+    }
+}
+
+.movie-info {
+    /*border: solid green;*/
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.search-movie-title {
+    /*margin-top: 0;*/
+}
+
+.search-controls {
+    align-self: center;
+}
+
+.controls-btn {
+    align-self: center;
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.movie-poster-div {
+   
+   /*border: solid red;*/
+
+    & img {
+        height: 100px;
+        width: 80px;
+        object-fit: contain;
+    }
+}
+
+
+
+

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../static/CSS/style.css">
+
+    <title> {% block title %}{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <!-- should I use user id session or use route to change display between signed in or not-->
+        {% if current_route == "/" %}
+            <nav>
+                <img class="logo" src="../static/Images/33770922_2208.q703.031.F.m004.c7.FP movie film cinema poster banner.jpg" alt="">
+
+                <ul class="nav-list">
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/create_account">Create Account</a></li>
+                </ul>
+            </nav>
+
+        {% else %}
+            <nav>
+                <img class="logo" src="../static/Images/33770922_2208.q703.031.F.m004.c7.FP movie film cinema poster banner.jpg" alt="">
+
+                <ul class="nav-list">
+                    <li>Profile</li>
+                    <li>Log out</li>
+                </ul>
+            </nav>
+        {% endif %}    
+
+
+    </header>
+
+    <main>
+        {% block main %}{% endblock %}
+    </main>
+    
+    
+</body>
+</html>

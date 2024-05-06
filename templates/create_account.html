@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block main %}
+
+    <h2 class="create-act-title">Create Account</h2>
+    <form action="/create_account" method="POST" class="create-account-form">
+        <label for="username" class="create-act-lbl"> Username </label>
+        <input type="text" autocomplete="off" id="username" class="create-act-input username" name="username">
+        <label for="password" class="create-act-lbl">Password</label>
+        <input type="password" autocomplete="off" id="password" class="create-act-input password" name="password">
+        <label for="confirm-password" class="create-act-lbl">Confirm Password</label>
+        <input type="password" autocomplete="off" id="password" class="create-act-input password" name="confirm-password">
+        <button type="submit" class="create-act-submit-btn">Creat Account </button>
+   
+    </form>
+
+
+
+
+{% endblock %}
