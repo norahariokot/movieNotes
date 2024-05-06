@@ -58,9 +58,17 @@
                             let movie_stars = document.createElement("p");
                             movie_stars.className = ("movie-stars");
                             movie_stars.innerHTML = stars;
-                            let controls = document.createElement("img");
+                            let controls = document.createElement("select");
                             controls.className = "search-controls";
                             controls.src = "../static/Images/Icons/9022327_dots_three_duotone_icon.png";
+                            
+                            const options = ["Watched", "Liked", "Watch List"];
+                            for (let i = 0; i < options.length; i++) {
+                                let option = document.createElement("option");
+                                option.innerHTML = options[i];
+                                controls.appendChild(option);
+                            }
+
                             let controls_btn = document.createElement("button");
                             controls_btn.type = "button";
                             controls_btn.className = "controls-btn";
