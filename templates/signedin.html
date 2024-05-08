@@ -114,49 +114,37 @@
             </script>
 
         <script>
+           
+            let isPopupVisible = false;
+            let popup_menu;
+
             document.addEventListener('click', function(event) {
-                console.log(event.target)
                 if (event.target.matches('.search-controls')) {
-                    
-                    console.log("options button clicked");
-                    // rest of your code
-                    let menu = document.getElementsByClassName('controls-btn');
-                    console.log(menu); 
-                    console.log(menu.length);
-
-                    // check if list is populated
-                    let popup = document.getElementsByClassName('popup_menu-list');
-                    console.log("popup is", popup);
-
-                    // Check if pop-list already exists and if so remove it
-                    if(popup.length !== 0) {
-                        console.log("Not empty");
-                        popup.remove();
-                        /*for(let i = 0; i < popup; i++) {
-                            popup[i].removeChild()
-                        }*/
-
-                       
-                    }
                    
-                    for (let i = 0; i < menu.length; i++) {
-                        menu[i].addEventListener('click', function () {
-                            console.log(i)
-                            console.log(menu[i]);
-                            console.log("options button clicked");
-                            let popup_menu = document.createElement("ul");
+                    console.log("options button clicked");
+                    if(isPopupVisible && !popup_menu.contains(event.target)) {
+                        //remove popup menu
+                        popup_menu.remove();
+                        isPopupVisible = false;
+                    }
+
+                    else {
+                            popup_menu = document.createElement("ul");
                             popup_menu.className = "popup_menu-list";
                             let popup_options = document.createElement("li");
                             popup_options.className = "popup-menu-li";
                             popup_options.innerHTML = "Watched";
                             popup_menu.appendChild(popup_options);
 
-                            this.parentNode.appendChild(popup_menu);
-                        });
-                    };
+                            event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', popup_menu);
+                            isPopupVisible = true;
+                    }
+
+                    
                 }
+
             });
-                
+
             
         
         </script>
