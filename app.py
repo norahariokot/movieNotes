@@ -57,7 +57,13 @@ def search():
     
     else:  
         movies = []
-    return jsonify(movies)    
+    return jsonify(movies)  
+
+@app.route("/watch", methods=["POST"])
+def watch():
+    title = request.get_json()
+    print(title)
+    return jsonify(title)      
 
 
 

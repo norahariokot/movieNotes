@@ -133,11 +133,39 @@
                             popup_menu.className = "popup_menu-list";
                             let popup_options = document.createElement("li");
                             popup_options.className = "popup-menu-li";
-                            popup_options.innerHTML = "Watched";
+                            let link = document.createElement("a");
+                            link.href = "/watch";
+                            link.innerHTML = "Watch";
+                            popup_options.appendChild(link);
+                            //popup_options.innerHTML = "Watched";
+
                             popup_menu.appendChild(popup_options);
 
                             event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', popup_menu);
                             isPopupVisible = true;
+
+                            //Add event handler to link to send data to the server side
+                            link.addEventListener('click', function(event) {
+                                event.preventDefault();
+
+                                let data = {
+                                    movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML
+                                
+                                };
+                                console.log("Movie title is", data);
+
+                                fetch("/watch", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(data)
+                                })
+                                .then(response=> response.json())
+                                .then(data => console.log(data))
+                                .catch((error) => console.error('Error:', error));
+
+                            });
                     }
 
                     
