@@ -1,9 +1,11 @@
 import datetime
 import os
 
+
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
+from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 from scrapper import user_query
 
@@ -11,6 +13,8 @@ from scrapper import user_query
 
 # Configure application
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("app_secret_key")
+
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -59,10 +63,12 @@ def search():
         movies = []
     return jsonify(movies)  
 
+
 @app.route("/watch", methods=["POST"])
 def watch():
     title = request.get_json()
     print(title)
+    
     return jsonify(title)      
 
 
