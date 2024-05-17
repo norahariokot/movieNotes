@@ -1,19 +1,20 @@
 import datetime
 import os
 
-
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 from scrapper import user_query
+from forms import CreateUserForm
 
 #from helpers import apology, login_required, lookup, usd, owned
 
 # Configure application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("app_secret_key")
+
 
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -33,9 +34,16 @@ def login():
      return render_template("index.html", current_route="/")
 
 
-@app.route("/create_account")
+@app.route("/create_account", methods=["GET","POST"])
 def create_account():
-    return render_template("create_account.html", current_route="/")
+    print("Reg form submitted")
+    reg_form = CreateUserForm()
+    print(reg_form)
+    if reg_form.validate_on_submit():
+        reg_form
+        print("Form validated")
+        return redirect('/')
+    return render_template("create_account.html", reg_form=reg_form)
 
 
 @app.route("/signedin")
