@@ -7,9 +7,9 @@ from flask_session import Session
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 from scrapper import user_query
-from forms import CreateUserForm
+from forms import CreateUserForm, LoginForm
+from helpers import login_required
 
-#from helpers import apology, login_required, lookup, usd, owned
 
 # Configure application
 app = Flask(__name__)
@@ -31,12 +31,24 @@ def before_request():
 
 
 @app.route("/")
+# add login required
+@login_required
 def index():
-    return render_template("index.html", current_route="/")
+    return render_template("index.html")
 
-@app.route("/login")
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-     return render_template("index.html", current_route="/")
+    print("Login route")
+    login_form = LoginForm()
+    print(login_form)
+
+    #Ensure login info is validated and login form is submitted via POST request method
+    if login_form.validate_on_submit():
+        print("Login form validated")
+        return render_template("index.html")
+
+    return render_template("login.html", login_form=login_form, current_route="/login")
 
 
 @app.route("/create_account", methods=["GET","POST"])
@@ -44,7 +56,7 @@ def create_account():
     #print("Reg form submitted")
     reg_form = CreateUserForm()
    
-    # Ensure all user account registration is validated and form submitted via POST request method
+    # Ensure all user account registration is validated and account reg form is submitted via POST request method
     if reg_form.validate_on_submit():
         firstname = reg_form.first_name.data
         lastname = reg_form.last_name.data
@@ -57,7 +69,7 @@ def create_account():
 
         # user is then redirected to the login page
         return redirect('/')
-    return render_template("create_account.html", reg_form=reg_form)
+    return render_template("create_account.html", reg_form=reg_form, current_route="/create_account")
 
 
 @app.route("/signedin")
@@ -69,7 +81,7 @@ def signedin():
 def search_page():
     search_page = True
     print("search page")
-    return render_template("signedin.html", search_page=search_page)
+    return render_template("index.html", search_page=search_page)
 
 @app.route("/search")
 def search():

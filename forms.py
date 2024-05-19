@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from flask import g
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import EqualTo, InputRequired, Length, ValidationError
-from helpers import current_names
+from werkzeug.security import check_password_hash
 
 # Custom validator to ensure the last and first names of users only contain letters
 def name_validator(form, field):
@@ -39,5 +39,31 @@ class CreateUserForm(FlaskForm):
     user_name = StringField('User Name', validators=[InputRequired(), user_name_validator])
     password = PasswordField('Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator])
     verify_password = PasswordField('Repeat Password', validators=[InputRequired(message='Please repeat the new password')])
+
+
+# Custom validator for username verification at login
+def login_username_validator(form, field):
+    login_username = field.data
+    existing_user = g.db.execute("SELECT * FROM users WHERE user_name = ?", login_username)
+    if not existing_user:
+        raise ValidationError('Invalid user name')
+
+# Custom validator for password at user login 
+def login_password_validator(form, field):
+    username = form.user_name.data
+    password = field.data
+   
+    # Check user details in the database
+    user = g.db.execute("SELECT * FROM users WHERE user_name = ?", username)  
+    
+    # Verify password  
+    if not user or not check_password_hash(user[0]['hash'], password):
+        raise ValidationError('Invalid password.') 
+
+# Create a Form Class for the login form
+class LoginForm(FlaskForm):
+    user_name = StringField('User Name', validators=[InputRequired(), login_username_validator])
+    password = PasswordField('Password', validators=[InputRequired(), login_password_validator])
+
 
 

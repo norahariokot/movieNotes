@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block main %}
+    <h2 class="log-in-title">Log in</h2>
+
+    <form action="/login" method="POST" class="login-form">
+        {{ login_form.csrf_token }}
+       <div>
+            {{ login_form.user_name.label }}
+            {{ login_form.user_name }}
+       </div>
+       
+       {% if login_form.user_name.errors %}
+            <ul class="errors">
+                {% for error in login_form.user_name.errors %}
+                    <li>{{error}}</li>
+                {% endfor %}
+            </ul>
+       {% endif %}
+
+       <div>
+            {{ login_form.password.label }}
+            {{ login_form.password }}
+        </div>
+   
+        {% if login_form.password.errors %}
+            <ul class="errors">
+                {% for error in login_form.password.errors %}
+                    <li>{{error}}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <button type="submit">Login</button>
+    </form>
+
+
+
+
+{% endblock %}
