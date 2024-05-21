@@ -4,17 +4,28 @@
 <div class="user-dashboard-container">
     <div class="user-menu">
         <ul>
-            <li><a href="{{ url_for('search_page')}}">Search</a></li>
+            <li><a href="{{ url_for('search_page')}}" id="index-search">Search</a></li>
           
         </ul>
 
+        <!--<script>
+            document.getElementById('index-search').addEventListener('click', function(event){
+                event.preventDefault();
+                console.log("search btn clicked")
+                fetch("/search_page")
+                .then(response => response.json())
+                .then(data => console.log(data))
+                 
+            })
+        </script>-->
+
         <ul>
-            <li><a href="/watched">Watched </a></li>
-            <li><a href="/favourites">Favourites</a></li>
-            <li><a href="/watching">Currently watching</a></li>
-            <li><a href="/watchlist">Watchlist </a></li>
-            <li><a href="/recommendations">Recommendations</a></li>
-            <li><a href="/movie_buddies">Movie buddies </a></li>
+            {% for dict_item in sections %}
+                <li><a href="{{ sections[dict_item] }}">{{ dict_item }}</a></li>
+        
+            {% endfor %}
+
+                     
         </ul>
 
     </div>
@@ -131,41 +142,64 @@
                     else {
                             popup_menu = document.createElement("ul");
                             popup_menu.className = "popup_menu-list";
-                            let popup_options = document.createElement("li");
+                            let options_list = {{ search_options_list | tojson | safe }};
+                            console.log(options_list)
+
+                            let options = {}
+                            options_list.forEach(list_item => {
+                                options[list_item[0]] = list_item[1]
+                            });
+                            console.log(options)
+
+                            let search_list_options = [];
+                            for (let key in options) {
+                                let popup_options = document.createElement("li");
+                                popup_options.className = "popup-menu-li";
+                                let link = document.createElement("a");
+                                link.href = options[key];
+                                link.innerHTML = key;
+                                popup_options.appendChild(link);
+                                popup_menu.appendChild(popup_options);
+                                search_list_options.push(popup_options)
+                            }
+                            
+                            /*let popup_options = document.createElement("li");
                             popup_options.className = "popup-menu-li";
                             let link = document.createElement("a");
-                            link.href = "/watch";
-                            link.innerHTML = "Watch";
+                            link.href = "/watched";
+                            link.innerHTML = "Watched";
                             popup_options.appendChild(link);
+                            popup_menu.appendChild(popup_options);*/
                             //popup_options.innerHTML = "Watched";
-
-                            popup_menu.appendChild(popup_options);
 
                             event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', popup_menu);
                             isPopupVisible = true;
 
-                            //Add event handler to link to send data to the server side
-                            link.addEventListener('click', function(event) {
-                                event.preventDefault();
+                            //Add event handlers to all links in the list items to send data to the server side
+                            for(let i = 0; i < search_list_options.length; i++) {
+                                search_list_options[i].firstChild.addEventListener('click', function(event) {
+                                    event.preventDefault();
 
-                                let data = {
-                                    movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML
+                                    let data = {
+                                        movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML
                                 
-                                };
-                                console.log("Movie title is", data);
+                                    };
+                                    console.log("Movie title is", data);
 
-                                fetch("/watch", {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(data)
-                                })
-                                .then(response=> response.json())
-                                .then(data => console.log(data))
-                                .catch((error) => console.error('Error:', error));
+                                    fetch("/watched", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(data)
+                                    })
+                                    .then(response=> response.json())
+                                    .then(data => console.log(data))
+                                    .catch((error) => console.error('Error:', error));
 
                             });
+
+                        }   
                     }
 
                     

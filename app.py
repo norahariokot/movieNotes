@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 from scrapper import user_query
 from forms import CreateUserForm, LoginForm
-from helpers import login_required
+from helpers import login_required, section_links, search_options
 
 
 # Configure application
@@ -24,6 +24,7 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///movie_lib.db")
 
+sections= section_links
 
 @app.before_request
 def before_request():
@@ -31,24 +32,39 @@ def before_request():
 
 
 @app.route("/")
-# add login required
 @login_required
 def index():
-    return render_template("index.html")
+   
+    print(sections)
+    return render_template("index.html", sections=sections)
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     print("Login route")
+   
     login_form = LoginForm()
     print(login_form)
 
     #Ensure login info is validated and login form is submitted via POST request method
     if login_form.validate_on_submit():
         print("Login form validated")
-        return render_template("index.html")
+        user = login_form.user_name.data
+        
+        # Query database for user info
+        user_info =db.execute("SELECT * FROM users WHERE user_name = ?", user)
+        
+        # Remember which user has logged in
+        if user_info:
+            session.clear()
+            session["user_id"] = user_info[0]['id']
+
+        # Redirect user to the home page
+        return redirect("/")
 
     return render_template("login.html", login_form=login_form, current_route="/login")
+
+
 
 
 @app.route("/create_account", methods=["GET","POST"])
@@ -80,8 +96,12 @@ def signedin():
 @app.route("/search_page")
 def search_page():
     search_page = True
+    search_page_options = search_options
+    search_options_list= list(search_page_options.items())
+    print(search_page_options)
+    print(search_options_list)
     print("search page")
-    return render_template("index.html", search_page=search_page)
+    return render_template("index.html", search_page=search_page, sections=sections, search_options_list=search_options_list)
 
 @app.route("/search")
 def search():
@@ -89,21 +109,27 @@ def search():
     if q:
         movies = user_query(q)
         #print(movies)
-        print("movies receieved by flask function")
-        for movie in movies:
-            print(movie['title'])
+        #print("movies receieved by flask function")
+        #for movie in movies:
+            #print(movie['title'])
     
     else:  
         movies = []
     return jsonify(movies)  
 
 
-@app.route("/watch", methods=["POST"])
-def watch():
+@app.route("/watched", methods=["POST"])
+def watched():
+    print("Watched route followed")
     title = request.get_json()
     print(title)
     
-    return jsonify(title)      
+    return jsonify(title)   
+
+@app.route("/watched_section", methods=["GET"]) 
+def watched_section():
+    watched_section = True
+    return render_template("")      
 
 
 

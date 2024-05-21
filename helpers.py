@@ -1,15 +1,42 @@
-from flask import redirect, session
+from flask import redirect, session, request
 from functools import wraps
 
 def login_required(f):
-    """
-    Decorate routes to require login.
-
-    http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
-    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        print(f"Accessing {request.path}: Session user_id: {session.get('user_id')}")
         if session.get("user_id") is None:
+            print("User not authenticated, redirecting to login.")
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
+movie_lib_sections = ["Watched", "Favourites", "Currently watching", "Watchlist", "Recommendations", "Movie Buddies"]
+
+# sections to navigate the index page
+section_links = {}
+for section in movie_lib_sections:
+    if " " in section:
+        new_section = section.replace(" ", "_")
+        section_link = "/" + new_section.lower() + "_section"
+    else:
+        section_link = "/" + section.lower() + "_section"
+    section_links[section] = section_link    
+
+# options for the pop up menu for search
+search_options_list = [section for section in movie_lib_sections if section not in ["Recommendations","Movie Buddies"]]
+search_options_list.append("Recommend")
+print(search_options_list)    
+search_options = {}    
+for option in search_options_list:
+    if " " in option:
+        new_search_option = option.replace(" ", "_")
+        search_option = "/" + new_search_option.lower()
+    else:
+        search_option = "/" + option.lower()
+    search_options[option] = search_option
+print(search_options)            
+    
+
+
+   
