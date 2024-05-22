@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 from scrapper import user_query
 from forms import CreateUserForm, LoginForm
-from helpers import login_required, section_links, search_options
+from helpers import login_required, section_links, search_options, extract_movie_info
 
 
 # Configure application
@@ -121,15 +121,74 @@ def search():
 @app.route("/watched", methods=["POST"])
 def watched():
     print("Watched route followed")
-    title = request.get_json()
-    print(title)
+    movie_info= request.get_json()
+    print(movie_info)
+    movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     
-    return jsonify(title)   
+    print(movie_title)
+    print(movie_year)
+    print(movie_stars)
+    print(movie_poster)
+    print(movie_poster_sizes)
+    print(movie_poster_set)
+
+
+    return jsonify(movie_info)   
 
 @app.route("/watched_section", methods=["GET"]) 
 def watched_section():
     watched_section = True
-    return render_template("")      
+    return render_template("")   
 
+
+@app.route("/favourites", methods=["POST"])
+def favourites():
+    print("Favourites route followed")
+    movie_info= request.get_json()
+    print(movie_info)
+    movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
+    
+    print(movie_title)
+    print(movie_year)
+    print(movie_stars)
+    print(movie_poster)
+    print(movie_poster_sizes)
+    print(movie_poster_set)
+
+    return jsonify(movie_info)   
+
+
+@app.route("/currently_watching", methods=["POST"])
+def currently_watching():
+    print("Currently_watching route followed")
+    movie_info= request.get_json()
+    print(movie_info)
+    movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
+    
+    print(movie_title)
+    print(movie_year)
+    print(movie_stars)
+    print(movie_poster)
+    print(movie_poster_sizes)
+    print(movie_poster_set)
+
+    return jsonify(movie_info)       
+
+
+@app.route("/recommend", methods=["POST"])
+def recommend():
+    print("Recommend route followed")
+    movie_info= request.get_json()
+    print(movie_info)
+    movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
+    
+    print(movie_title)
+    print(movie_year)
+    print(movie_stars)
+    print(movie_poster)
+    print(movie_poster_sizes)
+    print(movie_poster_set)
+
+    return jsonify(movie_info)      
 
 

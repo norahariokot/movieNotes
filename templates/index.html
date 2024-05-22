@@ -130,6 +130,8 @@
             let popup_menu;
 
             document.addEventListener('click', function(event) {
+                console.log(event.target)
+                
                 if (event.target.matches('.search-controls')) {
                    
                     console.log("options button clicked");
@@ -175,18 +177,27 @@
                             event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', popup_menu);
                             isPopupVisible = true;
 
+                            
+
                             //Add event handlers to all links in the list items to send data to the server side
                             for(let i = 0; i < search_list_options.length; i++) {
                                 search_list_options[i].firstChild.addEventListener('click', function(event) {
                                     event.preventDefault();
 
                                     let data = {
-                                        movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML
+                                        movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML,
+                                        movie_year: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
+                                        movie_stars: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
+                                        movie_poster: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.src,
+                                        movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.sizes,
+                                        movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild.srcset
+                                        
                                 
                                     };
-                                    console.log("Movie title is", data);
-
-                                    fetch("/watched", {
+                                    console.log(data);
+                                    let route = search_list_options[i].firstChild
+                                    console.log(route)
+                                    fetch(route, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json'

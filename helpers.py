@@ -26,7 +26,7 @@ for section in movie_lib_sections:
 # options for the pop up menu for search
 search_options_list = [section for section in movie_lib_sections if section not in ["Recommendations","Movie Buddies"]]
 search_options_list.append("Recommend")
-print(search_options_list)    
+#print(search_options_list)    
 search_options = {}    
 for option in search_options_list:
     if " " in option:
@@ -35,7 +35,16 @@ for option in search_options_list:
     else:
         search_option = "/" + option.lower()
     search_options[option] = search_option
-print(search_options)            
+#print(search_options)    
+
+def extract_movie_info(movie_info):
+    movie_title = movie_info["movie_title"]
+    movie_year = movie_info["movie_year"]
+    movie_stars = movie_info["movie_stars"]
+    movie_poster = movie_info["movie_poster"]
+    movie_poster_sizes = movie_info["movie_poster_sizes"]
+    movie_poster_set = movie_info["movie_poster_set"]
+    return movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set
     
 
 
