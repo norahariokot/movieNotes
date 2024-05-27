@@ -175,6 +175,23 @@ def currently_watching():
     return jsonify(movie_info)       
 
 
+@app.route("/watchlist", methods=["POST"])
+def watchlist():
+    print("Watchlist route followed")
+    movie_info= request.get_json()
+    print(movie_info)
+    movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
+    
+    print(movie_title)
+    print(movie_year)
+    print(movie_stars)
+    print(movie_poster)
+    print(movie_poster_sizes)
+    print(movie_poster_set)
+
+    return jsonify(movie_info)           
+
+
 @app.route("/recommend", methods=["POST"])
 def recommend():
     print("Recommend route followed")

@@ -17,20 +17,3 @@ CREATE TABLE supplier_product_categories (
     FOREIGN KEY(subcategory_id) REFERENCES product_subcategories(id) ON DELETE CASCADE ON UPDATE CASCADE
     ); 
 
-<ul class="movieList">
-  <div class="movie-info-container">
-    <div class="movie-poster-div">
-      img src="https://m.media-amazon.com/images.jpg" 
-    </div>
-    <div class="movie-info">
-      <div class="movie_info_text">
-        <h3 class="search-movie-title">Thor: Love and Thunder</h3>
-        <p class="movie-year">2022</p>
-        <p class="movie-stars">Chris Hemsworth, Natalie Portman</p>
-      </div>
-      <button type="button" class="controls-btn">
-        <img class="search-controls" src="../static/Images/Icons/9022327_dots_three_duotone_icon.png">        
-      </button>
-    </div>
-  </div>   
-</ul>

@@ -164,6 +164,48 @@
                                 popup_menu.appendChild(popup_options);
                                 search_list_options.push(popup_options)
                             }
+
+                            let watched_date;
+
+                            search_list_options.forEach(list_option => {
+                                //console.log(list_option.firstChild.innerHTML)
+                                if(list_option.firstChild.innerHTML == "Watched") {
+                                    console.log("Watched found")
+                                    let date_div = document.createElement("div");
+                                    let date_lbl = document.createElement("label");
+                                    let date = document.createElement("input");
+                                    date.type = "date";
+                                    date.id = "watched-date"
+                                    date_div.appendChild(date_lbl);
+                                    date_div.appendChild(date);
+                                    date_div.style.display = "none";
+
+                                    list_option.insertAdjacentElement('afterend', date_div);
+
+                                    list_option.addEventListener('mouseover', function() {
+                                        date_div.style.display = "block";
+                                        event.stopPropagation();
+                                    });
+
+                                    function upDateWatchedDate() {
+                                    watched_date = date.value;
+                                    }
+
+                                    date.addEventListener('change', function() {
+                                        console.log("date changing")
+                                        upDateWatchedDate();
+                                        console.log(watched_date)
+
+                                    });
+
+                                    date_div.addEventListener('mouseout', function() {
+                                        date_div.style.display = "none";
+                                    });
+
+                               }
+                            })
+
+                                                       
                             
                             /*let popup_options = document.createElement("li");
                             popup_options.className = "popup-menu-li";
@@ -194,6 +236,11 @@
                                         
                                 
                                     };
+
+                                    if (search_list_options[i].firstChild.innerHTML == "Watched") {
+                                        data.date = watched_date;
+                                    }
+                                    
                                     console.log(data);
                                     let route = search_list_options[i].firstChild
                                     console.log(route)
@@ -207,6 +254,7 @@
                                     .then(response=> response.json())
                                     .then(data => console.log(data))
                                     .catch((error) => console.error('Error:', error));
+                                    watched_date = null;
 
                             });
 
