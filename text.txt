@@ -8,12 +8,3 @@ CREATE TABLE users (
 
 CREATE UNIQUE INDEX user_name ON users (user_name);  
 
-CREATE TABLE supplier_product_categories ( 
-    supplier_id INTEGER, 
-    category_id INTEGER, 
-    subcategory_id INTEGER,
-    FOREIGN KEY(supplier_id) REFERENCES suppliers_list(id) ON DELETE CASCADE ON UPDATE CASCADE, 
-    FOREIGN KEY(category_id) REFERENCES product_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(subcategory_id) REFERENCES product_subcategories(id) ON DELETE CASCADE ON UPDATE CASCADE
-    ); 
-

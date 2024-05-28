@@ -155,5 +155,10 @@ nav {
     }
 }
 
+.popup-menu-wrapper {
+    display: flex;
+    border: solid red;
+}
+
 
 

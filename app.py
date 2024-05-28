@@ -35,7 +35,7 @@ def before_request():
 @login_required
 def index():
    
-    print(sections)
+    #print(sections)
     return render_template("index.html", sections=sections)
 
 
@@ -124,6 +124,7 @@ def watched():
     movie_info= request.get_json()
     print(movie_info)
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
+    watched_date = movie_info["date"]
     
     print(movie_title)
     print(movie_year)
@@ -131,6 +132,7 @@ def watched():
     print(movie_poster)
     print(movie_poster_sizes)
     print(movie_poster_set)
+    print(watched_date)
 
 
     return jsonify(movie_info)   
@@ -138,7 +140,7 @@ def watched():
 @app.route("/watched_section", methods=["GET"]) 
 def watched_section():
     watched_section = True
-    return render_template("")   
+    return render_template("index.html", watched_section=watched_section, sections=sections)   
 
 
 @app.route("/favourites", methods=["POST"])

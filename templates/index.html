@@ -128,9 +128,10 @@
            
             let isPopupVisible = false;
             let popup_menu;
+            let popup_menu_div;
 
             document.addEventListener('click', function(event) {
-                console.log(event.target)
+                console.log(event.target);
                 
                 if (event.target.matches('.search-controls')) {
                    
@@ -142,6 +143,8 @@
                     }
 
                     else {
+                            popup_menu_div = document.createElement("div");
+                            popup_menu_div.className = "popup-menu-wrapper";
                             popup_menu = document.createElement("ul");
                             popup_menu.className = "popup_menu-list";
                             let options_list = {{ search_options_list | tojson | safe }};
@@ -162,40 +165,37 @@
                                 link.innerHTML = key;
                                 popup_options.appendChild(link);
                                 popup_menu.appendChild(popup_options);
-                                search_list_options.push(popup_options)
+                                search_list_options.push(popup_options);
                             }
 
-                            let watched_date;
+                            popup_menu_div.appendChild(popup_menu);
+                            event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', popup_menu_div);
+                            isPopupVisible = true;
+
+                            let watched_date = null;
+                            let date_div = document.createElement("div");
+                            let date_lbl = document.createElement("label");
+                            let date = document.createElement("input");
+                            date_lbl.innerHTML = "Include date";
+                            date.type = "date";
+                            date.id = "watched-date"
+                            date_div.appendChild(date_lbl);
+                            date_div.appendChild(date);
+                            date_div.style.display = "none"
+                            popup_menu.insertAdjacentElement('afterend', date_div);
 
                             search_list_options.forEach(list_option => {
                                 //console.log(list_option.firstChild.innerHTML)
                                 if(list_option.firstChild.innerHTML == "Watched") {
                                     console.log("Watched found")
-                                    let date_div = document.createElement("div");
-                                    let date_lbl = document.createElement("label");
-                                    let date = document.createElement("input");
-                                    date.type = "date";
-                                    date.id = "watched-date"
-                                    date_div.appendChild(date_lbl);
-                                    date_div.appendChild(date);
-                                    date_div.style.display = "none";
-
-                                    list_option.insertAdjacentElement('afterend', date_div);
-
+                             
                                     list_option.addEventListener('mouseover', function() {
                                         date_div.style.display = "block";
-                                        event.stopPropagation();
+                                       
                                     });
 
-                                    function upDateWatchedDate() {
-                                    watched_date = date.value;
-                                    }
-
-                                    date.addEventListener('change', function() {
-                                        console.log("date changing")
-                                        upDateWatchedDate();
-                                        console.log(watched_date)
-
+                                    date_div.addEventListener('mouseover', function() {
+                                        date_div.style.display = "block";
                                     });
 
                                     date_div.addEventListener('mouseout', function() {
@@ -205,42 +205,26 @@
                                }
                             })
 
-                                                       
-                            
-                            /*let popup_options = document.createElement("li");
-                            popup_options.className = "popup-menu-li";
-                            let link = document.createElement("a");
-                            link.href = "/watched";
-                            link.innerHTML = "Watched";
-                            popup_options.appendChild(link);
-                            popup_menu.appendChild(popup_options);*/
-                            //popup_options.innerHTML = "Watched";
-
-                            event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', popup_menu);
-                            isPopupVisible = true;
-
-                            
-
                             //Add event handlers to all links in the list items to send data to the server side
                             for(let i = 0; i < search_list_options.length; i++) {
                                 search_list_options[i].firstChild.addEventListener('click', function(event) {
                                     event.preventDefault();
 
                                     let data = {
-                                        movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML,
-                                        movie_year: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
-                                        movie_stars: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
-                                        movie_poster: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.src,
-                                        movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.sizes,
-                                        movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild.srcset
-                                        
-                                
-                                    };
+                                        movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML,
+                                        movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
+                                        movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
+                                        movie_poster: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.src,
+                                        movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.sizes,
+                                        movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild.srcset
+                                                                       
+                                        };
+                             
 
                                     if (search_list_options[i].firstChild.innerHTML == "Watched") {
                                         data.date = watched_date;
                                     }
-                                    
+
                                     console.log(data);
                                     let route = search_list_options[i].firstChild
                                     console.log(route)
@@ -254,11 +238,45 @@
                                     .then(response=> response.json())
                                     .then(data => console.log(data))
                                     .catch((error) => console.error('Error:', error));
-                                    watched_date = null;
+                                
 
+                                });
+                            }  
+                            
+                            function upDateWatchedDate() {
+                                    watched_date = date.value;
+                            }
+                                    
+                            date.addEventListener('change', function(event) {
+                                console.log("date changing")
+                                upDateWatchedDate();
+                                console.log(watched_date);
+                                console.log(event.target);
+
+                                console.log("Watched fetch function after date change")
+                                let data = {
+                                    movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML,
+                                    movie_year: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
+                                    movie_stars: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
+                                    movie_poster: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.src,
+                                    movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.sizes,
+                                    movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild.srcset,
+                                    date: watched_date                                   
+                                }
+                                
+                                fetch("/watched", {
+                                method: 'POST',
+                                headers: {
+                                         'Content-Type': 'application/json'
+                                        },
+                                body: JSON.stringify(data)
+                                })
+                                .then(response=> response.json())
+                                .then(data => console.log(data))
+                                .catch((error) => console.error('Error:', error));
                             });
+                            watched_date = null;
 
-                        }   
                     }
 
                     
@@ -274,7 +292,26 @@
 
 
 
-    {% endif %}
+        {% endif %}
+
+        <!-- This conditon displays watched movies -->
+        {% if watched_section %}
+            <div class="watched-section-wrapper">
+                <h2 class="section-title"> Watched Movies</h2>
+                <p class="section-total">{{}}</p>
+
+                <div class="watched-view-btns">
+                    <button>All</button>
+                    <button>View by Year</button>
+                </div>
+
+                <div class="watched-movie-display">
+
+                </div>
+            </div>
+        
+
+        {% endif %}
 
 
     </div>

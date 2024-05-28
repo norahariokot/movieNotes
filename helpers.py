@@ -4,7 +4,7 @@ from functools import wraps
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print(f"Accessing {request.path}: Session user_id: {session.get('user_id')}")
+        #print(f"Accessing {request.path}: Session user_id: {session.get('user_id')}")
         if session.get("user_id") is None:
             print("User not authenticated, redirecting to login.")
             return redirect("/login")
