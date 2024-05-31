@@ -236,7 +236,9 @@
                                         body: JSON.stringify(data)
                                     })
                                     .then(response=> response.json())
-                                    .then(data => console.log(data))
+                                    .then(data => {
+                                        alert(data.message);
+                                    })
                                     .catch((error) => console.error('Error:', error));
                                 
 
@@ -272,7 +274,9 @@
                                 body: JSON.stringify(data)
                                 })
                                 .then(response=> response.json())
-                                .then(data => console.log(data))
+                                .then(data => {
+                                    alert(data.message);
+                                })
                                 .catch((error) => console.error('Error:', error));
                             });
                             watched_date = null;
@@ -298,7 +302,7 @@
         {% if watched_section %}
             <div class="watched-section-wrapper">
                 <h2 class="section-title"> Watched Movies</h2>
-                <p class="section-total">{{}}</p>
+                <p class="section-total"></p>
 
                 <div class="watched-view-btns">
                     <button>All</button>

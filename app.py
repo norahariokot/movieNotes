@@ -22,7 +22,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///movie_lib.db")
+db = SQL("sqlite:///movie_notes.db")
 
 sections= section_links
 
@@ -78,9 +78,11 @@ def create_account():
         lastname = reg_form.last_name.data
         username = reg_form.user_name.data
         password = reg_form.password.data
+
+        # Generate hash for password
         hash = generate_password_hash(password)
 
-        # user registration data stored in users table in movie_lib db
+        # user registration data stored in users table in movie_notes db
         db.execute("INSERT INTO users (first_name, last_name, user_name, hash) VALUES (?,?,?,?)", firstname, lastname, username, hash)
 
         # user is then redirected to the login page
@@ -121,25 +123,33 @@ def search():
 @app.route("/watched", methods=["POST"])
 def watched():
     print("Watched route followed")
-    movie_info= request.get_json()
+    movie_info = request.get_json()
     print(movie_info)
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     watched_date = movie_info["date"]
     
-    print(movie_title)
-    print(movie_year)
-    print(movie_stars)
-    print(movie_poster)
-    print(movie_poster_sizes)
-    print(movie_poster_set)
-    print(watched_date)
+    # store data to database while ensuring it not duplicated
+    movies_watched = db.execute ("SELECT movie_title, movie_year, movie_stars FROM watched where user_id = ?", session["user_id"])
+    print(movies_watched)
 
-
-    return jsonify(movie_info)   
+    movies_watched_found = False
+    for dict_item in movies_watched:
+        if movie_title == dict_item["movie_title"] and movie_year == dict_item["movie_year"] and movie_stars == dict_item["movie_stars"]:
+            movies_watched_found = True
+            print("Movie already exits in this list")
+            return jsonify({"message": "Movie already exists in the list"})
+            break
+    if not movies_watched_found:
+        print("Not found") 
+        db.execute("INSERT INTO watched (movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, movie_watched_date, user_id) VALUES (?,?,?,?,?,?,?,?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, watched_date,  session["user_id"])
+        
+    return jsonify({"message": "Movie added successfully"})   
 
 @app.route("/watched_section", methods=["GET"]) 
 def watched_section():
     watched_section = True
+    movie = db.execute ("SELECT movie_title, movie_watched_date, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
+    print(movie)
     return render_template("index.html", watched_section=watched_section, sections=sections)   
 
 

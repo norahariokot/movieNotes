@@ -11,11 +11,11 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-movie_lib_sections = ["Watched", "Favourites", "Currently watching", "Watchlist", "Recommendations", "Movie Buddies"]
+movie_notes_sections = ["Watched", "Favourites", "Currently watching", "Watchlist", "Recommendations", "Movie Buddies"]
 
 # sections to navigate the index page
 section_links = {}
-for section in movie_lib_sections:
+for section in movie_notes_sections:
     if " " in section:
         new_section = section.replace(" ", "_")
         section_link = "/" + new_section.lower() + "_section"
@@ -24,7 +24,7 @@ for section in movie_lib_sections:
     section_links[section] = section_link    
 
 # options for the pop up menu for search
-search_options_list = [section for section in movie_lib_sections if section not in ["Recommendations","Movie Buddies"]]
+search_options_list = [section for section in movie_notes_sections if section not in ["Recommendations","Movie Buddies"]]
 search_options_list.append("Recommend")
 #print(search_options_list)    
 search_options = {}    
@@ -45,7 +45,4 @@ def extract_movie_info(movie_info):
     movie_poster_sizes = movie_info["movie_poster_sizes"]
     movie_poster_set = movie_info["movie_poster_set"]
     return movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set
-    
 
-
-   
