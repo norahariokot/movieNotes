@@ -46,3 +46,4 @@ def extract_movie_info(movie_info):
     movie_poster_set = movie_info["movie_poster_set"]
     return movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set
 
+#options for watched movie controls

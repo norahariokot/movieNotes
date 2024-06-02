@@ -1,5 +1,6 @@
 import datetime
 import os
+import json
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, g, session, jsonify
@@ -24,6 +25,7 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///movie_notes.db")
 
+# Global variables
 sections= section_links
 
 @app.before_request
@@ -148,9 +150,13 @@ def watched():
 @app.route("/watched_section", methods=["GET"]) 
 def watched_section():
     watched_section = True
-    movie = db.execute ("SELECT movie_title, movie_watched_date, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
-    print(movie)
-    return render_template("index.html", watched_section=watched_section, sections=sections)   
+    movie = db.execute ("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
+    watched_options = [["Favourites", "/favourites"], ["Recommend", "/recommend"], ["Delete", "/delete_watched"]]
+    json_watched_options = json.dumps(watched_options)
+    #print(watched_options)
+    #print(movie)
+    
+    return render_template("index.html", watched_section=watched_section, sections=sections, movie=movie, json_watched_options=json_watched_options)   
 
 
 @app.route("/favourites", methods=["POST"])
@@ -160,14 +166,33 @@ def favourites():
     print(movie_info)
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     
-    print(movie_title)
-    print(movie_year)
-    print(movie_stars)
-    print(movie_poster)
-    print(movie_poster_sizes)
-    print(movie_poster_set)
+    #Ensure that the movie doesnt already exit in user list before adding it to the db
+    favourite_movies = db.execute("SELECT * FROM favourites WHERE user_id = ?", session["user_id"]) 
+    print(favourite_movies)
 
-    return jsonify(movie_info)   
+    favourite_movie_exists = False
+    for dict_item in favourite_movies:
+        if movie_title == dict_item["movie_title"] and movie_year == dict_item["movie_year"] and movie_stars == dict_item["movie_stars"]:
+            print("Favourite movie found")
+            favourite_movie_exists = True
+            return jsonify({"message": "Movie already exists in your Favourites list"})
+            break
+    if not favourite_movie_exists:
+        print("Favourite movie not found")
+        db.execute("INSERT INTO favourites(movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, session["user_id"])    
+
+    return jsonify({"message": "Movie successfully added to your Favourites list"})  
+
+
+@app.route("/favourites_section", methods=["GET"])
+def favourites_section():
+    print("Favourites sections")
+    favourite_section = True
+    favourite_movies = db.execute("SELECT * FROM favourites WHERE user_id = ?", session["user_id"])
+    favourite_ctl_options = [["Recommend", "/recommend"], ["Delete", "/delete_favourite"]]
+    json_favourite_options = json.dumps(favourite_ctl_options)
+    return render_template("index.html", favourite_section=favourite_section, sections=sections, favourite_movies=favourite_movies, json_favourite_options=json_favourite_options)
+
 
 
 @app.route("/currently_watching", methods=["POST"])
@@ -177,14 +202,31 @@ def currently_watching():
     print(movie_info)
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     
-    print(movie_title)
-    print(movie_year)
-    print(movie_stars)
-    print(movie_poster)
-    print(movie_poster_sizes)
-    print(movie_poster_set)
+    # Ensure movie doesnt already exist in currently watching before adding it to database
+    currently_watching_movies = db.execute("SELECT * FROM currently_watching WHERE user_id = ?", session["user_id"])
 
-    return jsonify(movie_info)       
+    currently_watching_exists = False
+    for dict_item in currently_watching_movies:
+        if movie_title == dict_item["movie_title"] and movie_year == dict_item["movie_year"] and movie_stars == dict_item["movie_stars"]:
+            print("Currenlty watched movie found")
+            currently_watching_exists = True
+            return jsonify({"message": "Movie already exists in your Currently Watching list"})
+            break
+    if not currently_watching_exists:
+        print("Currently watched movie not found")
+        db.execute("INSERT INTO currently_watching(movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, session["user_id"])    
+
+    return jsonify({"message": "Movie successfully added to Currently Watching List"}) 
+
+
+@app.route("/currently_watching_section")
+def currently_watching_section():
+    print("Currently watching section")
+    currently_watching = True
+    currently_watching_movies = db.execute("SELECT *  FROM currently_watching WHERE user_id = ?", session["user_id"])    
+    currently_watching_options = [["Completed Watching", "/completed_watch"], ["Recommend", "/recommend"], ["Delete", "/delete_currentlywatching"]] 
+    json_currently_watching_options = json.dumps(currently_watching_options)    
+    return render_template("index.html", sections=sections, currently_watching=currently_watching, currently_watching_movies=currently_watching_movies, json_currently_watching_options=json_currently_watching_options) 
 
 
 @app.route("/watchlist", methods=["POST"])
@@ -194,14 +236,33 @@ def watchlist():
     print(movie_info)
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     
-    print(movie_title)
-    print(movie_year)
-    print(movie_stars)
-    print(movie_poster)
-    print(movie_poster_sizes)
-    print(movie_poster_set)
+    #Ensure movie doesnt already exist in watch list before adding it to the database
+    watchlist_movies = db.execute("SELECT * FROM watchlist WHERE user_id=?", session["user_id"])
 
-    return jsonify(movie_info)           
+    watchlist_movie_exists = False
+    for dict_item in watchlist_movies:
+        if movie_title == dict_item["movie_title"] and movie_year == dict_item["movie_year"] and movie_stars == dict_item["movie_stars"]:
+            print("Movie already in watchlist")
+            watchlist_movie_exists = True
+            return jsonify({"message": "Movie already exists in your Watch list"})
+            break
+    if not watchlist_movie_exists:
+        print("Movie not in your  watch list")
+        db.execute("INSERT INTO watchlist(movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, session["user_id"])    
+
+    return jsonify({"message": "Movie successfully added to your Watch List"})           
+
+
+@app.route("/watchlist_section", methods=["GET"])
+def watchlist_section():
+    watchlist = True
+    movies_in_watchlist = db.execute("SELECT * FROM watchlist WHERE user_id = ?", session["user_id"])
+    watchlist_options = [["Completed Watching", "/completed_watch"], ["Delete", "/delete_watchlist"]] 
+    json_watchlist_options = json.dumps(watchlist_options)
+    return render_template("index.html", sections=sections, watchlist=watchlist, movies_in_watchlist=movies_in_watchlist, json_watchlist_options=json_watchlist_options)
+
+
+
 
 
 @app.route("/recommend", methods=["POST"])

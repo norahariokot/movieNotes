@@ -160,5 +160,18 @@ nav {
     border: solid red;
 }
 
+.watched-year-movie-display {
+    display: grid;
+    grid-template-columns: minmax(1em,1fr) repeat(5, minmax(20%,1fr)) minmax(1em,1fr);
+}
+
+.section-movie-container {
+    grid-column: span 1;
+}
+
+.section-movie-container:first-child {
+    grid-column: 2 / span 1; 
+}
+
 
 

@@ -124,7 +124,7 @@
 
             </script>
 
-        <script>
+            <script>
            
             let isPopupVisible = false;
             let popup_menu;
@@ -290,7 +290,7 @@
 
             
         
-        </script>
+            </script>
 
       
 
@@ -302,20 +302,182 @@
         {% if watched_section %}
             <div class="watched-section-wrapper">
                 <h2 class="section-title"> Watched Movies</h2>
-                <p class="section-total"></p>
+                <div>
+                    <p class="section-total">{{ movie|length }} Movies Watched </p>
+                    <input  autocomplete="off" autofocus placeholder="Search Watched Movies"  type="text" id="watched-movie-search">
+
+                </div>
+               
 
                 <div class="watched-view-btns">
                     <button>All</button>
                     <button>View by Year</button>
                 </div>
 
-                <div class="watched-movie-display">
+                <p style="display: none;" id="watched-options-list">{{ json_watched_options }}</p>
+                <div class="allwatched-movie-display">
+                    {% for dict_item in movie %}
+                        <div class="movie-info-container">
+                            <p style="display: none;">{{dict_item["id"]}}</p>                                                      
+                            <p>{{ loop.index }}</p>
+                            <div class="movie-poster-div">
+                                <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie_info_text">
+                                    <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
+                                    <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
+                                </div>
+                                <button type="button" class="controls-btn">
+                                    <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="watched-stn-ctls">
+                                </button>
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
 
                 </div>
+
+                <div class="watched-year-movie-display">
+                    
+                </div>
+
             </div>
         
 
         {% endif %}
+
+
+        <!-- This conditon displays favourite movies -->
+        {% if favourite_section %}
+            <div class="favourite-section-wrapper">
+                <h2 class="section-title"> Favourite Movies</h2>
+                <div>
+                    <p class="section-total">{{ favourite_movies|length }} Favourite Movies </p>
+                    <input  autocomplete="off" autofocus placeholder="Search Favourite Movies"  type="text" id="favourite-movie-search">
+
+                </div>
+               
+
+                <p style="display: none;" id="favourite-options-list">{{ json_favourite_options }}</p>
+
+                <div class="favourite-movie-display">
+                    {% for dict_item in favourite_movies %}
+                        <div class="movie-info-container">
+                            <p style="display: none;">{{dict_item["id"]}}</p>                                                      
+                            <p>{{ loop.index }}</p>
+                            <div class="movie-poster-div">
+                                <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie_info_text">
+                                    <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
+                                    <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
+                                </div>
+                                <button type="button" class="controls-btn">
+                                    <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="-stn-ctls">
+                                </button>
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+                
+            </div>
+        
+
+        {% endif %}
+
+        
+        <!-- This section will display currently-watching movies -->
+        {% if currently_watching %}
+            <div class="currently-watching-section-wrapper">
+                <h2 class="section-title"> Movies I am Currently Watching</h2>
+                <div>
+                    <p class="section-total">{{ currently_watching_movies|length }} Movies You are currently watching </p>
+                    <input  autocomplete="off" autofocus placeholder="Search Currently Watching"  type="text" id="currentlyWatching-movie-search">
+
+                </div>
+               
+
+                <p style="display: none;" id="currentlywatching-options-list">{{ json_currently_watching_options }}</p>
+
+                <div class="currentlywatching-movie-display">
+                    {% for dict_item in currently_watching_movies %}
+                        <div class="movie-info-container">
+                            <p style="display: none;">{{dict_item["id"]}}</p>                                                      
+                            <p>{{ loop.index }}</p>
+                            <div class="movie-poster-div">
+                                <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie_info_text">
+                                    <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
+                                    <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
+                                </div>
+                                <button type="button" class="controls-btn">
+                                    <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="currentlywatching-stn-ctls">
+                                </button>
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}  
+        
+        
+        <!-- This section will display movies in watchlist -->
+        {% if watchlist %}
+            <div class="watchlist-section-wrapper">
+                <h2 class="section-title"> Watch List </h2>
+                <div>
+                    <p class="section-total">{{ movies_in_watchlist|length }} Movies in your Watch List </p>
+                    <input  autocomplete="off" autofocus placeholder="Search Watch List"  type="text" id="watchlist-movie-search">
+
+                </div>
+               
+
+                <p style="display: none;" id="watchlist-options-list">{{ json_watchlist_options }}</p>
+
+                <div class="watchlist-movie-display">
+                    {% for dict_item in movies_in_watchlist %}
+                        <div class="movie-info-container">
+                            <p style="display: none;">{{dict_item["id"]}}</p>                                                      
+                            <p>{{ loop.index }}</p>
+                            <div class="movie-poster-div">
+                                <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie_info_text">
+                                    <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
+                                    <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
+                                </div>
+                                <button type="button" class="controls-btn">
+                                    <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="watchlist-stn-ctls">
+                                </button>
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}            
+
+
+
+
+
 
 
     </div>

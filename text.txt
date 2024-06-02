@@ -21,3 +21,15 @@ CREATE TABLE watched (
                 FOREIGN KEY (user_id) REFERENCES users(id)
               );
 
+CREATE TABLE watchlist (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                movie_title TEXT NOT NULL,
+                movie_year TEXT NOT NULL,
+                movie_stars TEXT NOT NULL,
+                movie_poster TEXT NOT NULL,
+                movie_poster_sizes TEXT NOT NULL,
+                movie_poster_set TEXT NOT NULL,
+                user_id INTEGER NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+              );              
+
