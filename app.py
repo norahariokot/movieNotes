@@ -147,6 +147,64 @@ def watched():
         
     return jsonify({"message": "Movie added successfully"})   
 
+
+# Route to handle completed watching
+@app.route("/completed_watch", methods=["POST"])
+def completed_watch():
+    print("Completed watching route")
+    movie_info = request.get_json()
+    print(movie_info)
+    movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
+    watched_date = movie_info["date"]
+    watched_route = movie_info["data_route"]
+    data_id = int(movie_info["movie_data_id"])
+    print(type(data_id))
+
+    # Add movie to watched table in database
+    # Ensure movie doesnt exist in watched before adding it to the database
+    movies_watched = db.execute ("SELECT movie_title, movie_year, movie_stars FROM watched where user_id = ?", session["user_id"])
+    #print(movies_watched)
+
+    movies_watched_found = False
+    for dict_item in movies_watched:
+        if movie_title == dict_item["movie_title"] and movie_year == dict_item["movie_year"] and movie_stars == dict_item["movie_stars"]:
+            movies_watched_found = True
+            print("Movie already exits in this list")
+            return jsonify({"message": "Movie already exists in your watched list"})
+            break
+    if not movies_watched_found:
+        print("Not found") 
+        # Insert movie into watched table
+        db.execute("INSERT INTO watched (movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, movie_watched_date, user_id) VALUES (?,?,?,?,?,?,?,?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, watched_date,  session["user_id"])
+        
+        # Delete movie after completing watching
+        if watched_route == "Currently Watching":
+            print(watched_route)
+            db.execute("DELETE FROM currently_watching WHERE id = ?", data_id)
+
+        elif watched_route == "Watch List":
+            print(watched_route)
+            db.execute("DELETE FROM watchlist WHERE id = ?", data_id)    
+        return jsonify({"message":f"Movie added successfully added to your Watched List and removed from your {watched_route}"})  
+
+    
+@app.route("/delete_watched", methods=["POST"])
+def delete_watched():
+    print("Delete watched movie route")
+    # Receive data from frontend via fetch function:
+    movie_info = request.get_json()
+    print(movie_info)
+
+    # Retrieve id for data to delete
+    movie_info_id = movie_info["movie_data_id"]
+    print(movie_info_id)
+
+    # Delete movie from watched table in data base
+    db.execute("DELETE FROM watched WHERE id = ?", movie_info_id)
+    return jsonify({"message": "Movie successfully removed from your Watched List"})
+
+   
+
 @app.route("/watched_section", methods=["GET"]) 
 def watched_section():
     watched_section = True
@@ -184,6 +242,22 @@ def favourites():
     return jsonify({"message": "Movie successfully added to your Favourites list"})  
 
 
+@app.route("/delete_favourite", methods=["POST"])
+def delete_favourite():
+    print("Delete Favourite movie route")
+    # Receive data from frontend via fetch function:
+    movie_info = request.get_json()
+    print(movie_info)
+
+    # Retrieve id for data to delete
+    movie_info_id = movie_info["movie_data_id"]
+    print(movie_info_id)
+
+    # Delete move from favourite table in database
+    db.execute("DELETE FROM favourites WHERE id = ?", movie_info_id)
+    return jsonify({"message": "Movie successfully deleted from your Favourites List"})
+
+
 @app.route("/favourites_section", methods=["GET"])
 def favourites_section():
     print("Favourites sections")
@@ -219,14 +293,34 @@ def currently_watching():
     return jsonify({"message": "Movie successfully added to Currently Watching List"}) 
 
 
+@app.route("/delete_currentlywatching", methods=["POST"])
+def delete_currentlywatching():
+    print("Delete Currently watching route")
+    # Receive data from frontend via fetch function:
+    movie_info = request.get_json()
+    print(movie_info)
+
+    # Retrieve id for data to delete
+    movie_info_id = movie_info["movie_data_id"]
+    print(movie_info_id)
+
+    # Delete move from currently_watching table in database
+    db.execute("DELETE FROM currently_watching WHERE id = ?", movie_info_id)
+    return jsonify({"message": "Movie successfully deleted from your Currently Watching List"})
+
+
 @app.route("/currently_watching_section")
 def currently_watching_section():
     print("Currently watching section")
     currently_watching = True
     currently_watching_movies = db.execute("SELECT *  FROM currently_watching WHERE user_id = ?", session["user_id"])    
+    print(currently_watching_movies)
     currently_watching_options = [["Completed Watching", "/completed_watch"], ["Recommend", "/recommend"], ["Delete", "/delete_currentlywatching"]] 
     json_currently_watching_options = json.dumps(currently_watching_options)    
     return render_template("index.html", sections=sections, currently_watching=currently_watching, currently_watching_movies=currently_watching_movies, json_currently_watching_options=json_currently_watching_options) 
+
+
+
 
 
 @app.route("/watchlist", methods=["POST"])
@@ -250,7 +344,26 @@ def watchlist():
         print("Movie not in your  watch list")
         db.execute("INSERT INTO watchlist(movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, session["user_id"])    
 
-    return jsonify({"message": "Movie successfully added to your Watch List"})           
+    return jsonify({"message": "Movie successfully added to your Watch List"}) 
+
+
+@app.route("/delete_watchlist", methods=["POST"])
+def delete_watchlist():
+    print("Delete Favourite movie route")
+    # Receive data from frontend via fetch function:
+    movie_info = request.get_json()
+    print(movie_info)
+
+    # Retrieve id for data to delete
+    movie_info_id = movie_info["movie_data_id"]
+    print(movie_info_id)
+
+    # Delete move from watchlist table in database
+    db.execute("DELETE FROM watchlist WHERE id = ?", movie_info_id)
+    return jsonify({"message": "Movie successfully deleted from your Watch List"})
+
+
+
 
 
 @app.route("/watchlist_section", methods=["GET"])

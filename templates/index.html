@@ -314,18 +314,20 @@
                     <button>View by Year</button>
                 </div>
 
-                <p style="display: none;" id="watched-options-list">{{ json_watched_options }}</p>
+                <p style="display: none;" id="watched-options-list" class="movie_data_id">{{ json_watched_options }}</p>
                 <div class="allwatched-movie-display">
                     {% for dict_item in movie %}
                         <div class="movie-info-container">
                             <p style="display: none;">{{dict_item["id"]}}</p>                                                      
-                            <p>{{ loop.index }}</p>
                             <div class="movie-poster-div">
                                 <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
                             </div>
                             <div class="movie-info">
                                 <div class="movie_info_text">
-                                    <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    <div class="movie_info_title_wrapper">
+                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
                                     <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
                                 </div>
@@ -362,23 +364,26 @@
                
 
                 <p style="display: none;" id="favourite-options-list">{{ json_favourite_options }}</p>
+            
 
                 <div class="favourite-movie-display">
                     {% for dict_item in favourite_movies %}
                         <div class="movie-info-container">
-                            <p style="display: none;">{{dict_item["id"]}}</p>                                                      
-                            <p>{{ loop.index }}</p>
+                            <p style="display: none;" class="movie_data_id">{{dict_item["id"]}}</p>                                                      
                             <div class="movie-poster-div">
                                 <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
                             </div>
                             <div class="movie-info">
                                 <div class="movie_info_text">
-                                    <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    <div class="movie_info_title_wrapper">
+                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
                                     <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
                                 </div>
                                 <button type="button" class="controls-btn">
-                                    <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="-stn-ctls">
+                                    <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="favourite-stn-ctls">
                                 </button>
                             </div>
 
@@ -411,17 +416,20 @@
                 <div class="currentlywatching-movie-display">
                     {% for dict_item in currently_watching_movies %}
                         <div class="movie-info-container">
-                            <p style="display: none;">{{dict_item["id"]}}</p>                                                      
-                            <p>{{ loop.index }}</p>
+                            <p style="display: none;" class="movie_data_id">{{dict_item["id"]}}</p>                                                      
                             <div class="movie-poster-div">
                                 <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
                             </div>
                             <div class="movie-info">
                                 <div class="movie_info_text">
-                                    <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    <div class="movie_info_title_wrapper">
+                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
                                     <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
                                 </div>
+                                <p class="route" style="display: none;">Currently Watching</p>
                                 <button type="button" class="controls-btn">
                                     <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="currentlywatching-stn-ctls">
                                 </button>
@@ -451,17 +459,20 @@
                 <div class="watchlist-movie-display">
                     {% for dict_item in movies_in_watchlist %}
                         <div class="movie-info-container">
-                            <p style="display: none;">{{dict_item["id"]}}</p>                                                      
-                            <p>{{ loop.index }}</p>
+                            <p style="display: none;" class="movie_data_id">{{dict_item["id"]}}</p>                                                      
                             <div class="movie-poster-div">
                                 <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
                             </div>
                             <div class="movie-info">
                                 <div class="movie_info_text">
-                                    <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    <div class="movie_info_title_wrapper">
+                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
+                                    </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
                                     <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
                                 </div>
+                                <p class="route" style="display: none;">Watch List</p>
                                 <button type="button" class="controls-btn">
                                     <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="watchlist-stn-ctls">
                                 </button>

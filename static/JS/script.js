@@ -6,9 +6,8 @@ let section_popup_menu_div;
 
 document.addEventListener('click', function(event) {
     console.log(event.target);
-    
+        
     if (event.target.matches('.section-controls')) {
-       
         console.log("section options button clicked");
         if(isSectionPopupVisible && !section_popup_menu.contains(event.target)) {
             //remove popup menu
@@ -23,13 +22,16 @@ document.addEventListener('click', function(event) {
                 section_popup_menu.className = "section_popup_menu-list";
                 section_popup_menu
                 let section_options_list;
-                               
+                 
+                // Add diffrent popup options to deferent links 
                 if (event.target.id == 'watched-stn-ctls') {
+                    console.log(event.target)
                     section_options_list = JSON.parse(document.getElementById('watched-options-list').innerHTML);
                 
                 }
 
                 else if (event.target.id == "favourite-stn-ctls") {
+                        console.log("Favourites sections options")
                         section_options_list = JSON.parse(document.getElementById('favourite-options-list').innerHTML);
                 }
 
@@ -66,38 +68,38 @@ document.addEventListener('click', function(event) {
                 event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', section_popup_menu_div);
                 isSectionPopupVisible = true;
 
-                /*let watched_date = null;
-                let date_div = document.createElement("div");
-                let date_lbl = document.createElement("label");
-                let date = document.createElement("input");
-                date_lbl.innerHTML = "Include date";
-                date.type = "date";
-                date.id = "watched-date"
-                date_div.appendChild(date_lbl);
-                date_div.appendChild(date);
-                date_div.style.display = "none"
-                section_popup_menu.insertAdjacentElement('afterend', date_div);
+                let section_watched_date = null;
+                let section_date_div = document.createElement("div");
+                let section_date_lbl = document.createElement("label");
+                let section_date = document.createElement("input");
+                section_date_lbl.innerHTML = "Include date";
+                section_date.type = "date";
+                section_date.id = "watched-date"
+                section_date_div.appendChild(section_date_lbl);
+                section_date_div.appendChild(section_date);
+                section_date_div.style.display = "none"
+                section_popup_menu.insertAdjacentElement('afterend', section_date_div);
 
-                search_list_options.forEach(list_option => {
+                section_list_options.forEach(list_option => {
                     //console.log(list_option.firstChild.innerHTML)
-                    if(list_option.firstChild.innerHTML == "Watched") {
-                        console.log("Watched found")
+                    if(list_option.firstChild.innerHTML == "Completed Watching") {
+                        console.log("Completed watching found")
                  
                         list_option.addEventListener('mouseover', function() {
-                            date_div.style.display = "block";
+                            section_date_div.style.display = "block";
                            
                         });
 
-                        date_div.addEventListener('mouseover', function() {
-                            date_div.style.display = "block";
+                        section_date_div.addEventListener('mouseover', function() {
+                            section_date_div.style.display = "block";
                         });
 
-                        date_div.addEventListener('mouseout', function() {
-                            date_div.style.display = "none";
+                        section_date_div.addEventListener('mouseout', function() {
+                            section_date_div.style.display = "none";
                         });
 
                    }
-                })*/
+                })
 
                 //Add event handlers to all links in the list items to send data to the server side
                 for(let i = 0; i < section_list_options.length; i++) {
@@ -106,19 +108,21 @@ document.addEventListener('click', function(event) {
                         console.log(event.target);
 
                         let data = {
-                            movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML,
+                            movie_data_id: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.innerHTML,
+                            movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.firstElementChild.children[1].innerHTML,
                             movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
                             movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
-                            movie_poster: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[2].firstElementChild.src,
-                            movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[2].firstElementChild.sizes,
-                            movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[2].firstElementChild.srcset
+                            movie_poster: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.src,
+                            movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
+                            movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset
                                                            
                             };
                  
 
-                        /*if (section_list_options[i].firstChild.innerHTML == "Watched") {
-                            data.date = watched_date;
-                        }*/
+                        if (section_list_options[i].firstChild.innerHTML == "Completed Watching") {
+                            data.date = section_watched_date;
+                            data.data_route = document.getElementsByClassName('route')[0].innerHTML;
+                        }
 
                         console.log(data);
                         let route = section_list_options[i].firstChild
@@ -139,29 +143,34 @@ document.addEventListener('click', function(event) {
 
                     });
                 }  
+
+                // Send data to the back end when section_date is updated
                 
-                /*function upDateWatchedDate() {
-                        watched_date = date.value;
+                function upDateWatchedDate() {
+                        section_watched_date = section_date.value;
                 }
                         
-                date.addEventListener('change', function(event) {
+                section_date.addEventListener('change', function(event) {
                     console.log("date changing")
                     upDateWatchedDate();
-                    console.log(watched_date);
+                    console.log(section_watched_date);
                     console.log(event.target);
 
                     console.log("Watched fetch function after date change")
                     let data = {
-                        movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML,
+                        movie_data_id: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.innerHTML,
+                        movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.firstElementChild.children[1].innerHTML,
                         movie_year: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
                         movie_stars: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
-                        movie_poster: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.src,
-                        movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.sizes,
-                        movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild.srcset,
-                        date: watched_date                                   
+                        movie_poster: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.src,
+                        movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
+                        movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset,
+                        date: section_watched_date,   
+                        data_route: document.getElementsByClassName('route')[0].innerHTML                          
                     }
-                    
-                    fetch("/watched", {
+                    console.log(data)
+
+                    fetch("/completed_watch", {
                     method: 'POST',
                     headers: {
                              'Content-Type': 'application/json'
@@ -174,7 +183,7 @@ document.addEventListener('click', function(event) {
                     })
                     .catch((error) => console.error('Error:', error));
                 });
-                watched_date = null;*/
+                watched_date = null;
 
         }
 

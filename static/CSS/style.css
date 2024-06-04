@@ -122,6 +122,16 @@ nav {
     }
 }
 
+.movie_info_title_wrapper {
+    display: flex;
+    /*border: solid green;*/
+}
+
+.section-movie-title-no {
+    margin-right: .2em;
+    /*border: solid red;*/
+}
+
 .movie-info {
     /*border: solid green;*/
     display: flex;
