@@ -35,7 +35,7 @@
             <input  autocomplete="off" autofocus placeholder="Search Movie"  type="text" id="searchInput">
 
             <h3 class="search-history" id="search-history"></h3>
-            <ul class="movieList"></ul>
+            <div class="movieList"></div>
 
             <script>
                 let timeoutId = null;
@@ -304,7 +304,11 @@
                 <h2 class="section-title"> Watched Movies</h2>
                 <div>
                     <p class="section-total">{{ movie|length }} Movies Watched </p>
-                    <input  autocomplete="off" autofocus placeholder="Search Watched Movies"  type="text" id="watched-movie-search">
+                    <div class="section-search-wrapper">
+                        <input  autocomplete="off" autofocus placeholder="Search Watched Movies"  type="text" id="watched-movie-search" class="section-search">
+                        <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                    </div>
+                  
 
                 </div>
                
@@ -315,7 +319,7 @@
                 </div>
 
                 <p style="display: none;" id="watched-options-list" class="movie_data_id">{{ json_watched_options }}</p>
-                <div class="allwatched-movie-display">
+                <div id="allwatched-movie-display" class="section-display">
                     {% for dict_item in movie %}
                         <div class="movie-info-container">
                             <p style="display: none;">{{dict_item["id"]}}</p>                                                      
@@ -346,6 +350,10 @@
                     
                 </div>
 
+                <div id="search-watched-wrapper" class="section-search-div" style="display: none;">
+
+                </div>
+
             </div>
         
 
@@ -358,7 +366,7 @@
                 <h2 class="section-title"> Favourite Movies</h2>
                 <div>
                     <p class="section-total">{{ favourite_movies|length }} Favourite Movies </p>
-                    <input  autocomplete="off" autofocus placeholder="Search Favourite Movies"  type="text" id="favourite-movie-search">
+                    <input  autocomplete="off" autofocus placeholder="Search Favourite Movies"  type="text" id="favourite-movie-search" class="section-search">
 
                 </div>
                
@@ -366,7 +374,7 @@
                 <p style="display: none;" id="favourite-options-list">{{ json_favourite_options }}</p>
             
 
-                <div class="favourite-movie-display">
+                <div id="favourite-movie-display" class="section-display">
                     {% for dict_item in favourite_movies %}
                         <div class="movie-info-container">
                             <p style="display: none;" class="movie_data_id">{{dict_item["id"]}}</p>                                                      
@@ -390,6 +398,10 @@
                         </div>
 
                     {% endfor %}
+
+                </div>
+
+                <div id="search-favourites-wrapper" class="section-search-div">
 
                 </div>
 

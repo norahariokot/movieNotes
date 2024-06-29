@@ -192,6 +192,71 @@ document.addEventListener('click', function(event) {
 
 });
 
+// Function
+
+// Function to create elements for search results within sections
+document.addEventListener("DOMContentLoaded", function() {
+    let section_search_input = document.getElementsByClassName('section-search');
+    console.log(section_search_input);
+    console.log(section_search_input.length);
+    
+    for (let i = 0; i < section_search_input.length; i++) {
+        section_search_input[i].addEventListener('click', function(event) {
+        console.log(event.target);
+        console.log("section_search input clicked")  
+
+        let search_close = document.getElementById('search-close')
+        search_close.style.display = "inline";
+
+        let hidden_div;
+        if (event.target.id == 'watched-movie-search') {
+            hidden_div = document.getElementById('allwatched-movie-display');         
+            console.log(hidden_div);
+            hidden_div.style.display = "none";
+          
+        }
+
+        
+
+        });
+
+        section_search_input[i].addEventListener('input', async function(event) {
+            let search_close = document.getElementById('search-close')
+            search_close.style.display = "inline";
+
+            let search_display_div;
+            let hidden_div;
+            if (event.target.id == 'watched-movie-search') {
+                hidden_div = document.getElementById('allwatched-movie-display'); 
+                search_display_div = document.getElementById('search-watched-wrapper');        
+                console.log(hidden_div);
+                hidden_div.style.display = "none";
+                search_display_div.style.display = "block";
+          
+            }
+
+            let response = await fetch('/search_watched?q=' + event.target.value);
+            let feedback = await response.json();
+            console.log(feedback);
+            let html = '';
+            for (let dict_item in feedback) {
+                let title = feedback[dict_item].movie_title.replace('<', '&lt;').replace('&', '&amp;');
+                html += 'p' + title +'p';
+            }
+            search_display_div.innerHTML = html;
+        });
+    }    
+});
+
+
+
+    /*1. Target search element in DOM
+        2. When targeted display the search content window, initial display is hidden
+        NB: Display the search results using format of the default views and also with , so use same class names and 
+        3.Send request to server using fetch
+        4. Close search*/
+//};
+
 
 
 

@@ -130,7 +130,7 @@ def watched():
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     watched_date = movie_info["date"]
     
-    # store data to database while ensuring it not duplicated
+    # retrieve data from database to check of data submitted already exists to avoid duplication
     movies_watched = db.execute ("SELECT movie_title, movie_year, movie_stars FROM watched where user_id = ?", session["user_id"])
     print(movies_watched)
 
@@ -203,7 +203,19 @@ def delete_watched():
     db.execute("DELETE FROM watched WHERE id = ?", movie_info_id)
     return jsonify({"message": "Movie successfully removed from your Watched List"})
 
-   
+@app.route("/search_watched")   
+def search_watched ():
+    print("Search watched fired")
+    q = request.args.get("q")
+    if q:
+        search_response = db.execute("SELECT * FROM watched WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
+    else:
+        search_response = []
+    #print(search_response) 
+    for dict_item in search_response:
+        print(dict_item["movie_title"])   
+    return jsonify(search_response)
+        
 
 @app.route("/watched_section", methods=["GET"]) 
 def watched_section():
