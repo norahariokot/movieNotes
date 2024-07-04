@@ -112,10 +112,10 @@ def search():
     q = request.args.get("q")
     if q:
         movies = user_query(q)
-        #print(movies)
-        #print("movies receieved by flask function")
-        #for movie in movies:
-            #print(movie['title'])
+        print(movies)
+        print("movies receieved by flask function")
+        for movie in movies:
+            print(movie['title'])
     
     else:  
         movies = []

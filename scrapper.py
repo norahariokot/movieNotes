@@ -1,22 +1,38 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-import requests
+import time
 
 def user_query(query):
+	url = f"https://www.imdb.com/find/?q={query}"
+	print(url)
+
+	# Set up headless Chrome
+	chrome_options = Options()
+	chrome_options.add_argument("--headless")
+	chrome_options.add_argument("--no-sandbox")
+	chrome_options.add_argument("--disable-dev-shm-usage")
+	chrome_options.add_argument('user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"')
 	
-	url = "https://www.imdb.com/find/"
+	# Update with the path to your chromedriver
+	chromediver_path =r"/mnt/c/WebDriver/chromedriver.exe"
+	print(chromediver_path)
+	service = Service(chromediver_path)
 
-	querystring = {'q': query}
-
-	headers = {
-			"User-Agent": "Mozilla/5.0",
-		}
-
-	page = requests.get(url, headers=headers, params=querystring)
-
-	print(page)
-
-	#Parse the HTML content with BeautifulSoup
-	soup=BeautifulSoup(page.text, 'html.parser')
+	driver = webdriver.Chrome(service=service, options=chrome_options) 
+	
+	driver.get(url)
+    
+    # Allow time for the page to load
+	driver.implicitly_wait(10)  # Adjust as needed
+    
+    # Get page source and parse with BeautifulSoup
+	page_source = driver.page_source 
+	driver.quit()
+    	
+	soup=BeautifulSoup(page_source, 'html.parser')
 	#print(soup.prettify())
 
 	with open ('output.html', 'w') as f:
@@ -39,6 +55,9 @@ def user_query(query):
 		#print(movie_dict)
 
 	return(movies_list)
+
+
+#user_query("Inception")
 
 	
 
