@@ -33,5 +33,5 @@ CREATE TABLE watchlist (
                 FOREIGN KEY (user_id) REFERENCES users(id)
               );    
 
-                      
+
 

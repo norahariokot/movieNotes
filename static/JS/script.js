@@ -166,8 +166,9 @@ document.addEventListener('click', function(event) {
                         movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
                         movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset,
                         date: section_watched_date,   
-                        data_route: document.getElementsByClassName('route')[0].innerHTML                          
+                        data_route: document.getElementsByClassName('route')[0].innerHTML                        
                     }
+                    console.log(movie_data_id);
                     console.log(data)
 
                     fetch("/completed_watch", {
@@ -194,58 +195,202 @@ document.addEventListener('click', function(event) {
 
 // Function
 
-// Function to create elements for search results within sections
+// Function for search functions within sections
+//Step 1: Select the search element using class name
 document.addEventListener("DOMContentLoaded", function() {
     let section_search_input = document.getElementsByClassName('section-search');
     console.log(section_search_input);
     console.log(section_search_input.length);
+    
+    /* Step 2:add click event to selected search element so that when clicked the default view 
+    dissapears and div to display search results appears */
+    let search_close = document.getElementById('search-close')
+    let section_display_tohide;
+    let section_search_display;
+    let fetch_url;
     
     for (let i = 0; i < section_search_input.length; i++) {
         section_search_input[i].addEventListener('click', function(event) {
         console.log(event.target);
         console.log("section_search input clicked")  
 
-        let search_close = document.getElementById('search-close')
         search_close.style.display = "inline";
-
-        let hidden_div;
+        
+        // default div view is hidden 
+        // conditionals are used to dyamically select the viewed and hidden displays for each section
+        
         if (event.target.id == 'watched-movie-search') {
-            hidden_div = document.getElementById('allwatched-movie-display');         
-            console.log(hidden_div);
-            hidden_div.style.display = "none";
-          
+            section_display_tohide = document.getElementById('allwatched-movie-display');            
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+                      
+        }  
+        
+        else if (event.target.id == 'favourite-movie-search') {
+            section_display_tohide = document.getElementById('favourite-movie-display');            
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+        }
+
+        else if (event.target.id == 'currentlyWatching-movie-search') {
+            section_display_tohide = document.getElementById('currentlywatching-movie-display');            
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
         }
 
         
 
         });
 
-        section_search_input[i].addEventListener('input', async function(event) {
-            let search_close = document.getElementById('search-close')
-            search_close.style.display = "inline";
+        
+     
+        
+    // Step 3: input event is then added to the search input
+    section_search_input[i].addEventListener('input', async function(event) {
+        let search_close = document.getElementById('search-close')
+        search_close.style.display = "inline";
 
-            let search_display_div;
-            let hidden_div;
-            if (event.target.id == 'watched-movie-search') {
-                hidden_div = document.getElementById('allwatched-movie-display'); 
-                search_display_div = document.getElementById('search-watched-wrapper');        
-                console.log(hidden_div);
-                hidden_div.style.display = "none";
-                search_display_div.style.display = "block";
+           
+         
+        if (event.target.id == 'watched-movie-search') {
+            section_display_tohide = document.getElementById('allwatched-movie-display'); 
+            section_search_display = document.getElementById('search-watched-wrapper');        
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+            section_search_display.style.display = "block";
+            fetch_url = '/search_watched?q='
           
+        }
+
+        else if (event.target.id == 'favourite-movie-search') {
+            section_display_tohide = document.getElementById('favourite-movie-display'); 
+            section_search_display = document.getElementById('search-favourites-wrapper');        
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+            section_search_display.style.display = "block";
+            fetch_url = '/search_favourites?q='
+          
+        }
+
+        else if (event.target.id == 'currentlyWatching-movie-search') {
+            section_display_tohide = document.getElementById('currentlywatching-movie-display'); 
+            section_search_display = document.getElementById('search-currentlyWatching-wrapper');        
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+            section_search_display.style.display = "block";
+            fetch_url = '/search_currentlyWatching?q='
+          
+        }
+
+        // Step 4: use fetch function to send the user query inputed in section search to the server
+
+        
+
+        let response = await fetch(fetch_url + event.target.value);
+        let feedback = await response.json();
+        console.log(feedback);
+        section_search_display.innerHTML = '';
+        for (let dict_item in feedback) {
+            let title = feedback[dict_item].movie_title.replace('<', '&lt;').replace('&', '&amp;');
+            console.log(title)
+           
+            let year = feedback[dict_item].movie_year;
+            let stars = feedback[dict_item].movie_stars;
+            let poster = feedback[dict_item].movie_poster;
+            let posterset = feedback[dict_item].movie_poster_set;
+            let movie_container_div = document.createElement("div");
+            movie_container_div.className = "movie-info-container";
+            let movie_info_text = document.createElement("div");
+            movie_info_text.className = "movie_info_text";
+            let movie_info_div = document.createElement("div")
+            movie_info_div.className = "movie-info"
+            let movie_title = document.createElement("h3");
+            movie_title.className = "search-movie-title";
+            movie_title.innerHTML = title;
+            let movie_year = document.createElement("p");
+            movie_year.className = "movie-year";
+            movie_year.innerHTML = year;
+            let movie_stars = document.createElement("p");
+            movie_stars.className = ("movie-stars");
+            movie_stars.innerHTML = stars;
+            let controls = document.createElement("img");
+            controls.className = "section-controls";
+            if (section_search_display.id == 'search-watched-wrapper') {
+                console.log("Watched section ctls")
+                controls.id ='watched-stn-ctls'
+            }
+            
+            else if (section_search_display.id == 'search-favourites-wrapper') {
+                console.log("Favourite section ctls")
+                controls.id ='favourite-stn-ctls'
             }
 
-            let response = await fetch('/search_watched?q=' + event.target.value);
-            let feedback = await response.json();
-            console.log(feedback);
-            let html = '';
-            for (let dict_item in feedback) {
-                let title = feedback[dict_item].movie_title.replace('<', '&lt;').replace('&', '&amp;');
-                html += 'p' + title +'p';
-            }
-            search_display_div.innerHTML = html;
-        });
-    }    
+            else if (section_search_display.id == 'search-currentlyWatching-wrapper') {
+                console.log("Currently watching section ctls")
+                controls.id ='currentlywatching-stn-ctls'
+            };
+
+            controls.src = "../static/Images/Icons/9022327_dots_three_duotone_icon.png";
+            let controls_btn = document.createElement("button");
+            controls_btn.type = "button";
+            controls_btn.className = "controls-btn";
+            controls_btn.appendChild(controls);
+
+             
+            let movie_poster_div = document.createElement("div");
+            movie_poster_div.className= ("movie-poster-div")
+            let movie_poster = document.createElement("img");
+            movie_poster.src = poster;
+            movie_poster.sizes = "50vw, (min-width: 480px) 34vw, (min-width: 600px) 26vw, (min-width: 1024px) 16vw, (min-width: 1280px) 16vw";
+            movie_poster.srcset = posterset;
+                        
+            
+           
+            movie_poster_div.appendChild(movie_poster);
+
+            let movie_title_div = document.createElement("div");
+            movie_title_div.className ="movie_info_title_wrapper";
+            let empty_title = document.createElement("h3");
+            empty_title.className = "empty_title";
+            empty_title.innerHTML = "";
+            movie_title_div.appendChild(empty_title);
+            movie_title_div.appendChild(movie_title);
+            movie_info_text.appendChild(movie_title_div);
+            movie_info_text.appendChild(movie_year);
+            movie_info_text.appendChild(movie_stars);
+            movie_info_div.appendChild(movie_info_text);
+            movie_info_div.appendChild(controls_btn);
+
+            let movie_id = document.createElement("p");
+            movie_id.innerHTML = feedback[dict_item].id;
+            movie_id.style.display = "none";
+                        
+            movie_container_div.append(movie_id);
+            movie_container_div.appendChild(movie_poster_div);
+            movie_container_div.appendChild(movie_info_div);
+
+
+                        
+            //document.getElementById("search-watched-wrapper").appendChild(movie_container_div);
+            section_search_display.appendChild(movie_container_div);
+           
+                                  
+        }
+              
+    });
+
+    // Closing section search by clicking section close button 
+    search_close.addEventListener('click', function(event) {
+        console.log(event.target)
+        console.log("search_close clicked")
+        search_close.style.display = "none";
+        section_display_tohide.style.display = "block";
+        section_search_display.style.display = "none";
+        event.target.parentNode.previousElementSibling.value = "";
+        console.log(event.target.parentNode.previousElementSibling);
+       
+    });
+}    
 });
 
 

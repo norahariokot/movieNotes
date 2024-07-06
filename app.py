@@ -208,13 +208,13 @@ def search_watched ():
     print("Search watched fired")
     q = request.args.get("q")
     if q:
-        search_response = db.execute("SELECT * FROM watched WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
+        watched_search_response = db.execute("SELECT * FROM watched WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
     else:
-        search_response = []
+        watched_search_response = []
     #print(search_response) 
-    for dict_item in search_response:
+    for dict_item in watched_search_response:
         print(dict_item["movie_title"])   
-    return jsonify(search_response)
+    return jsonify(watched_search_response)
         
 
 @app.route("/watched_section", methods=["GET"]) 
@@ -280,6 +280,20 @@ def favourites_section():
     return render_template("index.html", favourite_section=favourite_section, sections=sections, favourite_movies=favourite_movies, json_favourite_options=json_favourite_options)
 
 
+@app.route("/search_favourites")   
+def search_favourites ():
+    print("Search favourites fired")
+    q = request.args.get("q")
+    if q:
+        favourites_search_response = db.execute("SELECT * FROM favourites WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
+    else:
+        favourites_search_response = []
+    #print(search_response) 
+    for dict_item in favourites_search_response:
+        print(dict_item["movie_title"])   
+    return jsonify(favourites_search_response)
+        
+
 
 @app.route("/currently_watching", methods=["POST"])
 def currently_watching():
@@ -332,6 +346,18 @@ def currently_watching_section():
     return render_template("index.html", sections=sections, currently_watching=currently_watching, currently_watching_movies=currently_watching_movies, json_currently_watching_options=json_currently_watching_options) 
 
 
+@app.route("/search_currentlyWatching")   
+def search_currentlyWatching ():
+    print("Search Currently watching fired")
+    q = request.args.get("q")
+    if q:
+        currentlyWatching_search_response = db.execute("SELECT * FROM currently_watching WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
+    else:
+         currentlyWatching_search_response = []
+    #print(search_response) 
+    for dict_item in currentlyWatching_search_response:
+        print(dict_item["movie_title"])   
+    return jsonify(currentlyWatching_search_response)
 
 
 
