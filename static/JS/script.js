@@ -238,6 +238,14 @@ document.addEventListener("DOMContentLoaded", function() {
             section_display_tohide.style.display = "none";
         }
 
+        else if (event.target.id == 'watchlist-movie-search') {
+            section_display_tohide = document.getElementById('watchlist-movie-display');            
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+        }
+
+
+
         
 
         });
@@ -279,6 +287,16 @@ document.addEventListener("DOMContentLoaded", function() {
             section_display_tohide.style.display = "none";
             section_search_display.style.display = "block";
             fetch_url = '/search_currentlyWatching?q='
+          
+        }
+
+        else if (event.target.id == 'watchlist-movie-search') {
+            section_display_tohide = document.getElementById('watchlist-movie-display'); 
+            section_search_display = document.getElementById('search-watchlist-wrapper');        
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+            section_search_display.style.display = "block";
+            fetch_url = '/search_watchlist?q='
           
         }
 
@@ -328,6 +346,11 @@ document.addEventListener("DOMContentLoaded", function() {
             else if (section_search_display.id == 'search-currentlyWatching-wrapper') {
                 console.log("Currently watching section ctls")
                 controls.id ='currentlywatching-stn-ctls'
+            }
+            
+            else if (section_search_display.id == 'search-watchlist-wrapper') {
+                console.log("Currently watching section ctls")
+                controls.id ='watchlist-stn-ctls'
             };
 
             controls.src = "../static/Images/Icons/9022327_dots_three_duotone_icon.png";

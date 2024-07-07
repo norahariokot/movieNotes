@@ -413,6 +413,19 @@ def watchlist_section():
     return render_template("index.html", sections=sections, watchlist=watchlist, movies_in_watchlist=movies_in_watchlist, json_watchlist_options=json_watchlist_options)
 
 
+@app.route("/search_watchlist")   
+def search_watchlist ():
+    print("Search Watchlist fired")
+    q = request.args.get("q")
+    if q:
+        watchlist_search_response = db.execute("SELECT * FROM watchlist WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
+    else:
+         watchlist_search_response = []
+    #print(search_response) 
+    for dict_item in watchlist_search_response:
+        print(dict_item["movie_title"])   
+    return jsonify(watchlist_search_response)
+
 
 
 
@@ -430,6 +443,13 @@ def recommend():
     print(movie_poster_sizes)
     print(movie_poster_set)
 
-    return jsonify(movie_info)      
+    return jsonify(movie_info)    
+
+
+@app.route("/movie_buddies_section", methods=["GET"])
+def moviebuddies_section():
+    movie_buddies_section = True
+    return render_template("index.html", movie_buddies_section=movie_buddies_section, sections=sections)
+
 
 

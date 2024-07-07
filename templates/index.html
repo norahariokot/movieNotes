@@ -79,9 +79,6 @@
                             controls_btn.className = "controls-btn";
                             controls_btn.appendChild(controls);
 
-                           
-
-
                             let movie_poster_div = document.createElement("div");
                             movie_poster_div.className= ("movie-poster-div")
                             let movie_poster = document.createElement("img");
@@ -473,14 +470,18 @@
                 <h2 class="section-title"> Watch List </h2>
                 <div>
                     <p class="section-total">{{ movies_in_watchlist|length }} Movies in your Watch List </p>
-                    <input  autocomplete="off" autofocus placeholder="Search Watch List"  type="text" id="watchlist-movie-search">
+                    <div class="section-search-wrapper">
+                        <input  autocomplete="off" autofocus placeholder="Search Watch List"  type="search" id="watchlist-movie-search" class="section-search">
+                        <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                    </div>
+                  
 
                 </div>
                
 
                 <p style="display: none;" id="watchlist-options-list">{{ json_watchlist_options }}</p>
 
-                <div class="watchlist-movie-display">
+                <div id="watchlist-movie-display" class="section-display">
                     {% for dict_item in movies_in_watchlist %}
                         <div class="movie-info-container">
                             <p style="display: none;" class="movie_data_id">{{dict_item["id"]}}</p>                                                      
@@ -506,8 +507,25 @@
 
                     {% endfor %}
                 </div>
+
+                <div id="search-watchlist-wrapper" class="section-search-div">
+
+                </div>
             </div>
-        {% endif %}            
+        {% endif %}  
+        
+        
+        <!-- This section will display movie recommendations -->
+
+
+
+        <!-- This section will display the movie buddies -->
+         {% if movie_buddies_section %}
+         <div class="moviebuddies-section-wrapper section-wrapper">
+            <h2 class="section-title"> Movie Buddies </h2>
+
+         </div>
+         {% endif %}
 
 
 
@@ -515,6 +533,7 @@
 
 
 
+    
     </div>
 
 </div>
