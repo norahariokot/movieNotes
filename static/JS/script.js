@@ -193,9 +193,9 @@ document.addEventListener('click', function(event) {
 
 });
 
-// Function
 
-// Function for search functions within sections
+
+// Function for search functions within watched, favourite, currenctly-watching, watchlist and movie-buddies sections
 //Step 1: Select the search element using class name
 document.addEventListener("DOMContentLoaded", function() {
     let section_search_input = document.getElementsByClassName('section-search');
@@ -244,9 +244,13 @@ document.addEventListener("DOMContentLoaded", function() {
             section_display_tohide.style.display = "none";
         }
 
+        else if (event.target.id == 'movie-buddies-search') {
+            section_display_tohide = document.getElementById('movie-buddies-display');            
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+        }
 
-
-        
+      
 
         });
 
@@ -300,6 +304,16 @@ document.addEventListener("DOMContentLoaded", function() {
           
         }
 
+        else if (event.target.id == 'movie-buddies-search') {
+            section_display_tohide = document.getElementById('movie-buddies-display'); 
+            section_search_display = document.getElementById('search-moviebuddies-wrapper');        
+            console.log(section_display_tohide);
+            section_display_tohide.style.display = "none";
+            section_search_display.style.display = "block";
+            fetch_url = '/search_moviebuddies?q='
+          
+        }
+
         // Step 4: use fetch function to send the user query inputed in section search to the server
 
         
@@ -308,97 +322,109 @@ document.addEventListener("DOMContentLoaded", function() {
         let feedback = await response.json();
         console.log(feedback);
         section_search_display.innerHTML = '';
-        for (let dict_item in feedback) {
-            let title = feedback[dict_item].movie_title.replace('<', '&lt;').replace('&', '&amp;');
-            console.log(title)
-           
-            let year = feedback[dict_item].movie_year;
-            let stars = feedback[dict_item].movie_stars;
-            let poster = feedback[dict_item].movie_poster;
-            let posterset = feedback[dict_item].movie_poster_set;
-            let movie_container_div = document.createElement("div");
-            movie_container_div.className = "movie-info-container";
-            let movie_info_text = document.createElement("div");
-            movie_info_text.className = "movie_info_text";
-            let movie_info_div = document.createElement("div")
-            movie_info_div.className = "movie-info"
-            let movie_title = document.createElement("h3");
-            movie_title.className = "search-movie-title";
-            movie_title.innerHTML = title;
-            let movie_year = document.createElement("p");
-            movie_year.className = "movie-year";
-            movie_year.innerHTML = year;
-            let movie_stars = document.createElement("p");
-            movie_stars.className = ("movie-stars");
-            movie_stars.innerHTML = stars;
-            let controls = document.createElement("img");
-            controls.className = "section-controls";
-            if (section_search_display.id == 'search-watched-wrapper') {
-                console.log("Watched section ctls")
-                controls.id ='watched-stn-ctls'
+        if (event.target.id == 'movie-buddies-search') {
+            for (let dict_item in feedback) {
+                let movie_buddy = feedback[dict_item].user_name;
+                let movie_buddy_text = document.createElement("p");
+                movie_buddy_text.innerHTML = movie_buddy;
+                section_search_display.appendChild(movie_buddy_text);
             }
-            
-            else if (section_search_display.id == 'search-favourites-wrapper') {
-                console.log("Favourite section ctls")
-                controls.id ='favourite-stn-ctls'
-            }
-
-            else if (section_search_display.id == 'search-currentlyWatching-wrapper') {
-                console.log("Currently watching section ctls")
-                controls.id ='currentlywatching-stn-ctls'
-            }
-            
-            else if (section_search_display.id == 'search-watchlist-wrapper') {
-                console.log("Currently watching section ctls")
-                controls.id ='watchlist-stn-ctls'
-            };
-
-            controls.src = "../static/Images/Icons/9022327_dots_three_duotone_icon.png";
-            let controls_btn = document.createElement("button");
-            controls_btn.type = "button";
-            controls_btn.className = "controls-btn";
-            controls_btn.appendChild(controls);
-
-             
-            let movie_poster_div = document.createElement("div");
-            movie_poster_div.className= ("movie-poster-div")
-            let movie_poster = document.createElement("img");
-            movie_poster.src = poster;
-            movie_poster.sizes = "50vw, (min-width: 480px) 34vw, (min-width: 600px) 26vw, (min-width: 1024px) 16vw, (min-width: 1280px) 16vw";
-            movie_poster.srcset = posterset;
-                        
-            
-           
-            movie_poster_div.appendChild(movie_poster);
-
-            let movie_title_div = document.createElement("div");
-            movie_title_div.className ="movie_info_title_wrapper";
-            let empty_title = document.createElement("h3");
-            empty_title.className = "empty_title";
-            empty_title.innerHTML = "";
-            movie_title_div.appendChild(empty_title);
-            movie_title_div.appendChild(movie_title);
-            movie_info_text.appendChild(movie_title_div);
-            movie_info_text.appendChild(movie_year);
-            movie_info_text.appendChild(movie_stars);
-            movie_info_div.appendChild(movie_info_text);
-            movie_info_div.appendChild(controls_btn);
-
-            let movie_id = document.createElement("p");
-            movie_id.innerHTML = feedback[dict_item].id;
-            movie_id.style.display = "none";
-                        
-            movie_container_div.append(movie_id);
-            movie_container_div.appendChild(movie_poster_div);
-            movie_container_div.appendChild(movie_info_div);
-
-
-                        
-            //document.getElementById("search-watched-wrapper").appendChild(movie_container_div);
-            section_search_display.appendChild(movie_container_div);
-           
-                                  
         }
+        else {
+            for (let dict_item in feedback) {
+                let title = feedback[dict_item].movie_title.replace('<', '&lt;').replace('&', '&amp;');
+                console.log(title)
+               
+                let year = feedback[dict_item].movie_year;
+                let stars = feedback[dict_item].movie_stars;
+                let poster = feedback[dict_item].movie_poster;
+                let posterset = feedback[dict_item].movie_poster_set;
+                let movie_container_div = document.createElement("div");
+                movie_container_div.className = "movie-info-container";
+                let movie_info_text = document.createElement("div");
+                movie_info_text.className = "movie_info_text";
+                let movie_info_div = document.createElement("div")
+                movie_info_div.className = "movie-info"
+                let movie_title = document.createElement("h3");
+                movie_title.className = "search-movie-title";
+                movie_title.innerHTML = title;
+                let movie_year = document.createElement("p");
+                movie_year.className = "movie-year";
+                movie_year.innerHTML = year;
+                let movie_stars = document.createElement("p");
+                movie_stars.className = ("movie-stars");
+                movie_stars.innerHTML = stars;
+                let controls = document.createElement("img");
+                controls.className = "section-controls";
+                if (section_search_display.id == 'search-watched-wrapper') {
+                    console.log("Watched section ctls")
+                    controls.id ='watched-stn-ctls'
+                }
+                
+                else if (section_search_display.id == 'search-favourites-wrapper') {
+                    console.log("Favourite section ctls")
+                    controls.id ='favourite-stn-ctls'
+                }
+    
+                else if (section_search_display.id == 'search-currentlyWatching-wrapper') {
+                    console.log("Currently watching section ctls")
+                    controls.id ='currentlywatching-stn-ctls'
+                }
+                
+                else if (section_search_display.id == 'search-watchlist-wrapper') {
+                    console.log("Currently watching section ctls")
+                    controls.id ='watchlist-stn-ctls'
+                };
+    
+                controls.src = "../static/Images/Icons/9022327_dots_three_duotone_icon.png";
+                let controls_btn = document.createElement("button");
+                controls_btn.type = "button";
+                controls_btn.className = "controls-btn";
+                controls_btn.appendChild(controls);
+    
+                 
+                let movie_poster_div = document.createElement("div");
+                movie_poster_div.className= ("movie-poster-div")
+                let movie_poster = document.createElement("img");
+                movie_poster.src = poster;
+                movie_poster.sizes = "50vw, (min-width: 480px) 34vw, (min-width: 600px) 26vw, (min-width: 1024px) 16vw, (min-width: 1280px) 16vw";
+                movie_poster.srcset = posterset;
+                            
+                
+               
+                movie_poster_div.appendChild(movie_poster);
+    
+                let movie_title_div = document.createElement("div");
+                movie_title_div.className ="movie_info_title_wrapper";
+                let empty_title = document.createElement("h3");
+                empty_title.className = "empty_title";
+                empty_title.innerHTML = "";
+                movie_title_div.appendChild(empty_title);
+                movie_title_div.appendChild(movie_title);
+                movie_info_text.appendChild(movie_title_div);
+                movie_info_text.appendChild(movie_year);
+                movie_info_text.appendChild(movie_stars);
+                movie_info_div.appendChild(movie_info_text);
+                movie_info_div.appendChild(controls_btn);
+    
+                let movie_id = document.createElement("p");
+                movie_id.innerHTML = feedback[dict_item].id;
+                movie_id.style.display = "none";
+                            
+                movie_container_div.append(movie_id);
+                movie_container_div.appendChild(movie_poster_div);
+                movie_container_div.appendChild(movie_info_div);
+    
+    
+                            
+                //document.getElementById("search-watched-wrapper").appendChild(movie_container_div);
+                section_search_display.appendChild(movie_container_div);
+               
+                                      
+            }
+
+        }
+        
               
     });
 

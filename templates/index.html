@@ -523,6 +523,25 @@
          {% if movie_buddies_section %}
          <div class="moviebuddies-section-wrapper section-wrapper">
             <h2 class="section-title"> Movie Buddies </h2>
+            <div>
+                <!--<p class="section-total">{{ movie|length }} Movies Watched </p>-->
+                <div class="section-search-wrapper">
+                    <input  autocomplete="off" autofocus placeholder="Search for Movie Buddies"  type="search" id="movie-buddies-search" class="section-search">
+                    <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                </div>
+
+                <div id="movie-buddies-display" class="section-display">
+
+                </div>
+
+                <div id="search-moviebuddies-wrapper" class="section-search-div" style="display: none;">
+
+                </div>
+              
+
+            </div>
+           
+
 
          </div>
          {% endif %}

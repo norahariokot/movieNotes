@@ -452,4 +452,19 @@ def moviebuddies_section():
     return render_template("index.html", movie_buddies_section=movie_buddies_section, sections=sections)
 
 
+@app.route("/search_moviebuddies", methods=["GET"])    
+def search_moviebuddies():
+    print("Search Movie buddies fired")
+    q = request.args.get("q")
+    if q:
+        movie_buddies_response = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE user_name LIKE ? AND NOT id = ?", "%" + q + "%", session["user_id"])
+    else:
+        movie_buddies_response = []
+    #print(search_response) 
+    for dict_item in movie_buddies_response:
+        print(dict_item["user_name"])   
+    return jsonify(movie_buddies_response)
+
+
+
 
