@@ -324,10 +324,47 @@ document.addEventListener("DOMContentLoaded", function() {
         section_search_display.innerHTML = '';
         if (event.target.id == 'movie-buddies-search') {
             for (let dict_item in feedback) {
-                let movie_buddy = feedback[dict_item].user_name;
-                let movie_buddy_text = document.createElement("p");
-                movie_buddy_text.innerHTML = movie_buddy;
-                section_search_display.appendChild(movie_buddy_text);
+                //let profile_pic = "../Images/Icons/user_profile.png";
+                let id = feedback[dict_item].id;
+                let name = feedback[dict_item].full_name;
+                let user_name = feedback[dict_item].user_name;
+                //let status
+                let moviebuddy_container = document.createElement("div");
+                moviebuddy_container.className = "moviebuddy_container";
+
+                let moviebuddy_profile = document.createElement("div");
+                moviebuddy_profile.className = "moviebuddy_profile";
+                let moviebuddy_profilepic = document.createElement("img")
+                moviebuddy_profilepic.className = "moviebuddy_profilepic";
+                moviebuddy_profilepic.src = "../static/Images/Icons/user_profile.png";
+                moviebuddy_profile.appendChild(moviebuddy_profilepic);
+
+                let movie_buddy_info = document.createElement("div");
+                movie_buddy_info.className = "moviebuddy_info";
+                let moviebuddy_id = document.createElement("p");
+                moviebuddy_id.className = "movie-buddy-id";
+                moviebuddy_id.innerHTML = id;
+                moviebuddy_id.style.display = "none";
+                let movie_buddyname = document.createElement("p");
+                movie_buddyname.className = "movie-buddyname";
+                movie_buddyname.innerHTML = name;
+                let movie_buddyuser_name = document.createElement("p");
+                movie_buddyuser_name.className = "movie_buddyuser_name";
+                movie_buddyuser_name.innerHTML = user_name
+                let movie_buddy_status = document.createElement("span");
+                movie_buddy_status.innerHTML = '';
+                movie_buddyuser_name.appendChild(movie_buddy_status);
+
+                movie_buddy_info.appendChild(moviebuddy_id);
+                movie_buddy_info.appendChild(movie_buddyname);
+                movie_buddy_info.appendChild(movie_buddyuser_name);
+                movie_buddy_info.appendChild(movie_buddy_status)
+
+
+                moviebuddy_container.appendChild(moviebuddy_profile);
+                moviebuddy_container.appendChild(movie_buddy_info);
+                
+                section_search_display.appendChild(moviebuddy_container);
             }
         }
         else {

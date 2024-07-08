@@ -118,6 +118,7 @@ nav {
         /*border: solid black;*/
         margin-bottom: 0;
         margin-top: 0;
+        
 
     }
 }
@@ -184,5 +185,39 @@ nav {
     grid-column: 2 / span 1; 
 }
 
+/* -------- Movie Buddies ----------- */
+.movie-buddies-title-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+
+
+.moviebuddy_container {
+    display: flex;
+    /*border: red solid;*/
+}
+
+.moviebuddy_profile {
+    /*border: solid black;*/
+}
+
+.moviebuddy_profilepic {
+    /*border: solid green;*/
+}
+
+.moviebuddy_info {
+    /*border: solid blue;*/
+    margin-top: 0;
+}
+
+.movie-buddyname,
+.movie_buddyuser_name {
+    /*border: solid red;*/
+    margin-top: 0;
+    margin-bottom: .2em;
+}
 
 

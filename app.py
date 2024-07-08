@@ -460,9 +460,14 @@ def search_moviebuddies():
         movie_buddies_response = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE user_name LIKE ? AND NOT id = ?", "%" + q + "%", session["user_id"])
     else:
         movie_buddies_response = []
-    #print(search_response) 
+    #print(movie_buddies_response) 
+    
     for dict_item in movie_buddies_response:
-        print(dict_item["user_name"])   
+        user_fullname = dict_item["first_name"] + " " + dict_item["last_name"]
+        dict_item.pop('first_name', None)
+        dict_item.pop('last_name', None)
+        dict_item["full_name"] = user_fullname
+    print(movie_buddies_response)   
     return jsonify(movie_buddies_response)
 
 
