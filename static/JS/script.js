@@ -26,21 +26,21 @@ document.addEventListener('click', function(event) {
                 // Add diffrent popup options to deferent links 
                 if (event.target.id == 'watched-stn-ctls') {
                     console.log(event.target)
-                    section_options_list = JSON.parse(document.getElementById('watched-options-list').innerHTML);
+                    section_options_list = JSON.parse(document.getElementById('watched-options-list').innerText);
                 
                 }
 
                 else if (event.target.id == "favourite-stn-ctls") {
                         console.log("Favourites sections options")
-                        section_options_list = JSON.parse(document.getElementById('favourite-options-list').innerHTML);
+                        section_options_list = JSON.parse(document.getElementById('favourite-options-list').innerText);
                 }
 
                 else if (event.target.id == "currentlywatching-stn-ctls") {
-                    section_options_list = JSON.parse(document.getElementById('currentlywatching-options-list').innerHTML);
+                    section_options_list = JSON.parse(document.getElementById('currentlywatching-options-list').innerText);
                 }
 
                 else if (event.target.id == "watchlist-stn-ctls") {
-                    section_options_list = JSON.parse(document.getElementById('watchlist-options-list').innerHTML);
+                    section_options_list = JSON.parse(document.getElementById('watchlist-options-list').innerText);
                 }
 
                 console.log(typeof(section_options_list))
@@ -58,7 +58,7 @@ document.addEventListener('click', function(event) {
                     section_popup_options.className = "popup-menu-li";
                     let section_link = document.createElement("a");
                     section_link.href = section_options[key];
-                    section_link.innerHTML = key;
+                    section_link.innerText = key;
                     section_popup_options.appendChild(section_link);
                     section_popup_menu.appendChild(section_popup_options);
                     section_list_options.push(section_popup_options);
@@ -72,7 +72,7 @@ document.addEventListener('click', function(event) {
                 let section_date_div = document.createElement("div");
                 let section_date_lbl = document.createElement("label");
                 let section_date = document.createElement("input");
-                section_date_lbl.innerHTML = "Include date";
+                section_date_lbl.innerText = "Include date";
                 section_date.type = "date";
                 section_date.id = "watched-date"
                 section_date_div.appendChild(section_date_lbl);
@@ -81,8 +81,8 @@ document.addEventListener('click', function(event) {
                 section_popup_menu.insertAdjacentElement('afterend', section_date_div);
 
                 section_list_options.forEach(list_option => {
-                    //console.log(list_option.firstChild.innerHTML)
-                    if(list_option.firstChild.innerHTML == "Completed Watching") {
+                    //console.log(list_option.firstChild.innerText)
+                    if(list_option.firstChild.innerText == "Completed Watching") {
                         console.log("Completed watching found")
                  
                         list_option.addEventListener('mouseover', function() {
@@ -108,10 +108,10 @@ document.addEventListener('click', function(event) {
                         console.log(event.target);
 
                         let data = {
-                            movie_data_id: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.innerHTML,
-                            movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.firstElementChild.children[1].innerHTML,
-                            movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
-                            movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
+                            movie_data_id: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.innerText,
+                            movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.firstElementChild.children[1].innerText,
+                            movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerText,
+                            movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerText,
                             movie_poster: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.src,
                             movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
                             movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset
@@ -119,9 +119,9 @@ document.addEventListener('click', function(event) {
                             };
                  
 
-                        if (section_list_options[i].firstChild.innerHTML == "Completed Watching") {
+                        if (section_list_options[i].firstChild.innerText == "Completed Watching") {
                             data.date = section_watched_date;
-                            data.data_route = document.getElementsByClassName('route')[0].innerHTML;
+                            data.data_route = document.getElementsByClassName('route')[0].innerText;
                         }
 
                         console.log(data);
@@ -158,15 +158,15 @@ document.addEventListener('click', function(event) {
 
                     console.log("Watched fetch function after date change")
                     let data = {
-                        movie_data_id: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.innerHTML,
-                        movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.firstElementChild.children[1].innerHTML,
-                        movie_year: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
-                        movie_stars: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
+                        movie_data_id: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.innerText,
+                        movie_title: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.firstElementChild.children[1].innerText,
+                        movie_year: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerText,
+                        movie_stars: event.target.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerText,
                         movie_poster: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.src,
                         movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
                         movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset,
                         date: section_watched_date,   
-                        data_route: document.getElementsByClassName('route')[0].innerHTML                        
+                        data_route: document.getElementsByClassName('route')[0].innerText                        
                     }
                     console.log(movie_data_id);
                     console.log(data)
@@ -321,14 +321,14 @@ document.addEventListener("DOMContentLoaded", function() {
         let response = await fetch(fetch_url + event.target.value);
         let feedback = await response.json();
         console.log(feedback);
-        section_search_display.innerHTML = '';
+        section_search_display.innerText = '';
         if (event.target.id == 'movie-buddies-search') {
             for (let dict_item in feedback) {
                 //let profile_pic = "../Images/Icons/user_profile.png";
                 let id = feedback[dict_item].id;
                 let name = feedback[dict_item].full_name;
                 let user_name = feedback[dict_item].user_name;
-                //let status
+                let status = feedback[dict_item].status;
                 let moviebuddy_container = document.createElement("div");
                 moviebuddy_container.className = "moviebuddy_container";
 
@@ -343,29 +343,47 @@ document.addEventListener("DOMContentLoaded", function() {
                 movie_buddy_info.className = "moviebuddy_info";
                 let moviebuddy_id = document.createElement("p");
                 moviebuddy_id.className = "movie-buddy-id";
-                moviebuddy_id.innerHTML = id;
+                moviebuddy_id.innerText = id;
                 moviebuddy_id.style.display = "none";
                 let movie_buddyname = document.createElement("p");
                 movie_buddyname.className = "movie-buddyname";
-                movie_buddyname.innerHTML = name;
+                movie_buddyname.innerText = name;
                 let movie_buddyuser_name = document.createElement("p");
                 movie_buddyuser_name.className = "movie_buddyuser_name";
-                movie_buddyuser_name.innerHTML = user_name
-                let movie_buddy_status = document.createElement("span");
-                movie_buddy_status.innerHTML = '';
-                movie_buddyuser_name.appendChild(movie_buddy_status);
+                movie_buddyuser_name.innerText = user_name
 
+                let movie_buddy_status;
+                if (status == "Send Movie Buddy Request" || status == "Accept Movie Buddy Request") {
+                    movie_buddy_status = document.createElement("button")
+                    
+                    if(status == "Send Movie Buddy Request") {
+                        movie_buddy_status.id = "send_buddyrequest";
+                    }
+                    else if (status == "Accept Movie Buddy Request") {
+                        movie_buddy_status.id = "accept_buddyrequest";
+                    }
+                }
+
+                else {
+                    movie_buddy_status = document.createElement("span")
+                }
+               
+                
+                movie_buddy_status.textContent = status;
+                movie_buddy_status.className = "movie-buddy-status"
+                movie_buddyuser_name.appendChild(movie_buddy_status);
+               
                 movie_buddy_info.appendChild(moviebuddy_id);
                 movie_buddy_info.appendChild(movie_buddyname);
                 movie_buddy_info.appendChild(movie_buddyuser_name);
-                movie_buddy_info.appendChild(movie_buddy_status)
-
-
+        
                 moviebuddy_container.appendChild(moviebuddy_profile);
                 moviebuddy_container.appendChild(movie_buddy_info);
                 
                 section_search_display.appendChild(moviebuddy_container);
             }
+
+
         }
         else {
             for (let dict_item in feedback) {
@@ -384,13 +402,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 movie_info_div.className = "movie-info"
                 let movie_title = document.createElement("h3");
                 movie_title.className = "search-movie-title";
-                movie_title.innerHTML = title;
+                movie_title.innerText = title;
                 let movie_year = document.createElement("p");
                 movie_year.className = "movie-year";
-                movie_year.innerHTML = year;
+                movie_year.innerText = year;
                 let movie_stars = document.createElement("p");
                 movie_stars.className = ("movie-stars");
-                movie_stars.innerHTML = stars;
+                movie_stars.innerText = stars;
                 let controls = document.createElement("img");
                 controls.className = "section-controls";
                 if (section_search_display.id == 'search-watched-wrapper') {
@@ -435,7 +453,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 movie_title_div.className ="movie_info_title_wrapper";
                 let empty_title = document.createElement("h3");
                 empty_title.className = "empty_title";
-                empty_title.innerHTML = "";
+                empty_title.innerText = "";
                 movie_title_div.appendChild(empty_title);
                 movie_title_div.appendChild(movie_title);
                 movie_info_text.appendChild(movie_title_div);
@@ -445,7 +463,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 movie_info_div.appendChild(controls_btn);
     
                 let movie_id = document.createElement("p");
-                movie_id.innerHTML = feedback[dict_item].id;
+                movie_id.innerText = feedback[dict_item].id;
                 movie_id.style.display = "none";
                             
                 movie_container_div.append(movie_id);
@@ -487,6 +505,35 @@ document.addEventListener("DOMContentLoaded", function() {
         3.Send request to server using fetch
         4. Close search*/
 //};
+
+// Function to send movie buddy request (activates "send movie buddy request button")
+document.addEventListener("click", function(event) {
+
+    // select element that triggers click event based on this condition
+    if(event.target.id == 'send_buddyrequest') {
+        //let send_moviebuddy_request = document.getElementById('send_buddyrequest');
+        console.log(event.target);
+      
+        let request_recipient = event.target.parentNode.parentNode.firstElementChild.innerText;
+        console.log(request_recipient)
+        
+        // Send data to server
+        fetch("/send_moviebuddy_request", {
+            method:'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request_recipient)
+        })  
+        .then(response=> response.json())
+        .then(request_recipient => {
+            alert(request_recipient.message)
+        })
+        .catch((error) => console.error('Error:', error));
+        }
+ 
+});
+   
 
 
 

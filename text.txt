@@ -31,7 +31,22 @@ CREATE TABLE watchlist (
                 movie_poster_set TEXT NOT NULL,
                 user_id INTEGER NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id)
-              );    
+              ); 
+
+CREATE TABLE movie_buddies (
+  movie_buddy1 INTEGER NOT NULL,
+  movie_buddy2 INTEGER NOT NULL,
+  FOREIGN KEY (movie_buddy1) REFERENCES users(id),
+  FOREIGN KEY (movie_buddy2) REFERENCES users(id)
+)                 
+
+CREATE TABLE moviebuddy_request (
+  request_sender INTEGER NOT NULL,
+  request_recipient INTEGER NOT NULL,
+  FOREIGN KEY (request_sender) REFERENCES users(id),
+  FOREIGN KEY (request_recipient) REFERENCES users(id)
+);  
+
 
 
 

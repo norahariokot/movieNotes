@@ -461,14 +461,39 @@ def search_moviebuddies():
     else:
         movie_buddies_response = []
     #print(movie_buddies_response) 
-    
+
+   
     for dict_item in movie_buddies_response:
+        movie_buddy = db.execute("SELECT * FROM movie_buddies WHERE movie_buddy1 OR movie_buddy2 = ? AND movie_buddy1 OR movie_buddy2 = ?", session["user_id"], dict_item["id"])
+        if movie_buddy:
+            dict_item["status"] = "Movie Buddy"
+        else:
+            request_status = db.execute("SELECT * FROM moviebuddy_request WHERE request_sender OR request_recipient = ? AND request_sender OR request_recipient = ?", session["user_id"], dict_item["id"])
+            print(request_status)
+            if request_status:
+                if request_status[0]["request_sender"] == session["user_id"] and request_status[0]["request_recipient"] == dict_item["id"]:
+                    dict_item["status"] = "Movie Buddy Request Sent"
+                elif request_status[0]["request_sender"] == dict_item["id"] and request_status[0]["request_recipient"] == session["user_id"]:
+                    dict_item["status"] = "Accept Movie Buddy Request"
+            else:
+                dict_item["status"] = "Send Movie Buddy Request"       
         user_fullname = dict_item["first_name"] + " " + dict_item["last_name"]
         dict_item.pop('first_name', None)
         dict_item.pop('last_name', None)
         dict_item["full_name"] = user_fullname
     print(movie_buddies_response)   
     return jsonify(movie_buddies_response)
+
+
+@app.route("/send_moviebuddy_request", methods=["POST"])
+def send_moviebuddy_request():
+    print("Send Movie Request route fired")
+
+    request_recipient = request.get_json()
+    print(request_recipient)
+
+    return jsonify({"message": "Movie Buddy Request sent!"})
+
 
 
 
