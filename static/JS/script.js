@@ -353,8 +353,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 movie_buddyuser_name.innerText = user_name
 
                 let movie_buddy_status;
+                let buddy_cta;
                 if (status == "Send Movie Buddy Request" || status == "Accept Movie Buddy Request") {
                     movie_buddy_status = document.createElement("button")
+                    movie_buddy_status.textContent = status;
+
                     
                     if(status == "Send Movie Buddy Request") {
                         movie_buddy_status.id = "send_buddyrequest";
@@ -366,12 +369,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 else {
                     movie_buddy_status = document.createElement("span")
+                    movie_buddy_status.textContent = "\u2022" + " "+ status;
+                }
+
+                if (status == "Accept Movie Buddy Request" || status == "Buddy Request Declined") {
+                    buddy_cta = document.createElement("button")
+                    buddy_cta.className = "buddy_cta"
+
+                    if (status == "Accept Movie Buddy Request") {
+                        buddy_cta.innerText = "Decline Request"
+                        buddy_cta.id = "cta_decline_request"
+                    }
+
+                    else if (status == "Buddy Request Declined") {
+                        buddy_cta.innerText = "Resend Buddy Request"
+                        buddy_cta.id = "cta_resend_request"
+                    }
                 }
                
                 
-                movie_buddy_status.textContent = status;
+                
                 movie_buddy_status.className = "movie-buddy-status"
                 movie_buddyuser_name.appendChild(movie_buddy_status);
+                if (buddy_cta) {
+                    movie_buddyuser_name.appendChild(buddy_cta);
+                }
+             
                
                 movie_buddy_info.appendChild(moviebuddy_id);
                 movie_buddy_info.appendChild(movie_buddyname);
@@ -510,7 +533,7 @@ document.addEventListener("DOMContentLoaded", function() {
 document.addEventListener("click", function(event) {
 
     // select element that triggers click event based on this condition
-    if(event.target.id == 'send_buddyrequest') {
+    if(event.target.id == 'send_buddyrequest' || event.target.id == "cta_decline_request") {
         //let send_moviebuddy_request = document.getElementById('send_buddyrequest');
         console.log(event.target);
       
@@ -533,7 +556,66 @@ document.addEventListener("click", function(event) {
         }
  
 });
+
+
+// Function to acctivate accept movie buddy request 
+document.addEventListener("click", function(event) {
+
+    // select element that triggers click event based on this condition
+    if(event.target.id == "accept_buddyrequest") {
+        //let send_moviebuddy_request = document.getElementById('send_buddyrequest');
+        console.log(event.target);
+      
+        let request_sender = event.target.parentNode.parentNode.firstElementChild.innerText;
+        console.log(request_sender)
+        
+        // Send data to server
+        fetch("/accept_moviebuddy_request", {
+            method:'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request_sender)
+        })  
+        .then(response=> response.json())
+        .then(request_recipient => {
+            alert(request_recipient.message)
+        })
+        .catch((error) => console.error('Error:', error));
+        }
+ 
+});
+
+
+// Function to acctivate decline movie buddy request 
+document.addEventListener("click", function(event) {
+
+    // select element that triggers click event based on this condition
+    if(event.target.id == "cta_decline_request") {
+        //let send_moviebuddy_request = document.getElementById('send_buddyrequest');
+        console.log(event.target);
+      
+        let request_sender = event.target.parentNode.parentNode.firstElementChild.innerText;
+        console.log(request_sender)
+        
+        // Send data to server
+        fetch("/decline_moviebuddy_request", {
+            method:'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request_sender)
+        })  
+        .then(response=> response.json())
+        .then(request_recipient => {
+            alert(request_recipient.message)
+        })
+        .catch((error) => console.error('Error:', error));
+        }
+ 
+});
    
+
 
 
 

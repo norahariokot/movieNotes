@@ -46,7 +46,7 @@ def login():
     print("Login route")
    
     login_form = LoginForm()
-    print(login_form)
+    #print(login_form)
 
     #Ensure login info is validated and login form is submitted via POST request method
     if login_form.validate_on_submit():
@@ -65,6 +65,17 @@ def login():
         return redirect("/")
 
     return render_template("login.html", login_form=login_form, current_route="/login")
+
+
+@app.route("/logout")
+def logout():
+    """ Log user out """
+
+    # forget user if of loggined user
+    session.clear()
+
+    # redirect user to login page
+    return redirect("/login")
 
 
 
@@ -448,8 +459,45 @@ def recommend():
 
 @app.route("/movie_buddies_section", methods=["GET"])
 def moviebuddies_section():
+    print("Movie Buddies section")
     movie_buddies_section = True
-    return render_template("index.html", movie_buddies_section=movie_buddies_section, sections=sections)
+
+    #Retrieve movie buddies from database
+    # Step 1: Retrieve the user ids of users who are movie buddies with current users from from movie_buddies table
+    status = "Movie Buddies"
+    movie_buddies = db.execute("SELECT * FROM movie_buddies WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND buddy_status = ?", session["user_id"], session["user_id"], status)
+    print(movie_buddies)
+
+    # Step 2: Retrieved values to be stored in a list
+    movie_buddyid_list = []
+    for dict_item in movie_buddies:
+        if dict_item["buddy_request_sender"] == session["user_id"]:
+            movie_buddyid_list.append(dict_item["buddy_request_recipient"])
+        elif dict_item["buddy_request_recipient"] == session["user_id"]:
+            movie_buddyid_list.append(dict_item["buddy_request_sender"])  
+    print(movie_buddyid_list)   
+
+    # Step 3 : Retrieve information about those users from users table
+    movie_buddies_list = []
+    for id in movie_buddyid_list:
+        buddy_info = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE id = ?", id)
+        print(buddy_info)
+        
+        id = buddy_info[0]["id"]
+        name = buddy_info[0]["first_name"] + " " + buddy_info[0]["last_name"]
+        user_name = buddy_info[0]["user_name"]
+
+        buddy_dict = {}
+        buddy_dict["id"] = id
+        buddy_dict["name"] = name
+        buddy_dict["user_name"] = user_name
+        status = db.execute("SELECT buddy_status from movie_buddies WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND (buddy_request_sender = ? OR buddy_request_recipient = ?)", session["user_id"], session["user_id"], id, id)
+        print(status)
+        buddy_dict["buddy_status"] = status[0]["buddy_status"]
+        movie_buddies_list.append(buddy_dict)
+    print(movie_buddies_list)    
+
+    return render_template("index.html", movie_buddies_section=movie_buddies_section, sections=sections, movie_buddies_list=movie_buddies_list)
 
 
 @app.route("/search_moviebuddies", methods=["GET"])    
@@ -460,23 +508,31 @@ def search_moviebuddies():
         movie_buddies_response = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE user_name LIKE ? AND NOT id = ?", "%" + q + "%", session["user_id"])
     else:
         movie_buddies_response = []
-    #print(movie_buddies_response) 
+    print(movie_buddies_response) 
 
-   
+    # Look for Movie_buddy status for each user returned in the above search
     for dict_item in movie_buddies_response:
-        movie_buddy = db.execute("SELECT * FROM movie_buddies WHERE movie_buddy1 OR movie_buddy2 = ? AND movie_buddy1 OR movie_buddy2 = ?", session["user_id"], dict_item["id"])
-        if movie_buddy:
-            dict_item["status"] = "Movie Buddy"
+        print(f"Dict item is {dict_item}")
+        movie_buddy_status = db.execute("SELECT * FROM movie_buddies WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND (buddy_request_sender = ? OR buddy_request_recipient = ?)", session["user_id"], session["user_id"], dict_item["id"], dict_item["id"])
+        print(movie_buddy_status)
+        
+        if movie_buddy_status:
+            for item in movie_buddy_status:
+                print(f"Item is {item}")
+                if item["buddy_status"] == "Movie Buddies":
+                    dict_item["status"] = "Movie Buddy"
+                elif item["buddy_status"] == "Request Sent":
+                    if session["user_id"] == item["buddy_request_sender"] and dict_item["id"] ==  item["buddy_request_recipient"]:
+                        dict_item["status"] = "Movie Buddy Request Sent"
+                    elif session["user_id"] == item["buddy_request_recipient"] and dict_item["id"] ==  item["buddy_request_sender"]:
+                        dict_item["status"] = "Accept Movie Buddy Request"
+                elif item["buddy_status"] == "Request Declined":
+                    if session["user_id"] == item["buddy_request_sender"] and dict_item["id"] ==  item["buddy_request_recipient"]:
+                        dict_item["status"] = "Buddy Request Declined"
+
         else:
-            request_status = db.execute("SELECT * FROM moviebuddy_request WHERE request_sender OR request_recipient = ? AND request_sender OR request_recipient = ?", session["user_id"], dict_item["id"])
-            print(request_status)
-            if request_status:
-                if request_status[0]["request_sender"] == session["user_id"] and request_status[0]["request_recipient"] == dict_item["id"]:
-                    dict_item["status"] = "Movie Buddy Request Sent"
-                elif request_status[0]["request_sender"] == dict_item["id"] and request_status[0]["request_recipient"] == session["user_id"]:
-                    dict_item["status"] = "Accept Movie Buddy Request"
-            else:
-                dict_item["status"] = "Send Movie Buddy Request"       
+            print("No status")
+            dict_item["status"] = "Send Movie Buddy Request"       
         user_fullname = dict_item["first_name"] + " " + dict_item["last_name"]
         dict_item.pop('first_name', None)
         dict_item.pop('last_name', None)
@@ -491,9 +547,37 @@ def send_moviebuddy_request():
 
     request_recipient = request.get_json()
     print(request_recipient)
+    status = "Request Sent"
+
+    db.execute("INSERT INTO movie_buddies (buddy_request_sender, buddy_request_recipient, buddy_status) VALUES (?,?,?)", session["user_id"], request_recipient, status)
 
     return jsonify({"message": "Movie Buddy Request sent!"})
 
+
+@app.route("/accept_moviebuddy_request", methods=["POST"])
+def accept_moviebuddy_request():
+    print("Accept Movie Request route fired")
+
+    request_sender = request.get_json()
+    print(request_sender)
+    status = "Movie Buddies"
+            
+    db.execute("UPDATE movie_buddies SET buddy_status = ? WHERE buddy_request_sender = ? AND buddy_request_recipient = ?", status, request_sender, session["user_id"])
+
+    return jsonify({"message": "Movie Buddies"})
+
+
+@app.route("/decline_moviebuddy_request", methods=["POST"])
+def decline_moviebuddy_request():
+    print("Decline Movie Request route fired")
+
+    request_sender = request.get_json()
+    print(request_sender)
+    status = "Request Declined"
+            
+    db.execute("UPDATE movie_buddies SET buddy_status = ? WHERE buddy_request_sender = ? AND buddy_request_recipient = ?", status, request_sender, session["user_id"])
+
+    return jsonify({"message": "Movie Buddy Request Declined"})
 
 
 

@@ -524,7 +524,9 @@
          <div class="moviebuddies-section-wrapper section-wrapper">
             <div class="movie-buddies-title-div">
                 <h2 class="section-title movie-buddies-stn-title"> Movie Buddies </h2>
-                <button> Movie Buddy Request </button>
+                <button> Movie Buddy Requests </button>
+
+
             </div>
             
                       
@@ -536,7 +538,19 @@
                 </div>
 
                 <div id="movie-buddies-display" class="section-display">
+                    {% for dict_item in movie_buddies_list %}
+                        <div class="movie-buddies-container">
+                            <div class="movie-buddies-profile">
+                                <img class="movie-buddies-pic" src="../static/Images/Icons/user_profile.png" alt="user profile icon">
+                            </div>
+                            <div class="movie-buddies-info">
+                                <p class="movie-buddies-id" style="display: none;">{{dict_item["id"]}}</p>
+                                <p class="movie-buddies-name">{{dict_item["name"]}}</p>
+                                <p class="movie-buddies-name">{{dict_item["user_name"]}} <span class="movie-buddies-status">&#x2022 {{dict_item["buddy_status"]}}</span></p>
+                            </div>
 
+                        </div>
+                    {% endfor%}
                 </div>
 
                 <div id="search-moviebuddies-wrapper" class="section-search-div" style="display: none;">
