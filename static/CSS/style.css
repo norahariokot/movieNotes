@@ -196,7 +196,8 @@ nav {
 
 
 .moviebuddy_container,
-.movie-buddies-container {
+.movie-buddies-container,
+.movie_buddyrequests_container {
     display: flex;
     /*border: red solid;*/
 }
@@ -210,7 +211,8 @@ nav {
 }
 
 .moviebuddy_info,
-.movie-buddies-info {
+.movie-buddies-info,
+.movie-buddyrequest-info {
     /*border: solid blue;*/
     margin-top: 0;
 }
@@ -218,14 +220,17 @@ nav {
 .movie-buddyname,
 .movie_buddyuser_name,
 .movie-buddies-name,
-.movie-buddies-name {
+.movie-buddies-name,
+.movie-buddyrequest-name,
+.movie-buddyrequest-username {
     /*border: solid red;*/
     margin-top: 0;
     margin-bottom: .2em;
 }
 
 .movie-buddy-status,
-.movie-buddies-status {
+.movie-buddies-status,
+.accept-buddyrequest {
     margin-left: .5em;
     /*border: solid black;*/
 }

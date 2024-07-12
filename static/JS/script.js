@@ -354,6 +354,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 let movie_buddy_status;
                 let buddy_cta;
+                let movie_buddysearch_link;
                 if (status == "Send Movie Buddy Request" || status == "Accept Movie Buddy Request") {
                     movie_buddy_status = document.createElement("button")
                     movie_buddy_status.textContent = status;
@@ -386,6 +387,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         buddy_cta.id = "cta_resend_request"
                     }
                 }
+
+                
                
                 
                 
@@ -402,8 +405,19 @@ document.addEventListener("DOMContentLoaded", function() {
         
                 moviebuddy_container.appendChild(moviebuddy_profile);
                 moviebuddy_container.appendChild(movie_buddy_info);
+
+                if (status == "Movie Buddy") {
+                    movie_buddysearch_link = document.createElement("a");
+                    
+                    movie_buddysearch_link.href = "";
+                    movie_buddysearch_link.appendChild(moviebuddy_container);
+                    section_search_display.appendChild(movie_buddysearch_link);
+                }
+                else {
+                    section_search_display.appendChild(moviebuddy_container);
+                }
                 
-                section_search_display.appendChild(moviebuddy_container);
+                
             }
 
 
@@ -562,7 +576,7 @@ document.addEventListener("click", function(event) {
 document.addEventListener("click", function(event) {
 
     // select element that triggers click event based on this condition
-    if(event.target.id == "accept_buddyrequest") {
+    if(event.target.id == "accept_buddyrequest" || event.target.id == "accept_buddyrequest_btn") {
         //let send_moviebuddy_request = document.getElementById('send_buddyrequest');
         console.log(event.target);
       
@@ -591,7 +605,7 @@ document.addEventListener("click", function(event) {
 document.addEventListener("click", function(event) {
 
     // select element that triggers click event based on this condition
-    if(event.target.id == "cta_decline_request") {
+    if(event.target.id == "cta_decline_request" || event.target.id == "decline_buddyrequest_btn") {
         //let send_moviebuddy_request = document.getElementById('send_buddyrequest');
         console.log(event.target);
       
@@ -614,6 +628,51 @@ document.addEventListener("click", function(event) {
         }
  
 });
+
+
+// Function to enable user view Movie Buddy notes ()
+document.addEventListener("click", function(event) {
+    console.log(event.target);
+
+    const anchorElement = event.target.closest('a.view-buddy-notes');
+    console.log(anchorElement);
+
+    if (anchorElement) {
+        event.preventDefault();
+
+        // Use querySelector to find elements with specific ids within the anchorElement
+        const idElement = anchorElement.querySelector('.movie-buddies-id');
+
+        // Retrieve text content from the element
+        let id = idElement ? idElement.innerText: '';
+        console.log(id)
+
+        let data = {
+            id: id
+        };
+
+        fetch('/send_request_for_buddy_movienotes', {
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("View Movie Buddy Notes successfull", data)
+            // Redirect to the view_buddy_movienotes section
+            window.location.href = '/view_buddy_movienotes';
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    
+    
+});
+
    
 
 

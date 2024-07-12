@@ -580,5 +580,75 @@ def decline_moviebuddy_request():
     return jsonify({"message": "Movie Buddy Request Declined"})
 
 
+@app.route("/view_movie_buddyrequests")    
+def view_movie_buddyrequests():
+    view_movie_buddyrequests = True
+    print("View Movie Buddy requests")
+
+    status = "Request Sent"
+    movie_buddy_requests = db.execute("SELECT * FROM movie_buddies WHERE buddy_request_recipient = ? AND buddy_status = ?", session["user_id"], status)
+    print(movie_buddy_requests)
+
+    request_ids = []
+    for dict_item in movie_buddy_requests:
+        id = dict_item["buddy_request_sender"]
+        request_ids.append(id)
+
+    movie_buddy_requests_list = []
+    for id in request_ids:
+        buddy_request_info = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE id = ?", id)
+
+        #Details of buddy request sender
+        buddy_requestdict = {}
+        buddy_requestdict["id"] = buddy_request_info[0]["id"]
+        buddy_requestdict["name"] = buddy_request_info[0]["first_name"] + " " + buddy_request_info[0]["last_name"]
+        buddy_requestdict["user_name"] = buddy_request_info[0]["user_name"]
+
+        movie_buddy_requests_list.append(buddy_requestdict)
+    
+    print (movie_buddy_requests_list)   
+    return render_template("index.html", sections=sections, movie_buddy_requests_list=movie_buddy_requests_list, view_movie_buddyrequests=view_movie_buddyrequests)
+
+
+@app.route("/send_request_for_buddy_movienotes", methods=["POST"])
+def send_request_for_buddy_movienotes():
+    print("Send request for buddy movie notes route")
+    data = request.json
+
+    #store the data in the session
+    session["buddy_data"] = data
+    print(session)
+    return jsonify({"message": "View buddy movie notes granted"}), 200
+
+
+@app.route("/view_buddy_movienotes")   
+def view_buddy_movienotes():
+    print("View buddy movie notes routes fired")
+    buddy_data = session.get('buddy_data', None)
+    print(buddy_data)
+    buddy_id = buddy_data["id"]
+    print(buddy_id)
+
+    buddy_info_list = []
+    if buddy_data:
+        view_buddy_movienotes = True
+        buddy_info = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE id = ?", buddy_id)
+        print(buddy_info)
+
+        buddy_info_dict = {}
+        buddy_info_dict["id"] = buddy_info[0]["id"]
+        buddy_info_dict["name"] = buddy_info[0]["first_name"] + " " + buddy_info[0]["last_name"]
+        buddy_info_dict["username"] = buddy_info[0]["user_name"]
+        buddy_watchedmovies = db.execute("SELECT * FROM watched WHERE user_id = ?", buddy_id)
+        print(buddy_watchedmovies)
+
+    return render_template("index.html", sections=sections, view_buddy_movienotes=view_buddy_movienotes, buddy_info_dict=buddy_info_dict)   
+
+
+
+
+
+
+
 
 
