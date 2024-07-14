@@ -547,7 +547,7 @@ document.addEventListener("DOMContentLoaded", function() {
 document.addEventListener("click", function(event) {
 
     // select element that triggers click event based on this condition
-    if(event.target.id == 'send_buddyrequest' || event.target.id == "cta_decline_request") {
+    if(event.target.id == 'send_buddyrequest' || event.target.id == "cta_resend_request") {
         //let send_moviebuddy_request = document.getElementById('send_buddyrequest');
         console.log(event.target);
       
@@ -671,6 +671,52 @@ document.addEventListener("click", function(event) {
 
     
     
+});
+
+
+// Function to enable user view buddy movie notes
+document.addEventListener("click", function(event) {
+
+    let movie_notes_id = event.target.id;
+    console.log(movie_notes_id);
+    let url_1;
+    let url_2;
+    let buddy_info = document.getElementById("buddy-notes-view-id").innerText;
+    console.log(buddy_info)
+    
+
+    // select element that triggers click event based on this condition
+    if(movie_notes_id == "buddy-notes-watched") {
+        console.log(movie_notes_id);
+        url_1 = "/send_info_buddywatched";
+        url_2 = "/view_buddy_watched"
+      
+    } 
+
+    let buddy_data = {
+        id:buddy_info
+    }
+    console.log(buddy_data);
+
+    fetch(url_1, {
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(buddy_data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Successfull", data)
+        // Redirect to the view_buddy_movienotes section
+        window.location.href = url_2;
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+
+
 });
 
    

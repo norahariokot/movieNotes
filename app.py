@@ -529,6 +529,8 @@ def search_moviebuddies():
                 elif item["buddy_status"] == "Request Declined":
                     if session["user_id"] == item["buddy_request_sender"] and dict_item["id"] ==  item["buddy_request_recipient"]:
                         dict_item["status"] = "Buddy Request Declined"
+                    elif session["user_id"]  == item["buddy_request_recipient"] and dict_item["id"] == item["buddy_request_sender"]:
+                        dict_item["status"] = "Send Movie Buddy Request"
 
         else:
             print("No status")
@@ -547,9 +549,22 @@ def send_moviebuddy_request():
 
     request_recipient = request.get_json()
     print(request_recipient)
-    status = "Request Sent"
 
-    db.execute("INSERT INTO movie_buddies (buddy_request_sender, buddy_request_recipient, buddy_status) VALUES (?,?,?)", session["user_id"], request_recipient, status)
+    # Check is uer is resending request
+    resending_request = db.execute("SELECT * FROM movie_buddies WHERE buddy_request_sender = ? AND buddy_request_recipient = ? AND buddy_status = ?", session["user_id"], request_recipient, "Request Declined")
+    print(resending_request)
+
+    declined_now_sending_request = db.execute("SELECT * FROM movie_buddies WHERE buddy_request_sender = ? AND buddy_request_recipient = ? AND buddy_status = ?", request_recipient, session["user_id"],"Request Declined")
+    print(declined_now_sending_request)
+
+    status = "Request Sent"
+    if resending_request:
+        db.execute("UPDATE movie_buddies SET buddy_status = ? WHERE id = ?", status, resending_request[0]["id"])
+        
+    elif declined_now_sending_request:
+        db.execute("UPDATE movie_buddies SET buddy_request_sender = ?, buddy_request_recipient = ?, buddy_status = ? WHERE id = ?", session["user_id"], request_recipient, status, declined_now_sending_request[0]["id"])    
+    else:
+        db.execute("INSERT INTO movie_buddies (buddy_request_sender, buddy_request_recipient, buddy_status) VALUES (?,?,?)", session["user_id"], request_recipient, status)
 
     return jsonify({"message": "Movie Buddy Request sent!"})
 
@@ -632,6 +647,7 @@ def view_buddy_movienotes():
     buddy_info_list = []
     if buddy_data:
         view_buddy_movienotes = True
+        session["view_buddynotes"] = view_buddy_movienotes
         buddy_info = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE id = ?", buddy_id)
         print(buddy_info)
 
@@ -639,10 +655,40 @@ def view_buddy_movienotes():
         buddy_info_dict["id"] = buddy_info[0]["id"]
         buddy_info_dict["name"] = buddy_info[0]["first_name"] + " " + buddy_info[0]["last_name"]
         buddy_info_dict["username"] = buddy_info[0]["user_name"]
+        session["buddy_notes_info"] = buddy_info_dict
+        print(session["buddy_notes_info"])
+        print(session)
         buddy_watchedmovies = db.execute("SELECT * FROM watched WHERE user_id = ?", buddy_id)
         print(buddy_watchedmovies)
 
-    return render_template("index.html", sections=sections, view_buddy_movienotes=view_buddy_movienotes, buddy_info_dict=buddy_info_dict)   
+    return render_template("index.html", sections=sections, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"])   
+
+
+@app.route("/send_info_buddywatched", methods=["POST"])  
+def send_info_buddywatched():
+    print("Get buddy watched info")
+    buddy_info = request.json
+    print(buddy_info)  
+
+    #store the data in the session
+    session["buddy_watched_info"] = buddy_info
+    print(session["buddy_watched_info"])
+    return jsonify({"message": "View buddy watched notes info saved"})
+
+
+@app.route("/view_buddy_watched")  
+def view_buddy_watched():
+    view_buddy_watched = True
+    print("View buddy info watched")
+    watched_info = session.get('buddy_watched_info', None)
+    print(watched_info)
+    watched_info_id = watched_info["id"]
+    print(watched_info_id)
+
+    buddy_watched_notes = db.execute("SELECT * FROM watched WHERE user_id = ?", watched_info_id)
+    print(buddy_watched_notes)
+
+    return render_template("index.html", sections=sections,view_buddy_watched=view_buddy_watched, buddy_watched_notes=buddy_watched_notes, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"])
 
 
 
