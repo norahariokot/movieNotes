@@ -688,7 +688,22 @@ def view_buddy_watched():
     buddy_watched_notes = db.execute("SELECT * FROM watched WHERE user_id = ?", watched_info_id)
     print(buddy_watched_notes)
 
-    return render_template("index.html", sections=sections,view_buddy_watched=view_buddy_watched, buddy_watched_notes=buddy_watched_notes, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"])
+    buddy_notes_options = search_options
+    print(buddy_notes_options)
+
+    # Convert dictionary to list of lists
+    buddy_notes_options_list = []
+    for key, value in buddy_notes_options.items():
+        buddy_notes_option = []
+        buddy_notes_option.append(key)
+        buddy_notes_option.append(value)
+        buddy_notes_options_list.append(buddy_notes_option)
+    print(buddy_notes_options_list)
+
+    json_buddynotes_options = json.dumps(buddy_notes_options_list)
+    
+
+    return render_template("index.html", sections=sections,view_buddy_watched=view_buddy_watched, buddy_watched_notes=buddy_watched_notes, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options)
 
 
 

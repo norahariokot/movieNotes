@@ -283,7 +283,7 @@
                     
                 }
 
-            });
+            }); 
 
             
         
@@ -617,7 +617,8 @@
 
             <div class="buddy-notes-display">
                 <p>See my watched notes</p>
-            {% if view_buddy_watched %} 
+            {% if view_buddy_watched %}
+            <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
                 <p>See my watched notes</p>
                 {% for dict_item in buddy_watched_notes %}
                     <div class="buddy-notes-container">
@@ -626,12 +627,14 @@
                             <img src="{{dict_item['movie_poster']}}" alt="movie poster" srcset="{{dict_item['movie_poster_set']}}">
                         </div>
                         <div class="buddy-notes-movieinfo">
-                            <div class="buddy-notes-title-wrapper">
-                                <h3 class="buddy-notes-section-title">{{loop.index}}.</h3>
-                                <h3 class="buddy-notes-section-title">{{dict_item["movie_title"]}}</h3>
+                            <div class="buddy-notes-movieinfo-text">
+                                <div class="buddy-notes-title-wrapper">
+                                    <h3 class="buddy-notes-section-title-no">{{loop.index}}.</h3>
+                                    <h3 class="buddy-notes-section-title">{{dict_item["movie_title"]}}</h3>
+                                </div>
+                                <p class="buddy-notes-movie-year">{{dict_item["movie_year"]}}</p>
+                                <p class="buddy-notes-movie-stars">{{dict_item["movie_stars"]}}</p>          
                             </div>
-                            <p class="buddy-notes-movie-year">{{dict_item["movie_year"]}}</p>
-                            <p class="buddy-notes-movie-stars">{{dict_item["movie_stars"]}}</p>          
                         </div>
                         <button type="button" class="controls-btn">
                             <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="buddy-watched-stn-ctls">

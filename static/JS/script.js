@@ -43,6 +43,10 @@ document.addEventListener('click', function(event) {
                     section_options_list = JSON.parse(document.getElementById('watchlist-options-list').innerText);
                 }
 
+                else if (event.target.id == "buddy-watched-stn-ctls") {
+                    section_options_list = JSON.parse(document.getElementById('buddynotes-options-list').innerText);
+                }
+
                 console.log(typeof(section_options_list))
                 console.log(section_options_list)
 
@@ -677,7 +681,9 @@ document.addEventListener("click", function(event) {
 // Function to enable user view buddy movie notes
 document.addEventListener("click", function(event) {
 
-    let movie_notes_id = event.target.id;
+    // Add condition to check for specific events so that not events trigger the 
+    if(event.target.id == "buddy-notes-watched") {
+        let movie_notes_id = event.target.id;
     console.log(movie_notes_id);
     let url_1;
     let url_2;
@@ -716,6 +722,9 @@ document.addEventListener("click", function(event) {
     });
 
 
+    }
+
+    
 
 });
 

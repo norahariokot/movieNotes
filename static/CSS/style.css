@@ -96,7 +96,8 @@ nav {
 
 /* --- Search Page --- */
 
-.movie-info-container {
+.movie-info-container,
+.buddy-notes-container {
     /*border: solid red;*/
     display: flex;
     margin-bottom: 1em;
@@ -107,7 +108,8 @@ nav {
     padding-bottom: .5em;
 }
 
-.movie_info_text{
+.movie_info_text,
+.buddy-notes-movieinfo-text {
     /*border: solid blue;*/
     display: flex;
     flex-direction: column;
@@ -123,18 +125,21 @@ nav {
     }
 }
 
-.movie_info_title_wrapper {
+.movie_info_title_wrapper,
+.buddy-notes-title-wrapper {
     display: flex;
     /*border: solid green;*/
    
 }
 
-.section-movie-title-no {
+.section-movie-title-no,
+.buddy-notes-section-title-no {
     margin-right: .2em;
     /*border: solid red;*/
 }
 
-.movie-info {
+.movie-info,
+.buddy-notes-movieinfo {
     /*border: solid green;*/
     display: flex;
     width: 100%;
@@ -156,7 +161,8 @@ nav {
     cursor: pointer;
 }
 
-.movie-poster-div {
+.movie-poster-div,
+.buddy-notes-movieposter {
    
    /*border: solid red;*/
 
