@@ -67,11 +67,15 @@ document.addEventListener('click', function(event) {
                     section_popup_menu.appendChild(section_popup_options);
                     section_list_options.push(section_popup_options);
                 }
+                console.log(section_list_options);
 
+                // Append pop-up menu to the DOM
                 section_popup_menu_div.appendChild(section_popup_menu);
                 event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', section_popup_menu_div);
+                console.log(event.target.parentNode.parentNode.parentNode)
                 isSectionPopupVisible = true;
 
+                // If pop up menu has options that create date to be selected, create the pop up elements for the DOM
                 let section_watched_date = null;
                 let section_date_div = document.createElement("div");
                 let section_date_lbl = document.createElement("label");
@@ -86,8 +90,8 @@ document.addEventListener('click', function(event) {
 
                 section_list_options.forEach(list_option => {
                     //console.log(list_option.firstChild.innerText)
-                    if(list_option.firstChild.innerText == "Completed Watching") {
-                        console.log("Completed watching found")
+                    if(list_option.firstChild.innerText == "Completed Watching" || list_option.firstChild.innerText == "Watched") {
+                        console.log("Completed watching or watched found")
                  
                         list_option.addEventListener('mouseover', function() {
                             section_date_div.style.display = "block";
@@ -107,6 +111,7 @@ document.addEventListener('click', function(event) {
 
                 //Add event handlers to all links in the list items to send data to the server side
                 for(let i = 0; i < section_list_options.length; i++) {
+                    console.log(i);
                     section_list_options[i].firstChild.addEventListener('click', function(event) {
                         event.preventDefault();
                         console.log(event.target);
@@ -126,6 +131,10 @@ document.addEventListener('click', function(event) {
                         if (section_list_options[i].firstChild.innerText == "Completed Watching") {
                             data.date = section_watched_date;
                             data.data_route = document.getElementsByClassName('route')[0].innerText;
+                        }
+
+                        else if (section_list_options[i].firstChild.innerText == "Watched") {
+                            data.date = section_watched_date;
                         }
 
                         console.log(data);
@@ -169,13 +178,27 @@ document.addEventListener('click', function(event) {
                         movie_poster: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.src,
                         movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
                         movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset,
-                        date: section_watched_date,   
-                        data_route: document.getElementsByClassName('route')[0].innerText                        
+                        date: section_watched_date 
+                                             
                     }
+                    let url;
+
+                    if (section_list_options[i].firstChild.innerText == "Completed Watching") {
+                        data.data_route = document.getElementsByClassName('route')[0].innerText;
+                        url = "/completed_watch";
+                    }
+
+                    else if (section_list_options[i].firstChild.innerText == "Watched") {
+                        data.date = section_watched_date;
+                        url = "/watch"
+                    }
+
+
+
                     console.log(movie_data_id);
                     console.log(data)
 
-                    fetch("/completed_watch", {
+                    fetch(url, {
                     method: 'POST',
                     headers: {
                              'Content-Type': 'application/json'
