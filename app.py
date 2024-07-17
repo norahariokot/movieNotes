@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 from scrapper import user_query
 from forms import CreateUserForm, LoginForm
-from helpers import login_required, section_links, search_options, extract_movie_info
+from helpers import login_required, section_links, search_options, extract_movie_info, json_buddynotes_options
 
 
 # Configure application
@@ -61,6 +61,7 @@ def login():
             session.clear()
             session["user_id"] = user_info[0]['id']
 
+
         # Redirect user to the home page
         return redirect("/")
 
@@ -91,6 +92,7 @@ def create_account():
         lastname = reg_form.last_name.data
         username = reg_form.user_name.data
         password = reg_form.password.data
+        profile_pic = "../static/Images/Icons/user_profile.png"
 
         # Generate hash for password
         hash = generate_password_hash(password)
@@ -480,17 +482,23 @@ def moviebuddies_section():
     # Step 3 : Retrieve information about those users from users table
     movie_buddies_list = []
     for id in movie_buddyid_list:
-        buddy_info = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE id = ?", id)
+        buddy_info = db.execute("SELECT id, first_name, last_name, user_name, profile_pic FROM users WHERE id = ?", id)
         print(buddy_info)
         
         id = buddy_info[0]["id"]
         name = buddy_info[0]["first_name"] + " " + buddy_info[0]["last_name"]
         user_name = buddy_info[0]["user_name"]
+        profile_pic = buddy_info[0]["profile_pic"]
+        print(profile_pic)
+        if profile_pic == None:
+            print("profile pic empty")
+            profile_pic = "../static/Images/Icons/user_profile.png"
 
         buddy_dict = {}
         buddy_dict["id"] = id
         buddy_dict["name"] = name
         buddy_dict["user_name"] = user_name
+        buddy_dict["profile_pic"] = profile_pic
         status = db.execute("SELECT buddy_status from movie_buddies WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND (buddy_request_sender = ? OR buddy_request_recipient = ?)", session["user_id"], session["user_id"], id, id)
         print(status)
         buddy_dict["buddy_status"] = status[0]["buddy_status"]
@@ -648,20 +656,23 @@ def view_buddy_movienotes():
     if buddy_data:
         view_buddy_movienotes = True
         session["view_buddynotes"] = view_buddy_movienotes
-        buddy_info = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE id = ?", buddy_id)
+        buddy_info = db.execute("SELECT id, first_name, last_name, user_name, profile_pic FROM users WHERE id = ?", buddy_id)
         print(buddy_info)
 
         buddy_info_dict = {}
         buddy_info_dict["id"] = buddy_info[0]["id"]
         buddy_info_dict["name"] = buddy_info[0]["first_name"] + " " + buddy_info[0]["last_name"]
         buddy_info_dict["username"] = buddy_info[0]["user_name"]
+        buddy_info_dict["profile_pic"] = buddy_info[0]["profile_pic"]
+        if buddy_info_dict["profile_pic"] == None:
+            buddy_info_dict["profile_pic"] = "../static/Images/Icons/user_profile.png"
         session["buddy_notes_info"] = buddy_info_dict
         print(session["buddy_notes_info"])
         print(session)
-        buddy_watchedmovies = db.execute("SELECT * FROM watched WHERE user_id = ?", buddy_id)
-        print(buddy_watchedmovies)
+        buddy_watched_notes = db.execute("SELECT * FROM watched WHERE user_id = ?", buddy_id)
+        print(buddy_watched_notes)
 
-    return render_template("index.html", sections=sections, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"])   
+    return render_template("index.html", sections=sections, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], buddy_watched_notes=buddy_watched_notes,json_buddynotes_options=json_buddynotes_options)   
 
 
 @app.route("/send_info_buddywatched", methods=["POST"])  
@@ -688,22 +699,77 @@ def view_buddy_watched():
     buddy_watched_notes = db.execute("SELECT * FROM watched WHERE user_id = ?", watched_info_id)
     print(buddy_watched_notes)
 
-    buddy_notes_options = search_options
-    print(buddy_notes_options)
-
-    # Convert dictionary to list of lists
-    buddy_notes_options_list = []
-    for key, value in buddy_notes_options.items():
-        buddy_notes_option = []
-        buddy_notes_option.append(key)
-        buddy_notes_option.append(value)
-        buddy_notes_options_list.append(buddy_notes_option)
-    print(buddy_notes_options_list)
-
-    json_buddynotes_options = json.dumps(buddy_notes_options_list)
-    
-
     return render_template("index.html", sections=sections,view_buddy_watched=view_buddy_watched, buddy_watched_notes=buddy_watched_notes, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options)
+
+
+@app.route("/send_info_buddy_favourites", methods=["POST"])
+def send_info_buddy_favourites():
+    print("Get buddy favourites info")
+    buddy_info = request.json
+    print(buddy_info)
+
+    #store the data in the session
+    session["buddy_favourites_info"] = buddy_info
+    print(session["buddy_favourites_info"])
+    return jsonify({"message": "View buddy favourites info saved"})
+
+
+@app.route("/view_buddy_favourites")
+def view_buddy_favourites():
+    view_buddy_favourites = True
+    print("View buddy favourites notes")
+    favourites_info = session.get("buddy_favourites_info", None)
+    print(favourites_info)
+    favourites_info_id = favourites_info["id"]
+    print(favourites_info_id)
+
+
+    # Retrieve favourite movies of the user whose id is stored in favourites_info_id
+    buddy_favourites_notes = db.execute("SELECT * FROM favourites WHERE user_id = ?", favourites_info_id)
+
+    return render_template("index.html", sections=sections, view_buddy_favourites=view_buddy_favourites, buddy_favourites_notes=buddy_favourites_notes,view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options)
+
+
+@app.route("/send_info_buddy_currentlywatching", methods=["POST"])
+def send_info_buddy_currentlywatching():
+    print("Get buddy Currently watching info")
+    buddy_info = request.json
+    print(buddy_info)
+
+    #store the data in the session
+    session["buddy_currently_watching_info"] = buddy_info
+    print(session["buddy_currently_watching_info"])
+    return jsonify({"message": "View buddy currently watching info saved"})
+
+
+@app.route("/view_buddy_currentlywatching")
+def view_buddy_currentlywatching():
+    view_buddy_currentlywatching = True
+    print("View buddy Currently watching notes")
+    currentlywatching_info = session.get("buddy_currently_watching_info", None)
+    print(currentlywatching_info)
+    currentlywatching_info_id = currentlywatching_info["id"]
+    print(currentlywatching_info_id)
+
+
+    # Retrieve favourite movies of the user whose id is stored in favourites_info_id
+    buddy_currentlywatching_notes = db.execute("SELECT * FROM currently_watching WHERE user_id = ?", currentlywatching_info_id)
+
+
+    return render_template("index.html", sections=sections, view_buddy_currentlywatching=view_buddy_currentlywatching, buddy_currentlywatching_notes=buddy_currentlywatching_notes,view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

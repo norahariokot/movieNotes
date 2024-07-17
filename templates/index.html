@@ -369,8 +369,8 @@
                         <input  autocomplete="off" autofocus placeholder="Search Favourite Movies"  type="search" id="favourite-movie-search" class="section-search">
                         <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
                     </div>
-                   
 
+                            
                 </div>
                
 
@@ -545,7 +545,7 @@
                         <a href="#" class="view-buddy-notes">
                             <div class="movie-buddies-container">
                                 <div class="movie-buddies-profile">
-                                    <img class="movie-buddies-pic" src="../static/Images/Icons/user_profile.png" alt="user profile icon">
+                                    <img class="movie-buddies-pic" src="{{dict_item['profile_pic']}}" alt="user profile icon">
                                 </div>
                                 <div class="movie-buddies-info">
                                     <p class="movie-buddies-id" style="display: none;">{{dict_item["id"]}}</p>
@@ -597,7 +597,7 @@
         
             <div class="movie_buddy_profile_container">
                     <div class="movie-buddyrequest-profile">
-                        <img src="../static/Images/Icons/user_profile.png" alt="user profile pic">
+                        <img src="{{buddy_notes_info['profile_pic']}}" alt="user profile pic">
                     </div>
                     <div class="movie-buddyrequest-info">
                         <p class="movie-buddyrequest-id" id="buddy-notes-view-id" style="display: none;">{{buddy_notes_info["id"]}}</p>
@@ -611,16 +611,74 @@
             
             <ul class="buddy-notes-nav">
                 <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-watched">Watched</a></li>
-                <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-favouries">Favourites</a></li>
+                <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-favourites">Favourites</a></li>
                 <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-currently-watching">Currently Watching</a></li>
             </ul>
 
             <div class="buddy-notes-display">
                 <p>See my watched notes</p>
-            {% if view_buddy_watched %}
+            {% if view_buddy_watched or view_buddynotes %}
             <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
                 <p>See my watched notes</p>
                 {% for dict_item in buddy_watched_notes %}
+                    <div class="buddy-notes-container">
+                        <p style="display: none;">{{dict_item["id"]}}</p>
+                        <div class="buddy-notes-movieposter">
+                            <img src="{{dict_item['movie_poster']}}" alt="movie poster" srcset="{{dict_item['movie_poster_set']}}">
+                        </div>
+                        <div class="buddy-notes-movieinfo">
+                            <div class="buddy-notes-movieinfo-text">
+                                <div class="buddy-notes-title-wrapper">
+                                    <h3 class="buddy-notes-section-title-no">{{loop.index}}.</h3>
+                                    <h3 class="buddy-notes-section-title">{{dict_item["movie_title"]}}</h3>
+                                </div>
+                                <p class="buddy-notes-movie-year">{{dict_item["movie_year"]}}</p>
+                                <p class="buddy-notes-movie-stars">{{dict_item["movie_stars"]}}</p>          
+                            </div>
+                            <button type="button" class="controls-btn">
+                                <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="buddy-watched-stn-ctls">
+                            </button>
+    
+                        </div>
+
+                    </div>
+                
+                {% endfor %}
+            {% endif %}   
+
+            {% if view_buddy_favourites %}
+            <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
+                <p>See my watched notes</p>
+                {% for dict_item in buddy_favourites_notes %}
+                    <div class="buddy-notes-container">
+                        <p style="display: none;">{{dict_item["id"]}}</p>
+                        <div class="buddy-notes-movieposter">
+                            <img src="{{dict_item['movie_poster']}}" alt="movie poster" srcset="{{dict_item['movie_poster_set']}}">
+                        </div>
+                        <div class="buddy-notes-movieinfo">
+                            <div class="buddy-notes-movieinfo-text">
+                                <div class="buddy-notes-title-wrapper">
+                                    <h3 class="buddy-notes-section-title-no">{{loop.index}}.</h3>
+                                    <h3 class="buddy-notes-section-title">{{dict_item["movie_title"]}}</h3>
+                                </div>
+                                <p class="buddy-notes-movie-year">{{dict_item["movie_year"]}}</p>
+                                <p class="buddy-notes-movie-stars">{{dict_item["movie_stars"]}}</p>          
+                            </div>
+                            <button type="button" class="controls-btn">
+                                <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="buddy-watched-stn-ctls">
+                            </button>
+    
+                        </div>
+
+                    </div>
+                
+                {% endfor %}
+            {% endif %}   
+
+            {% if view_buddy_currentlywatching %}
+            <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
+                <p>See my watched notes</p>
+                {% for dict_item in buddy_currentlywatching_notes %}
                     <div class="buddy-notes-container">
                         <p style="display: none;">{{dict_item["id"]}}</p>
                         <div class="buddy-notes-movieposter">

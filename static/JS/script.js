@@ -705,11 +705,11 @@ document.addEventListener("click", function(event) {
 document.addEventListener("click", function(event) {
 
     // Add condition to check for specific events so that not events trigger the 
-    if(event.target.id == "buddy-notes-watched") {
+    if(event.target.id == "buddy-notes-watched" || event.target.id == "buddy-notes-favourites" || event.target.id == "buddy-notes-currently-watching") {
         let movie_notes_id = event.target.id;
     console.log(movie_notes_id);
-    let url_1;
-    let url_2;
+    let url_1; //stores the initial flask route to be fired, to store the user id of buddy being viewed on the server
+    let url_2; //stores the flask route where user is redirected to view the notes of the buddy 
     let buddy_info = document.getElementById("buddy-notes-view-id").innerText;
     console.log(buddy_info)
     
@@ -721,6 +721,20 @@ document.addEventListener("click", function(event) {
         url_2 = "/view_buddy_watched"
       
     } 
+
+    else if (movie_notes_id == "buddy-notes-favourites") {
+        console.log(movie_notes_id);
+        url_1 = "/send_info_buddy_favourites";
+        url_2 = "/view_buddy_favourites";
+    }
+
+    else if (movie_notes_id == "buddy-notes-currently-watching") {
+        console.log(movie_notes_id);
+        url_1 = "/send_info_buddy_currentlywatching";
+        url_2 = "/view_buddy_currentlywatching";
+    }
+
+
 
     let buddy_data = {
         id:buddy_info

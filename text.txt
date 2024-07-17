@@ -3,7 +3,8 @@ CREATE TABLE users (
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
                 user_name TEXT NOT NULL,
-                hash TEXT NOT NULL
+                hash TEXT NOT NULL,
+                profile_pic TEXT NOT NULL
               );
 
 CREATE UNIQUE INDEX user_name ON users (user_name);  

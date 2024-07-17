@@ -1,5 +1,8 @@
+import json
+
 from flask import redirect, session, request
 from functools import wraps
+
 
 def login_required(f):
     @wraps(f)
@@ -47,3 +50,14 @@ def extract_movie_info(movie_info):
     return movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set
 
 #options for watched movie controls
+
+# Convert search options dictionary to list of lists 
+# To be used by buddy notes control options to create json data for controls
+buddy_notes_options_list = []
+for key, value in search_options.items():
+    buddy_notes_option = []
+    buddy_notes_option.append(key)
+    buddy_notes_option.append(value)
+    buddy_notes_options_list.append(buddy_notes_option)
+#print(buddy_notes_options_list)
+json_buddynotes_options = json.dumps(buddy_notes_options_list)
