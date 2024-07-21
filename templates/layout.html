@@ -31,7 +31,20 @@
                 <img class="logo" src="../static/Images/33770922_2208.q703.031.F.m004.c7.FP movie film cinema poster banner.jpg" alt="">
 
                 <ul class="nav-list">
-                    <li>Profile</li>
+                    <li>
+                        <a href="#">
+                            <div class="login-user-profile">
+                                <div class="login-user-profile-pic">
+                                    <img src="{{user_profile['profile_pic']}}" alt="user profile picture">
+                                </div>
+                                <div class="login-user-profile-info">
+                                    <p class="user-name">{{user_profile['user_name']}}</p> 
+                                </div>
+
+                            </div>
+                        
+                        </a>
+                    </li>
                     <li><a href="/logout">Log out</a></li>
                 </ul>
             </nav>

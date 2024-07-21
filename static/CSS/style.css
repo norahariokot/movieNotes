@@ -242,3 +242,22 @@ nav {
 }
 
 
+/* User profile */
+.login-user-profile {
+    border: solid red;
+}
+
+.login-user-profile-pic {
+    border: solid black;
+}
+
+.login-user-profile-info {
+    border: solid green;
+    & * {
+        border: red solid;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+

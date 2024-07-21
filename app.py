@@ -38,7 +38,7 @@ def before_request():
 def index():
    
     #print(sections)
-    return render_template("index.html", sections=sections)
+    return render_template("index.html", sections=sections, user_profile=session.get("user_profile"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -60,6 +60,23 @@ def login():
         if user_info:
             session.clear()
             session["user_id"] = user_info[0]['id']
+
+            
+            user_profile = {}
+            user_profile["full_name"] = user_info[0]['first_name'] +" " + user_info[0]['last_name']
+            user_profile["user_name"] = user_info[0]['user_name']
+            user_profile["profile_pic"] = user_info[0]['profile_pic']
+            if user_profile["profile_pic"] == None:
+                user_profile["profile_pic"] = "../static/Images/Icons/user_profile.png"
+
+            session["user_profile"] = user_profile
+            print(session["user_profile"])  
+            print(session)  
+
+            user_profile = session.get("user_profile")
+            print(user_profile)
+            
+        
 
 
         # Redirect user to the home page
@@ -118,7 +135,7 @@ def search_page():
     print(search_page_options)
     print(search_options_list)
     print("search page")
-    return render_template("index.html", search_page=search_page, sections=sections, search_options_list=search_options_list)
+    return render_template("index.html", search_page=search_page, sections=sections, search_options_list=search_options_list, user_profile=session.get("user_profile"))
 
 @app.route("/search")
 def search():
@@ -239,7 +256,7 @@ def watched_section():
     #print(watched_options)
     #print(movie)
     
-    return render_template("index.html", watched_section=watched_section, sections=sections, movie=movie, json_watched_options=json_watched_options)   
+    return render_template("index.html", watched_section=watched_section, sections=sections, movie=movie, json_watched_options=json_watched_options, user_profile=session.get("user_profile"))   
 
 
 @app.route("/favourites", methods=["POST"])
@@ -290,7 +307,7 @@ def favourites_section():
     favourite_movies = db.execute("SELECT * FROM favourites WHERE user_id = ?", session["user_id"])
     favourite_ctl_options = [["Recommend", "/recommend"], ["Delete", "/delete_favourite"]]
     json_favourite_options = json.dumps(favourite_ctl_options)
-    return render_template("index.html", favourite_section=favourite_section, sections=sections, favourite_movies=favourite_movies, json_favourite_options=json_favourite_options)
+    return render_template("index.html", favourite_section=favourite_section, sections=sections, favourite_movies=favourite_movies, json_favourite_options=json_favourite_options, user_profile=session.get("user_profile"))
 
 
 @app.route("/search_favourites")   
@@ -356,7 +373,7 @@ def currently_watching_section():
     print(currently_watching_movies)
     currently_watching_options = [["Completed Watching", "/completed_watch"], ["Recommend", "/recommend"], ["Delete", "/delete_currentlywatching"]] 
     json_currently_watching_options = json.dumps(currently_watching_options)    
-    return render_template("index.html", sections=sections, currently_watching=currently_watching, currently_watching_movies=currently_watching_movies, json_currently_watching_options=json_currently_watching_options) 
+    return render_template("index.html", sections=sections, currently_watching=currently_watching, currently_watching_movies=currently_watching_movies, json_currently_watching_options=json_currently_watching_options, user_profile=session.get("user_profile")) 
 
 
 @app.route("/search_currentlyWatching")   
@@ -423,7 +440,7 @@ def watchlist_section():
     movies_in_watchlist = db.execute("SELECT * FROM watchlist WHERE user_id = ?", session["user_id"])
     watchlist_options = [["Completed Watching", "/completed_watch"], ["Delete", "/delete_watchlist"]] 
     json_watchlist_options = json.dumps(watchlist_options)
-    return render_template("index.html", sections=sections, watchlist=watchlist, movies_in_watchlist=movies_in_watchlist, json_watchlist_options=json_watchlist_options)
+    return render_template("index.html", sections=sections, watchlist=watchlist, movies_in_watchlist=movies_in_watchlist, json_watchlist_options=json_watchlist_options, user_profile=session.get("user_profile"))
 
 
 @app.route("/search_watchlist")   
@@ -505,7 +522,7 @@ def moviebuddies_section():
         movie_buddies_list.append(buddy_dict)
     print(movie_buddies_list)    
 
-    return render_template("index.html", movie_buddies_section=movie_buddies_section, sections=sections, movie_buddies_list=movie_buddies_list)
+    return render_template("index.html", movie_buddies_section=movie_buddies_section, sections=sections, movie_buddies_list=movie_buddies_list, user_profile=session.get("user_profile"))
 
 
 @app.route("/search_moviebuddies", methods=["GET"])    
@@ -630,7 +647,7 @@ def view_movie_buddyrequests():
         movie_buddy_requests_list.append(buddy_requestdict)
     
     print (movie_buddy_requests_list)   
-    return render_template("index.html", sections=sections, movie_buddy_requests_list=movie_buddy_requests_list, view_movie_buddyrequests=view_movie_buddyrequests)
+    return render_template("index.html", sections=sections, movie_buddy_requests_list=movie_buddy_requests_list, view_movie_buddyrequests=view_movie_buddyrequests, user_profile=session.get("user_profile"))
 
 
 @app.route("/send_request_for_buddy_movienotes", methods=["POST"])
@@ -672,7 +689,7 @@ def view_buddy_movienotes():
         buddy_watched_notes = db.execute("SELECT * FROM watched WHERE user_id = ?", buddy_id)
         print(buddy_watched_notes)
 
-    return render_template("index.html", sections=sections, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], buddy_watched_notes=buddy_watched_notes,json_buddynotes_options=json_buddynotes_options)   
+    return render_template("index.html", sections=sections, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], buddy_watched_notes=buddy_watched_notes,json_buddynotes_options=json_buddynotes_options, user_profile=session.get("user_profile"))   
 
 
 @app.route("/send_info_buddywatched", methods=["POST"])  
@@ -699,7 +716,7 @@ def view_buddy_watched():
     buddy_watched_notes = db.execute("SELECT * FROM watched WHERE user_id = ?", watched_info_id)
     print(buddy_watched_notes)
 
-    return render_template("index.html", sections=sections,view_buddy_watched=view_buddy_watched, buddy_watched_notes=buddy_watched_notes, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options)
+    return render_template("index.html", sections=sections,view_buddy_watched=view_buddy_watched, buddy_watched_notes=buddy_watched_notes, view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options, user_profile=session.get("user_profile"))
 
 
 @app.route("/send_info_buddy_favourites", methods=["POST"])
@@ -727,7 +744,7 @@ def view_buddy_favourites():
     # Retrieve favourite movies of the user whose id is stored in favourites_info_id
     buddy_favourites_notes = db.execute("SELECT * FROM favourites WHERE user_id = ?", favourites_info_id)
 
-    return render_template("index.html", sections=sections, view_buddy_favourites=view_buddy_favourites, buddy_favourites_notes=buddy_favourites_notes,view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options)
+    return render_template("index.html", sections=sections, view_buddy_favourites=view_buddy_favourites, buddy_favourites_notes=buddy_favourites_notes,view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options, user_profile=session.get("user_profile"))
 
 
 @app.route("/send_info_buddy_currentlywatching", methods=["POST"])
@@ -756,7 +773,7 @@ def view_buddy_currentlywatching():
     buddy_currentlywatching_notes = db.execute("SELECT * FROM currently_watching WHERE user_id = ?", currentlywatching_info_id)
 
 
-    return render_template("index.html", sections=sections, view_buddy_currentlywatching=view_buddy_currentlywatching, buddy_currentlywatching_notes=buddy_currentlywatching_notes,view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options)
+    return render_template("index.html", sections=sections, view_buddy_currentlywatching=view_buddy_currentlywatching, buddy_currentlywatching_notes=buddy_currentlywatching_notes,view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options, user_profile=session.get("user_profile"))
 
 
 
