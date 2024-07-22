@@ -211,7 +211,8 @@
                             buddy_recommendations_div.appendChild(recommendations);
                             buddy_recommendations_div.appendChild(recommend_btn);
                             buddy_recommendations_div.style.display = "none";
-                            event_trigger.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', buddy_recommendations_div)
+                            event_trigger.parentNode.parentNode.parentNode.nextElementSibling.insertAdjacentElement('afterend', buddy_recommendations_div)
+                            console.log(event_trigger.parentNode.parentNode.parentNode.nextElementSibling);
                                              
                                        
 
