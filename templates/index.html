@@ -8,17 +8,6 @@
           
         </ul>
 
-        <!--<script>
-            document.getElementById('index-search').addEventListener('click', function(event){
-                event.preventDefault();
-                console.log("search btn clicked")
-                fetch("/search_page")
-                .then(response => response.json())
-                .then(data => console.log(data))
-                 
-            })
-        </script>-->
-
         <ul>
             {% for dict_item in sections %}
                 <li><a href="{{ sections[dict_item] }}">{{ dict_item }}</a></li>
@@ -36,6 +25,7 @@
 
             <h3 class="search-history" id="search-history"></h3>
             <div class="movieList"></div>
+            <p style="display: none;" id="search-options-list">{{ json_buddynotes_options }}</p>
 
             <script>
                 let timeoutId = null;
@@ -73,6 +63,7 @@
                             movie_stars.innerHTML = stars;
                             let controls = document.createElement("img");
                             controls.className = "search-controls";
+                            controls.id = "search-controls-options";
                             controls.src = "../static/Images/Icons/9022327_dots_three_duotone_icon.png";
                             let controls_btn = document.createElement("button");
                             controls_btn.type = "button";
@@ -131,6 +122,7 @@
                 console.log(event.target);
                 
                 if (event.target.matches('.search-controls')) {
+                    let event_trigger = event.target;
                    
                     console.log("options button clicked");
                     if(isPopupVisible && !popup_menu.contains(event.target)) {
@@ -144,7 +136,7 @@
                             popup_menu_div.className = "popup-menu-wrapper";
                             popup_menu = document.createElement("ul");
                             popup_menu.className = "popup_menu-list";
-                            let options_list = {{ search_options_list | tojson | safe }};
+                            let options_list = JSON.parse(document.getElementById('search-options-list').innerText);
                             console.log(options_list)
 
                             let options = {}
@@ -169,6 +161,7 @@
                             event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', popup_menu_div);
                             isPopupVisible = true;
 
+                            // Create elements to add a watched date
                             let watched_date = null;
                             let date_div = document.createElement("div");
                             let date_lbl = document.createElement("label");
@@ -202,12 +195,68 @@
                                }
                             })
 
+                            // Create a pop up menu for recommending movie for movie buddies
+                            let buddy_recommendations_div = document.createElement('div');
+                            buddy_recommendations_div.className = 'buddy_recommendations_div';
+                            buddy_recommendations_div.id = 'recommendations_options';
+                            let recommend_btn = document.createElement('button');
+                            recommend_btn.innerHTML = 'Recommend';
+                            let close_recommend = document.createElement('button');
+                            let close_img = document.createElement('img');
+                            close_img.src = "../static/Images/Icons/close.png";
+                            let recommendations = document.createElement('select');
+
+                            close_recommend.appendChild(close_img);
+                            buddy_recommendations_div.appendChild(close_recommend);
+                            buddy_recommendations_div.appendChild(recommendations);
+                            buddy_recommendations_div.appendChild(recommend_btn);
+                            buddy_recommendations_div.style.display = "none";
+                            event_trigger.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', buddy_recommendations_div)
+                                             
+                                       
+
+
+
+
+
+
+
                             //Add event handlers to all links in the list items to send data to the server side
                             for(let i = 0; i < search_list_options.length; i++) {
                                 search_list_options[i].firstChild.addEventListener('click', function(event) {
                                     event.preventDefault();
+                                    console.log(event.target)
 
-                                    let data = {
+                                    if(search_list_options[i].firstChild.innerText == "Recommend") {
+
+                                        fetch("/buddy_recommend_info")
+                                        .then(response => {
+                                           // Convert the response to JSON
+                                           return response.json(); 
+                                        })
+                                        .then(data => {
+                                            //Process the JSON data
+                                            console.log(data);
+                                            popup_menu_div.style.display = "none";
+                                            buddy_recommendations_div.style.display = "block";
+                                        
+                                            data.forEach(data_item => {
+                                                console.log(data_item);
+                                            })
+                                        
+                                        })
+                                        .catch(error => {
+                                            // Handle any errors that occurred during the fetch
+                                            console.error('There was a problem with the fetch operation:', error);
+                                        });
+                                    }
+                                    
+                                    
+
+                                    
+                                        
+                                    else {
+                                        let data = {
                                         movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML,
                                         movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
                                         movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
@@ -221,25 +270,25 @@
                                     if (search_list_options[i].firstChild.innerHTML == "Watched") {
                                         data.date = watched_date;
                                     }
+                                    console.log(data);   
 
-                                    console.log(data);
-                                    let route = search_list_options[i].firstChild
-                                    console.log(route)
-                                    fetch(route, {
-                                        method: 'POST',
-                                        headers: {
+                                        let route = search_list_options[i].firstChild
+                                        console.log(route)
+                                        fetch(route, {
+                                            method: 'POST',
+                                            headers: {
                                             'Content-Type': 'application/json'
-                                        },
+                                            },
                                         body: JSON.stringify(data)
-                                    })
-                                    .then(response=> response.json())
-                                    .then(data => {
-                                        alert(data.message);
-                                    })
-                                    .catch((error) => console.error('Error:', error));
-                                
+                                        })
+                                        .then(response=> response.json())
+                                        .then(data => {
+                                            alert(data.message);
+                                        })
+                                        .catch((error) => console.error('Error:', error));
+                                        }
 
-                                });
+                                    });
                             }  
                             
                             function upDateWatchedDate() {
@@ -279,17 +328,13 @@
                             watched_date = null;
 
                     }
-
                     
                 }
-
             }); 
-
             
         
             </script>
-
-      
+   
 
 
 
@@ -374,7 +419,7 @@
                 </div>
                
 
-                <p style="display: none;" id="favourite-options-list">{{ json_favourite_options }}</p>
+                <p style="display: none;" id="favourite-options-list">{{ json_favourite_options }}</p>https://www.w3schools.com/html/html_emojis.asp
             
 
                 <div id="favourite-movie-display" class="section-display">

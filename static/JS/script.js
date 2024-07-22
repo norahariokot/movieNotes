@@ -6,7 +6,8 @@ let section_popup_menu_div;
 
 document.addEventListener('click', function(event) {
     console.log(event.target);
-        
+     
+    // Target the control buttons in the search page and section pages
     if (event.target.matches('.section-controls')) {
         console.log("section options button clicked");
         if(isSectionPopupVisible && !section_popup_menu.contains(event.target)) {

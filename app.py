@@ -129,13 +129,10 @@ def signedin():
 
 @app.route("/search_page")
 def search_page():
-    search_page = True
-    search_page_options = search_options
-    search_options_list= list(search_page_options.items())
-    print(search_page_options)
-    print(search_options_list)
     print("search page")
-    return render_template("index.html", search_page=search_page, sections=sections, search_options_list=search_options_list, user_profile=session.get("user_profile"))
+    search_page = True
+    
+    return render_template("index.html", search_page=search_page, sections=sections, user_profile=session.get("user_profile"), json_buddynotes_options=json_buddynotes_options)
 
 @app.route("/search")
 def search():
@@ -459,21 +456,20 @@ def search_watchlist ():
 
 
 
-@app.route("/recommend", methods=["POST"])
-def recommend():
-    print("Recommend route followed")
-    movie_info= request.get_json()
-    print(movie_info)
-    movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
-    
-    print(movie_title)
-    print(movie_year)
-    print(movie_stars)
-    print(movie_poster)
-    print(movie_poster_sizes)
-    print(movie_poster_set)
+@app.route("/buddy_recommend_info")
+def buddy_recommend_info():
+    print("Buddy Recommend Info route followed")
+    buddy_info = db.execute("SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN movie_buddies ON users.id = movie_buddies.buddy_request_sender WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND buddy_status = 'Movie Buddies' AND users.id!= ? UNION SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN movie_buddies ON users.id = movie_buddies.buddy_request_recipient WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND buddy_status = 'Movie Buddies' AND users.id!= ?", session["user_id"], session["user_id"], session["user_id"], session["user_id"], session["user_id"], session["user_id"])
+    print(buddy_info)
 
-    return jsonify(movie_info)    
+    for dict_item in buddy_info:
+        dict_item['full_name'] = dict_item['first_name'] + " " + dict_item['last_name']
+        dict_item.pop('first_name')
+        dict_item.pop('last_name')
+        if dict_item['profile_pic'] == None:
+            dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
+    
+    return jsonify(buddy_info)    
 
 
 @app.route("/movie_buddies_section", methods=["GET"])

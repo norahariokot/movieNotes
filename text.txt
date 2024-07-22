@@ -51,5 +51,16 @@ CREATE TABLE moviebuddy_request (
 );  
 
 
+SELECT users.id, first_name, last_name, user_name, profile_pic,buddy_request_sender, buddy_request_recipient
+FROM users 
+JOIN movie_buddies ON users.id = movie_buddies.id
+WHERE buddy_status = "Movie Buddies";
+
+SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN movie_buddies ON users.id = movie_buddies.buddy_request_sender WHERE (buddy_request_sender = 1 OR buddy_request_recipient = 1) AND buddy_status = "Movie Buddies" AND users.id!= 1 UNION SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN movie_buddies ON users.id = movie_buddies.buddy_request_recipient WHERE (buddy_request_sender = 1 OR buddy_request_recipient = 1) AND buddy_status = "Movie Buddies" AND users.id!= 1;
+
+SELECT buddy_request_sender, buddy_request_recipient FROM movie_buddies WHERE (buddy_request_sender = 1 OR buddy_request_recipient = 1) AND buddy_status = "Movie Buddies";
+
+
+
 
 
