@@ -248,7 +248,7 @@ def search_watched ():
 def watched_section():
     watched_section = True
     movie = db.execute ("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
-    watched_options = [["Favourites", "/favourites"], ["Recommend", "/recommend"], ["Delete", "/delete_watched"]]
+    watched_options = [["Favourites", "/favourites"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]
     json_watched_options = json.dumps(watched_options)
     #print(watched_options)
     #print(movie)
@@ -302,7 +302,7 @@ def favourites_section():
     print("Favourites sections")
     favourite_section = True
     favourite_movies = db.execute("SELECT * FROM favourites WHERE user_id = ?", session["user_id"])
-    favourite_ctl_options = [["Recommend", "/recommend"], ["Delete", "/delete_favourite"]]
+    favourite_ctl_options = [["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_favourite"]]
     json_favourite_options = json.dumps(favourite_ctl_options)
     return render_template("index.html", favourite_section=favourite_section, sections=sections, favourite_movies=favourite_movies, json_favourite_options=json_favourite_options, user_profile=session.get("user_profile"))
 
@@ -368,7 +368,7 @@ def currently_watching_section():
     currently_watching = True
     currently_watching_movies = db.execute("SELECT *  FROM currently_watching WHERE user_id = ?", session["user_id"])    
     print(currently_watching_movies)
-    currently_watching_options = [["Completed Watching", "/completed_watch"], ["Recommend", "/recommend"], ["Delete", "/delete_currentlywatching"]] 
+    currently_watching_options = [["Completed Watching", "/completed_watch"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_currentlywatching"]] 
     json_currently_watching_options = json.dumps(currently_watching_options)    
     return render_template("index.html", sections=sections, currently_watching=currently_watching, currently_watching_movies=currently_watching_movies, json_currently_watching_options=json_currently_watching_options, user_profile=session.get("user_profile")) 
 

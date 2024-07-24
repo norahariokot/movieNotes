@@ -76,7 +76,7 @@ document.addEventListener('click', function(event) {
                 console.log(event.target.parentNode.parentNode.parentNode)
                 isSectionPopupVisible = true;
 
-                // If pop up menu has options that create date to be selected, create the pop up elements for the DOM
+                // Create elements to add watched date elements
                 let section_watched_date = null;
                 let section_date_div = document.createElement("div");
                 let section_date_lbl = document.createElement("label");
@@ -110,6 +110,29 @@ document.addEventListener('click', function(event) {
                    }
                 })
 
+                // Create a pop up menu for recommending movie for movie buddies
+                let buddy_recommendations_div = document.createElement('div');
+                buddy_recommendations_div.className = 'buddy_recommendations_div';
+                buddy_recommendations_div.id = 'recommendations_options';
+                let recommend_btn = document.createElement('button');
+                recommend_btn.innerHTML = 'Recommend';
+                let close_recommend = document.createElement('button');
+                let close_img = document.createElement('img');
+                close_img.src = "../static/Images/Icons/close.png";
+                close_img.id = "recommendations-close-btn";
+                let recommendations = document.createElement('div');
+                recommendations.className = 'recommendations-div';
+
+                close_recommend.appendChild(close_img);
+                buddy_recommendations_div.appendChild(close_recommend);
+                buddy_recommendations_div.appendChild(recommendations);
+                buddy_recommendations_div.appendChild(recommend_btn);
+                buddy_recommendations_div.style.display = "none";
+                section_popup_menu_div.insertAdjacentElement('afterend', buddy_recommendations_div)
+               
+                           
+
+
                 //Add event handlers to all links in the list items to send data to the server side
                 for(let i = 0; i < section_list_options.length; i++) {
                     console.log(i);
@@ -117,28 +140,119 @@ document.addEventListener('click', function(event) {
                         event.preventDefault();
                         console.log(event.target);
 
-                        let data = {
-                            movie_data_id: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.innerText,
-                            movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.firstElementChild.children[1].innerText,
-                            movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerText,
-                            movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerText,
-                            movie_poster: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.src,
-                            movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
-                            movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset
-                                                           
-                            };
-                 
+                        if(section_list_options[i].firstChild.innerText == "Recommend") {
 
-                        if (section_list_options[i].firstChild.innerText == "Completed Watching") {
-                            data.date = section_watched_date;
-                            data.data_route = document.getElementsByClassName('route')[0].innerText;
+                            fetch("/buddy_recommend_info")
+                            .then(response => {
+                               // Convert the response to JSON
+                               console.log("buddy recommendation info returned")
+                               return response.json();
+                               
+                            })
+                            .then(recommend_to => {
+                                //Process the JSON data
+                                console.log(recommend_to); 
+                                document.querySelector(".recommendations-div").innerHTML = '';
+                                section_popup_menu_div.style.display = "none";
+                                buddy_recommendations_div.style.display = "block";
+                            
+                                recommend_to.forEach(data_item => {
+                                    console.log(data_item);
+                                    let recommendie_wrapper = document.createElement('div');
+                                    recommendie_wrapper.className = "recommendie_wrapper";
+
+                                    let checkbox_div = document.createElement('div');
+                                    checkbox_div.className = "checkbox-div";
+
+                                    let checkbox = document.createElement('input');
+                                    checkbox.className = 'checkbox';
+                                    checkbox.type = 'checkbox';
+                                    checkbox_div.appendChild(checkbox);
+
+                                    let recommendie_div = document.createElement('div');
+                                    recommendie_div.className = 'recommendie_div';
+
+                                    let recommendie_profile = document.createElement('div');
+                                    recommendie_profile.className = 'recommendie_profile_div';
+
+                                    let profile_pic = document.createElement('img');
+                                    profile_pic.className = 'recommendie_profile_pic';
+                                    profile_pic.src = data_item.profile_pic;
+                                    recommendie_profile.appendChild(profile_pic);
+
+                                    let recommendie_info = document.createElement('div');
+                                    recommendie_info.className = 'recommendie_info';
+
+                                    let recommendie_id = document.createElement('p');
+                                    recommendie_id.className = "recommendie-id";
+                                    recommendie_id.innerText = data_item.id;
+                                    recommendie_id.style.display = 'none';
+
+                                    let recommendie_name = document.createElement('p');
+                                    recommendie_name.className = 'recommendie-name';
+                                    recommendie_name.innerText = data_item.full_name;
+
+                                    let recommendie_username = document.createElement('p');
+                                    recommendie_username.className = 'recommendie_username';
+                                    recommendie_username.innerText = data_item.user_name;
+
+                                    // append elements to the recommendie_info div
+                                    recommendie_info.appendChild(recommendie_id);
+                                    recommendie_info.appendChild(recommendie_name);
+                                    recommendie_info.appendChild(recommendie_username);
+
+                                    // append recommendie_profile and recommendie_info to recommendie_div
+                                    recommendie_div.appendChild(recommendie_profile);
+                                    recommendie_div.appendChild(recommendie_info);
+
+                                    //append recommendie_div and checkbox to recommendie_wrapper
+                                    recommendie_wrapper.appendChild(checkbox_div);
+                                    recommendie_wrapper.appendChild(recommendie_div);
+                            
+                                    // append recommendie_wrapper to recommendations
+                                    recommendations.appendChild(recommendie_wrapper);
+
+
+
+
+                                })
+                            
+                            })
+                            .catch(error => {
+                                // Handle any errors that occurred during the fetch
+                                console.error('There was a problem with the fetch operation:', error);
+                            });
+
+                            close_img.addEventListener('click', function(event) {
+                                buddy_recommendations_div.style.display = "none";
+                                popup_menu_div.style.display = "flex";
+                            });
+
+
                         }
+                        
+                        else {
+                            let data = {
+                                movie_data_id: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.innerText,
+                                movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.firstElementChild.children[1].innerText,
+                                movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerText,
+                                movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerText,
+                                movie_poster: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.src,
+                                movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
+                                movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset
+                                                               
+                                };
 
-                        else if (section_list_options[i].firstChild.innerText == "Watched") {
-                            data.date = section_watched_date;
-                        }
+                                if (section_list_options[i].firstChild.innerText == "Completed Watching") {
+                                    data.date = section_watched_date;
+                                    data.data_route = document.getElementsByClassName('route')[0].innerText;
+                                }
+        
+                                else if (section_list_options[i].firstChild.innerText == "Watched") {
+                                    data.date = section_watched_date;
+                                }
 
-                        console.log(data);
+                                console.log(data);
                         let route = section_list_options[i].firstChild
                         console.log(route)
                         fetch(route, {
@@ -154,6 +268,15 @@ document.addEventListener('click', function(event) {
                         })
                         .catch((error) => console.error('Error:', error));
                     
+                     
+                        }
+
+
+                        
+
+                        
+
+                        
 
                     });
                 }  
@@ -214,7 +337,7 @@ document.addEventListener('click', function(event) {
                 });
                 watched_date = null;
 
-        }
+            }
 
         
     }

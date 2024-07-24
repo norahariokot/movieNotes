@@ -175,15 +175,17 @@ nav {
 
 .popup-menu-wrapper {
     display: flex;
-    border: solid red;
+    border: solid black 1px;
+    width: fit-content;
+    border-radius: 5%;
 }
 
 .popup_menu-list {
-    border: solid yellow;
+    /*border: solid yellow;*/
 }
 
 .date-div {
-    border: solid black;
+    /*border: solid black;*/
 }
 .watched-year-movie-display {
     display: grid;
