@@ -164,6 +164,7 @@
                             // Create elements to add a watched date
                             let watched_date = null;
                             let date_div = document.createElement("div");
+                            date_div.className = 'date-div';
                             let date_lbl = document.createElement("label");
                             let date = document.createElement("input");
                             date_lbl.innerHTML = "Include date";
@@ -204,7 +205,9 @@
                             let close_recommend = document.createElement('button');
                             let close_img = document.createElement('img');
                             close_img.src = "../static/Images/Icons/close.png";
-                            let recommendations = document.createElement('select');
+                            close_img.id = "recommendations-close-btn";
+                            let recommendations = document.createElement('div');
+                            recommendations.className = 'recommendations-div';
 
                             close_recommend.appendChild(close_img);
                             buddy_recommendations_div.appendChild(close_recommend);
@@ -235,20 +238,83 @@
                                            // Convert the response to JSON
                                            return response.json(); 
                                         })
-                                        .then(data => {
+                                        .then(recommend_to => {
                                             //Process the JSON data
-                                            console.log(data);
+                                            console.log(recommend_to);
+                                            document.querySelector(".recommendations-div").innerHTML = '';
                                             popup_menu_div.style.display = "none";
                                             buddy_recommendations_div.style.display = "block";
                                         
-                                            data.forEach(data_item => {
+                                            recommend_to.forEach(data_item => {
                                                 console.log(data_item);
+                                                let recommendie_wrapper = document.createElement('div');
+                                                recommendie_wrapper.className = "recommendie_wrapper";
+
+                                                let checkbox_div = document.createElement('div');
+                                                checkbox_div.className = "checkbox-div";
+
+                                                let checkbox = document.createElement('input');
+                                                checkbox.className = 'checkbox';
+                                                checkbox.type = 'checkbox';
+                                                checkbox_div.appendChild(checkbox);
+
+                                                let recommendie_div = document.createElement('div');
+                                                recommendie_div.className = 'recommendie_div';
+
+                                                let recommendie_profile = document.createElement('div');
+                                                recommendie_profile.className = 'recommendie_profile_div';
+
+                                                let profile_pic = document.createElement('img');
+                                                profile_pic.className = 'recommendie_profile_pic';
+                                                profile_pic.src = data_item.profile_pic;
+                                                recommendie_profile.appendChild(profile_pic);
+
+                                                let recommendie_info = document.createElement('div');
+                                                recommendie_info.className = 'recommendie_info';
+
+                                                let recommendie_id = document.createElement('p');
+                                                recommendie_id.className = "recommendie-id";
+                                                recommendie_id.innerText = data_item.id;
+                                                recommendie_id.style.display = 'none';
+
+                                                let recommendie_name = document.createElement('p');
+                                                recommendie_name.className = 'recommendie-name';
+                                                recommendie_name.innerText = data_item.full_name;
+
+                                                let recommendie_username = document.createElement('p');
+                                                recommendie_username.className = 'recommendie_username';
+                                                recommendie_username.innerText = data_item.user_name;
+
+                                                // append elements to the recommendie_info div
+                                                recommendie_info.appendChild(recommendie_id);
+                                                recommendie_info.appendChild(recommendie_name);
+                                                recommendie_info.appendChild(recommendie_username);
+
+                                                // append recommendie_profile and recommendie_info to recommendie_div
+                                                recommendie_div.appendChild(recommendie_profile);
+                                                recommendie_div.appendChild(recommendie_info);
+
+                                                //append recommendie_div and checkbox to recommendie_wrapper
+                                                recommendie_wrapper.appendChild(checkbox_div);
+                                                recommendie_wrapper.appendChild(recommendie_div);
+                                        
+                                                // append recommendie_wrapper to recommendations
+                                                recommendations.appendChild(recommendie_wrapper);
+
+
+
+
                                             })
                                         
                                         })
                                         .catch(error => {
                                             // Handle any errors that occurred during the fetch
                                             console.error('There was a problem with the fetch operation:', error);
+                                        });
+
+                                        close_img.addEventListener('click', function(event) {
+                                            buddy_recommendations_div.style.display = "none";
+                                            popup_menu_div.style.display = "flex";
                                         });
                                     }
                                     

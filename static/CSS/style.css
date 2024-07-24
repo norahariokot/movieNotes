@@ -178,6 +178,13 @@ nav {
     border: solid red;
 }
 
+.popup_menu-list {
+    border: solid yellow;
+}
+
+.date-div {
+    border: solid black;
+}
 .watched-year-movie-display {
     display: grid;
     grid-template-columns: minmax(1em,1fr) repeat(5, minmax(20%,1fr)) minmax(1em,1fr);
@@ -258,6 +265,47 @@ nav {
         margin-top: 0;
         margin-bottom: 0;
     }
+}
+
+/* Recommendations */
+.recommendie_wrapper,
+.recommendie_div {
+    display: flex;
+}
+
+.recommendie_wrapper {
+    /*border: solid green;*/
+    align-items: center;
+}
+
+.checkbox-div {
+    /*border: solid blueviolet;*/
+}
+
+.recommendie_div {
+    /*border: solid red;*/
+    height: fit-content;
+    align-items: center;
+}
+
+.recommendie_profile_div {
+    /*border: solid blue;*/
+    height: fit-content;
+}
+
+.recommendie_profile_pic {
+    /*border: solid black;*/
+}
+
+.recommendie-name,
+.recommendie_username {
+    /*border: solid green;*/
+    margin-top: 0;
+
+}
+
+.recommendie-name {
+    margin-bottom: .5rem;
 }
 
 
