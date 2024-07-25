@@ -1,0 +1,14 @@
+
+Hope you enjoy your new logo, here are the people that
+made your beautiful logo happen :)
+font name: kelson_md
+font link: http://www.fontfabric.com/kelson-sans/
+font author: Bruno Mello
+font author site: http://www.myfonts.com/person/Bruno_Mello/
+
+
+icon designer: Konrad Michalik
+icon designer link: /konradmichalik
+        
+{"bg-gradient-0":"#0D2175","bg-gradient-1":"#1F1EFB","icon":"#ffffff","font":"#ffffff","slogan":"#ffffff"}
+      

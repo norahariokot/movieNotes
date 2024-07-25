@@ -6,6 +6,7 @@ let section_popup_menu_div;
 
 document.addEventListener('click', function(event) {
     console.log(event.target);
+    let element = event.target;
      
     // Target the control buttons in the search page and section pages
     if (event.target.matches('.section-controls')) {
@@ -116,6 +117,7 @@ document.addEventListener('click', function(event) {
                 buddy_recommendations_div.id = 'recommendations_options';
                 let recommend_btn = document.createElement('button');
                 recommend_btn.innerHTML = 'Recommend';
+                recommend_btn.id = 'recommend_btn';
                 let close_recommend = document.createElement('button');
                 let close_img = document.createElement('img');
                 close_img.src = "../static/Images/Icons/close.png";
@@ -139,6 +141,7 @@ document.addEventListener('click', function(event) {
                     section_list_options[i].firstChild.addEventListener('click', function(event) {
                         event.preventDefault();
                         console.log(event.target);
+                        let recommendie_ids = [];   
 
                         if(section_list_options[i].firstChild.innerText == "Recommend") {
 
@@ -168,6 +171,56 @@ document.addEventListener('click', function(event) {
                                     checkbox.className = 'checkbox';
                                     checkbox.type = 'checkbox';
                                     checkbox_div.appendChild(checkbox);
+                                    // Add click event listner to the checkboxes
+                                               
+                                    checkbox.addEventListener('change', function(event) {
+                                        let item = event.target;
+                                        let data_item = item.parentNode.nextElementSibling.children[1].children[0].innerText;
+                                        console.log(item);
+                                        if(item.checked) {
+                                            console.log("checkbox checked");
+                                            console.log(data_item);
+                                            recommendie_ids.push(data_item);
+                                            console.log("click event added to checkbox")
+                                        }
+                                        else {
+                                            console.log("checkbox unchecked");
+                                            let index = recommendie_ids.indexOf(data_item);
+                                            if(index !== -1) {
+                                                recommendie_ids.splice(index, 1)
+                                            }
+
+
+                                        }
+                                        console.log(recommendie_ids);
+
+                                        document.addEventListener('click', function(event) {
+                                                        
+                                            if(event.target.id == "recommend_btn") {
+                                                console.log(recommendie_ids);
+                                                // Send data to server
+                                                fetch("/recommend_movie", {
+                                                    method:'POST',
+                                                    headers: {
+                                                         'Content-Type':'application/json'
+                                                    },
+                                                    body: JSON.stringify(recommendie_ids)
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    alert(data.message)
+                                                })
+                                                .catch((error) => console.log('Error:',error));
+                                            }
+                                            else {
+                                                console.log("Not recommend btn clicked")
+                                            }
+
+                                        })
+                                        
+                                        
+                                    });    
+
 
                                     let recommendie_div = document.createElement('div');
                                     recommendie_div.className = 'recommendie_div';

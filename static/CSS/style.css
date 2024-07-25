@@ -25,8 +25,15 @@ nav {
 }  
 
 .logo {
-    width: 100px;
+    width: 150px;
     height: 100px;
+    /*border: solid green;*/
+    & img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
+
 }
 
 .nav-list {

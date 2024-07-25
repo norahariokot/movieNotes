@@ -469,7 +469,26 @@ def buddy_recommend_info():
         if dict_item['profile_pic'] == None:
             dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
     
-    return jsonify(buddy_info)    
+    return jsonify(buddy_info)  
+
+
+@app.route("/recommend_movie", methods=["POST"])
+def recommend_movie():
+    print("Recommend movie route")
+    recommend_info = request.get_json()
+    print(recommend_info)
+
+    recommend_to = []
+    for item in recommend_info:
+        id = int(item)
+        recommend_to.append(id)
+    print(recommend_to)    
+
+
+    return jsonify({"message": "Movie successfully recommended"})
+
+
+
 
 
 @app.route("/movie_buddies_section", methods=["GET"])
