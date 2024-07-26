@@ -478,12 +478,22 @@ def recommend_movie():
     recommend_info = request.get_json()
     print(recommend_info)
 
+    # Convert the values of recommendies to integars because they were sent as a string from the fetch function
     recommend_to = []
-    for item in recommend_info:
+    for item in recommend_info['recommendies']:
         id = int(item)
         recommend_to.append(id)
-    print(recommend_to)    
+    print(recommend_to) 
 
+    # Update the value of recommendies with the intergars
+    recommend_info['recommendies'] = recommend_to
+    print(recommend_info)
+
+    movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(recommend_info)
+
+    for id in recommend_to:
+        print(f"data is being added to the databse for {id}")
+        db.execute("INSERT INTO recommendations(movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, recommender, recommendie) VALUES (?,?,?,?,?,?,?,?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, session["user_id"], id)  
 
     return jsonify({"message": "Movie successfully recommended"})
 

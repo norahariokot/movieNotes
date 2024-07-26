@@ -1,3 +1,5 @@
+let recommendie_ids = []; // This list is being defined here to store ids for recommendie buddies. It is in outer scope to retain state
+
 // Function to create pop menu for section control buttons
          
 let isSectionPopupVisible = false;
@@ -141,7 +143,7 @@ document.addEventListener('click', function(event) {
                     section_list_options[i].firstChild.addEventListener('click', function(event) {
                         event.preventDefault();
                         console.log(event.target);
-                        let recommendie_ids = [];   
+                        
 
                         if(section_list_options[i].firstChild.innerText == "Recommend") {
 
@@ -155,7 +157,11 @@ document.addEventListener('click', function(event) {
                             .then(recommend_to => {
                                 //Process the JSON data
                                 console.log(recommend_to); 
-                                document.querySelector(".recommendations-div").innerHTML = '';
+                                let cleared_div = document.querySelectorAll(".recommendations-div");
+                                console.log(cleared_div)
+                                for (let i = 0; i < cleared_div.length; i++) {
+                                    cleared_div[i].innerHTML = " ";
+                                }
                                 section_popup_menu_div.style.display = "none";
                                 buddy_recommendations_div.style.display = "block";
                             
@@ -190,38 +196,11 @@ document.addEventListener('click', function(event) {
                                                 recommendie_ids.splice(index, 1)
                                             }
 
-
                                         }
-                                        console.log(recommendie_ids);
 
-                                        document.addEventListener('click', function(event) {
-                                                        
-                                            if(event.target.id == "recommend_btn") {
-                                                console.log(recommendie_ids);
-                                                // Send data to server
-                                                fetch("/recommend_movie", {
-                                                    method:'POST',
-                                                    headers: {
-                                                         'Content-Type':'application/json'
-                                                    },
-                                                    body: JSON.stringify(recommendie_ids)
-                                                })
-                                                .then(response => response.json())
-                                                .then(data => {
-                                                    alert(data.message)
-                                                })
-                                                .catch((error) => console.log('Error:',error));
-                                            }
-                                            else {
-                                                console.log("Not recommend btn clicked")
-                                            }
-
-                                        })
                                         
-                                        
-                                    });    
-
-
+                                    });
+                                    
                                     let recommendie_div = document.createElement('div');
                                     recommendie_div.className = 'recommendie_div';
 
@@ -266,10 +245,9 @@ document.addEventListener('click', function(event) {
                                     recommendations.appendChild(recommendie_wrapper);
 
 
-
-
                                 })
-                            
+
+                                
                             })
                             .catch(error => {
                                 // Handle any errors that occurred during the fetch
@@ -278,8 +256,18 @@ document.addEventListener('click', function(event) {
 
                             close_img.addEventListener('click', function(event) {
                                 buddy_recommendations_div.style.display = "none";
-                                popup_menu_div.style.display = "flex";
+                                section_popup_menu_div.style.display = "flex";
+                                let checkboxes = document.querySelectorAll('.checkbox');
+                                console.log("Clear checkboxes");
+                                console.log(checkboxes);
+                                checkboxes.forEach(function(checkbox) {
+                                    console.log("this checkbox is being cleared")
+                                    checkbox.checked = false;
+                                })
                             });
+
+                        
+                        
 
 
                         }
@@ -941,6 +929,53 @@ document.addEventListener("click", function(event) {
     
 
 });
+
+
+document.addEventListener('click', function(event) {
+    if(event.target.id == "recommend_btn" && recommendie_ids.length >= 1) {
+        // data to be sent later to the server
+        let data = {
+            movie_title: event.target.parentNode.previousElementSibling.previousElementSibling.children[2].firstElementChild.firstElementChild.children[1].innerText,
+            movie_year: event.target.parentNode.previousElementSibling.previousElementSibling.children[2].firstElementChild.children[1].innerText,
+            movie_stars: event.target.parentNode.previousElementSibling.previousElementSibling.children[2].firstElementChild.children[2].innerText,
+            movie_poster: event.target.parentNode.previousElementSibling.previousElementSibling.children[1].firstElementChild.src,
+            movie_poster_sizes: event.target.parentNode.previousElementSibling.previousElementSibling.children[1].firstElementChild.sizes,
+            movie_poster_set: event.target.parentNode.previousElementSibling.previousElementSibling.children[1].firstElementChild.srcset,
+            recommendies: recommendie_ids
+        }
+        console.log(data);
+        console.log(recommendie_ids);
+        console.log('Recommend btn clicked & recommendie ids not empty')
+        // Send data to 
+        fetch("/recommend_movie", {
+            method:'POST',
+            headers: {
+                'Content-Type':'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+        .then(response => response.json())
+        .then(data => {
+                alert(data.message)
+            })
+        .catch((error) => console.log('Error:',error));
+        console.log("recommend movie route has been fired");
+        data = {};
+        recommendie_ids = [];
+    }
+
+    else if (event.target.id == "recommend_btn" && recommendie_ids.length == 0) {
+            console.log("only recommend_btn clicked");
+            alert("No recommendies selected");
+    }
+    else {
+        console.log("Not recommend btn clicked");
+    }
+    
+   })
+
+                            
+
 
    
 

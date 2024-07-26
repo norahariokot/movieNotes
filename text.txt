@@ -48,7 +48,21 @@ CREATE TABLE moviebuddy_request (
   request_recipient INTEGER NOT NULL,
   FOREIGN KEY (request_sender) REFERENCES users(id),
   FOREIGN KEY (request_recipient) REFERENCES users(id)
-);  
+); 
+
+CREATE TABLE recommendations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  movie_title TEXT NOT NULL,
+  movie_year TEXT NOT NULL,
+  movie_stars TEXT NOT NULL,
+  movie_poster TEXT NOT NULL,
+  movie_poster_sizes TEXT NOT NULL,
+  movie_poster_set TEXT NOT NULL,
+  recommender INTEGER NOT NULL,
+  recommendie INTEGER NOT NULL,
+  FOREIGN KEY (recommender) REFERENCES users(id),
+  FOREIGN KEY (recommendie) REFERENCES users(id)
+);
 
 
 SELECT users.id, first_name, last_name, user_name, profile_pic,buddy_request_sender, buddy_request_recipient
@@ -59,8 +73,4 @@ WHERE buddy_status = "Movie Buddies";
 SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN movie_buddies ON users.id = movie_buddies.buddy_request_sender WHERE (buddy_request_sender = 1 OR buddy_request_recipient = 1) AND buddy_status = "Movie Buddies" AND users.id!= 1 UNION SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN movie_buddies ON users.id = movie_buddies.buddy_request_recipient WHERE (buddy_request_sender = 1 OR buddy_request_recipient = 1) AND buddy_status = "Movie Buddies" AND users.id!= 1;
 
 SELECT buddy_request_sender, buddy_request_recipient FROM movie_buddies WHERE (buddy_request_sender = 1 OR buddy_request_recipient = 1) AND buddy_status = "Movie Buddies";
-
-
-
-
 

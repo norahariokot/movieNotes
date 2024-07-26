@@ -235,6 +235,17 @@
 
                                     if(search_list_options[i].firstChild.innerText == "Recommend") {
 
+                                        // Data to be sent to server 
+                                        let data = {
+                                        movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[0].innerHTML,
+                                        movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[1].innerHTML,
+                                        movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.lastElementChild.firstElementChild.children[2].innerHTML,
+                                        movie_poster: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.src,
+                                        movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.firstChild.sizes,
+                                        movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild.srcset
+                                                                       
+                                        };
+
                                         fetch("/buddy_recommend_info")
                                         .then(response => {
                                            // Convert the response to JSON
@@ -282,17 +293,23 @@
                                                     }
                                                     console.log(recommendie_ids);
 
-                                                    document.addEventListener('click', function(event) {
-                                                        
-                                                        if(event.target.id == "recommend_btn") {
-                                                            console.log(recommendie_ids);
+                                                    data.recommendies = recommendie_ids;
+                                                    console.log(data);
+
+                                                    
+                                                });
+
+                                                document.addEventListener('click', function(event) {                                                         
+                                                    if(event.target.id == "recommend_btn" && recommendie_ids.length >= 1) {
+                                                        console.log(recommendie_ids);
+                                                        console.log("recommendie id not empty")
                                                         // Send data to server
                                                         fetch("/recommend_movie", {
                                                             method:'POST',
                                                             headers: {
                                                                 'Content-Type':'application/json'
                                                             },
-                                                            body: JSON.stringify(recommendie_ids)
+                                                            body: JSON.stringify(data)
                                                         })
                                                         .then(response => response.json())
                                                         .then(data => {
@@ -300,11 +317,12 @@
                                                         })
                                                         .catch((error) => console.log('Error:',error));
                                                         }
-                                                    })
 
-                                                    
-                                                    
-                                                });
+                                                        else if (event.target.id == "recommend_btn" && recommendie_ids.length == 0) {
+                                                            console.log("No recommendies");
+                                                            alert("No recommendies selected");
+                                                        }
+                                                    })
 
                                                 let recommendie_div = document.createElement('div');
                                                 recommendie_div.className = 'recommendie_div';
