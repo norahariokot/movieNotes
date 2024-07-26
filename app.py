@@ -487,12 +487,25 @@ def recommend_movie():
 
     # Update the value of recommendies with the intergars
     recommend_info['recommendies'] = recommend_to
-    print(recommend_info)
+    #print(recommend_info)
 
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(recommend_info)
 
+    new_recommend_to = recommend_to.copy()
+    print(f"ids before checking for duplicates {new_recommend_to}")
     for id in recommend_to:
-        print(f"data is being added to the databse for {id}")
+        already_recommended = db.execute("SELECT * FROM recommendations WHERE recommender = ? AND recommendie = ? AND movie_title = ? AND movie_year= ? AND movie_stars = ?", session["user_id"], id, movie_title, movie_year, movie_stars)
+        #print(already_recommended)
+        if already_recommended:
+            print("Recommendaton found")
+            new_recommend_to.remove(id)
+    print(new_recommend_to)   
+
+    recommend_info['recommendies'] = new_recommend_to
+
+    print(recommend_info)
+
+    for id in new_recommend_to:
         db.execute("INSERT INTO recommendations(movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, recommender, recommendie) VALUES (?,?,?,?,?,?,?,?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, session["user_id"], id)  
 
     return jsonify({"message": "Movie successfully recommended"})
