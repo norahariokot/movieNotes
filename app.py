@@ -248,7 +248,7 @@ def search_watched ():
 def watched_section():
     watched_section = True
     movie = db.execute ("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
-    watched_options = [["Favourites", "/favourites"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]
+    watched_options = {{[["Favourites", "/favourites"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]}}
     json_watched_options = json.dumps(watched_options)
     #print(watched_options)
     #print(movie)
@@ -453,7 +453,19 @@ def search_watchlist ():
         print(dict_item["movie_title"])   
     return jsonify(watchlist_search_response)
 
+@app.route("/recommendations_section")
+def recommendations_section():
+    recommendations_section = True
+    recommendations = db.execute("SELECT users.id, first_name, last_name, user_name, profile_pic, recommendations.id, movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set FROM users JOIN recommendations ON users.id = recommender WHERE recommendie = ?", session["user_id"])
 
+    # updating profile pics in recommendations
+    for dict_item in recommendations:
+        if dict_item["profile_pic"] == None:
+            dict_item["profile_pic"] = "../static/Images/Icons/user_profile.png"
+    recommendations_options = [["Watchlist", "/watchlist"], ["Delete", "/delete_recommendation"]]
+    json_recommendations_options =json.dumps(recommendations_options)
+
+    return render_template("index.html", recommendations_section=recommendations_section, sections=sections, recommendations=recommendations, json_recommendations_options=json_recommendations_options, user_profile=session.get("user_profile"))
 
 
 @app.route("/buddy_recommend_info")
@@ -478,19 +490,23 @@ def recommend_movie():
     recommend_info = request.get_json()
     print(recommend_info)
 
-    # Convert the values of recommendies to integars because they were sent as a string from the fetch function
+    # Convert the values of recommendies in recomend_info to integars because they were sent as a string from the fetch function
     recommend_to = []
     for item in recommend_info['recommendies']:
         id = int(item)
         recommend_to.append(id)
     print(recommend_to) 
 
-    # Update the value of recommendies with the intergars
+    # Update the value of recommendies in recommend_info with the intergars
     recommend_info['recommendies'] = recommend_to
     #print(recommend_info)
 
+    # Extract the data in recommend_info
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(recommend_info)
 
+    # Ensure not duplicates in the recommendations table
+    # This will be done by running loop to check for existing data based on the recommendie and recommender for the same movie in table
+    # a new list is created to store values of recommendies, if a record is found as duplicated its id will be removed from the new list which will store the updated values for recommendies in recommend_info
     new_recommend_to = recommend_to.copy()
     print(f"ids before checking for duplicates {new_recommend_to}")
     for id in recommend_to:
@@ -501,9 +517,9 @@ def recommend_movie():
             new_recommend_to.remove(id)
     print(new_recommend_to)   
 
+    # update recommendies in recommend_info with the values of ids which dont contain duplicates for a specific movie
     recommend_info['recommendies'] = new_recommend_to
-
-    print(recommend_info)
+    #print(recommend_info)
 
     for id in new_recommend_to:
         db.execute("INSERT INTO recommendations(movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, recommender, recommendie) VALUES (?,?,?,?,?,?,?,?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, session["user_id"], id)  
