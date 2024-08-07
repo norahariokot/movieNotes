@@ -711,32 +711,23 @@
         <!-- This section will display movie recommendations -->
         {% if recommendations_section %}
         <div class="recommendations-section-wrapper">
-            <h2 class="section-title">Movie Recommendations from you Movie Buddies </h2>
+            <h2 class="section-title">Movie Recommendations from your Movie Buddies </h2>
 
             <p style="display: none;" id="recommendations-sections-list">{{json_recommendations_options}}</p>
 
             <div id="recommendations-movie-display" class="section-display">
-                {% for dict_item in recommendations %}
+                {% if recommendations|length == 0 %}
+                    <p> You dont have any Movie Recommendations. Ask your movie buddies to recommend some. </p>
+                {% else %}    
+                    {% for dict_item in recommendations %}
                     <div class="recommendations-movie-container">
-                        <div class="recommender-info">
-                            <div class="recommender-div">
-                                <p style="display: none;" class="recommender_id">{{dict_item["users.id"]}}</p>
-                                <div class="recommender-profile">
-                                    <div class="recommender-profile-pic">
-                                        <img src="{{dict_item['profile_pic']}}" alt="recommender's profile pic">
-                                    </div>
-                                    <div class="recommender-info-text">
-                                      <p class="recommender-username">{{dict_item["user_name"]}}</p>  
-                                    </div>
-                                </div>                             
-                            </div>
-                        </div>
-                        <div class="movie-info-container">
+                        
+                        <div class="recommended-movie-info-container">
                             <p style="display: none;" class="movie_data_id">{{dict_item["recommendations.id"]}}</p>                                                      
                             <div class="movie-poster-div">
                                 <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
                             </div>
-                            <div class="movie-info">
+                            <div class="recommended-movie-info">
                                 <div class="movie_info_text">
                                     <div class="movie_info_title_wrapper">
                                         <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
@@ -751,9 +742,25 @@
                                 </button>
                             </div>
                         </div>
-
+                        <div class="recommender-info">
+                        <p class="recommender-title">Recommended by;</p>    
+                        {% for user in dict_item["user_name"] %}
+                            <div class="recommender-div">
+                                <p style="display: none;" class="recommender_id">{{user["user_id"]}}</p>
+                                <div class="recommender-profile">
+                                    <div class="recommender-profile-pic">
+                                        <img src="{{user['profile_pic']}}" alt="recommender's profile pic">
+                                    </div>
+                                    <div class="recommender-info-text">
+                                      <p class="recommender-username">{{user["user_name"]}}</p>  
+                                    </div>
+                                </div>                             
+                            </div>
+                        {% endfor %}    
+                        </div>
                     </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
 

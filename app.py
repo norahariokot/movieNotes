@@ -248,7 +248,7 @@ def search_watched ():
 def watched_section():
     watched_section = True
     movie = db.execute ("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
-    watched_options = {{[["Favourites", "/favourites"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]}}
+    watched_options = [["Favourites", "/favourites"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]
     json_watched_options = json.dumps(watched_options)
     #print(watched_options)
     #print(movie)
@@ -456,12 +456,37 @@ def search_watchlist ():
 @app.route("/recommendations_section")
 def recommendations_section():
     recommendations_section = True
-    recommendations = db.execute("SELECT users.id, first_name, last_name, user_name, profile_pic, recommendations.id, movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set FROM users JOIN recommendations ON users.id = recommender WHERE recommendie = ?", session["user_id"])
+    recommendations_info = db.execute("SELECT users.id AS user_id, first_name, last_name, user_name, profile_pic, recommendations.id AS recommendation_id, movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set FROM users JOIN recommendations ON users.id = recommender WHERE recommendie = ?", session["user_id"])
+    print(len(recommendations_info))
+    print(recommendations_info)
 
-    # updating profile pics in recommendations
-    for dict_item in recommendations:
+    recommendations = []
+    for dict_item in recommendations_info:
+        found = False
+        user_name = []
+        user_name_dict = {}
         if dict_item["profile_pic"] == None:
             dict_item["profile_pic"] = "../static/Images/Icons/user_profile.png"
+        user_name_dict["user_id"]   = dict_item["user_id"]
+        user_name_dict['first_name'] = dict_item['first_name']
+        user_name_dict['last_name'] = dict_item['last_name']
+        user_name_dict['user_name'] = dict_item['user_name']
+        user_name_dict['profile_pic'] = dict_item['profile_pic']
+        user_name.append(user_name_dict)
+        dict_item['user_name'] = user_name
+        dict_item.pop('first_name')
+        dict_item.pop('last_name')
+        dict_item.pop('profile_pic')
+        for dict in recommendations:
+            if dict_item["movie_title"] in dict["movie_title"]:
+                print("Found")
+                found = True 
+                dict['user_name'].append(dict_item['user_name'][0])
+        if found is False:
+            recommendations.append(dict_item)
+   
+    print(recommendations)               
+    
     recommendations_options = [["Watchlist", "/watchlist"], ["Delete", "/delete_recommendation"]]
     json_recommendations_options =json.dumps(recommendations_options)
 

@@ -297,6 +297,10 @@ nav {
     align-items: center;
 }
 
+.recommender-div {
+    /*border: solid blue;*/
+}
+
 .recommendie_profile_div {
     /*border: solid blue;*/
     height: fit-content;
@@ -315,6 +319,32 @@ nav {
 
 .recommendie-name {
     margin-bottom: .5rem;
+}
+
+.recommendations-movie-container {
+    /*border: solid red;*/
+    display: flex;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 5em;
+    border-bottom: solid 1px gainsboro;
+    padding-inline: 1em;
+    padding-bottom: .5em;
+    justify-content: space-between;
+}
+
+.recommended-movie-info-container {
+    display:flex;
+}
+
+.recommender-profile {
+    display: flex;
+}
+
+.recommender-title {
+    /*border: solid black;*/
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 
