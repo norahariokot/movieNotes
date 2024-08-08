@@ -223,7 +223,7 @@ def delete_watched():
     print(movie_info)
 
     # Retrieve id for data to delete
-    movie_info_id = movie_info["movie_data_id"]
+    movie_info_id = int(movie_info["movie_data_id"])
     print(movie_info_id)
 
     # Delete movie from watched table in data base
@@ -289,7 +289,7 @@ def delete_favourite():
     print(movie_info)
 
     # Retrieve id for data to delete
-    movie_info_id = movie_info["movie_data_id"]
+    movie_info_id = int(movie_info["movie_data_id"])
     print(movie_info_id)
 
     # Delete move from favourite table in database
@@ -354,7 +354,7 @@ def delete_currentlywatching():
     print(movie_info)
 
     # Retrieve id for data to delete
-    movie_info_id = movie_info["movie_data_id"]
+    movie_info_id = int(movie_info["movie_data_id"])
     print(movie_info_id)
 
     # Delete move from currently_watching table in database
@@ -420,10 +420,10 @@ def delete_watchlist():
     print(movie_info)
 
     # Retrieve id for data to delete
-    movie_info_id = movie_info["movie_data_id"]
+    movie_info_id = int(movie_info["movie_data_id"])
     print(movie_info_id)
 
-    # Delete move from watchlist table in database
+    # Delete movie from watchlist table in database
     db.execute("DELETE FROM watchlist WHERE id = ?", movie_info_id)
     return jsonify({"message": "Movie successfully deleted from your Watch List"})
 
@@ -492,6 +492,23 @@ def recommendations_section():
 
     return render_template("index.html", recommendations_section=recommendations_section, sections=sections, recommendations=recommendations, json_recommendations_options=json_recommendations_options, user_profile=session.get("user_profile"))
 
+
+@app.route("/delete_recommendation", methods=["POST"])  
+def delete_recommendation():  
+    print("Delete recommendation route fired")
+    # Receive data from frontend / client via a fetch function
+    recommendation_info = request.get_json()
+    print(recommendation_info)
+
+    # Retrieve id of movie in database
+    recommended_movie_id = int(recommendation_info["movie_data_id"])
+    print(recommended_movie_id)
+    print(type(recommended_movie_id))
+
+    # Delete movie from recommendations table in database
+    db.execute("DELETE FROM recommendations WHERE id = ?", recommended_movie_id)
+    
+    return jsonify({"message": "Movie successfully deleted from your Recommendations"})
 
 @app.route("/buddy_recommend_info")
 def buddy_recommend_info():

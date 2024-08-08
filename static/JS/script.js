@@ -9,6 +9,7 @@ let section_popup_menu_div;
 document.addEventListener('click', function(event) {
     console.log(event.target);
     let element = event.target;
+    console.log(element)
      
     // Target the control buttons in the search page and section pages
     if (event.target.matches('.section-controls')) {
@@ -51,6 +52,10 @@ document.addEventListener('click', function(event) {
                     section_options_list = JSON.parse(document.getElementById('buddynotes-options-list').innerText);
                 }
 
+                else if (event.target.id == "recommendations-stn-ctls") {
+                    section_options_list = JSON.parse(document.getElementById('recommendations-sections-list').innerText);
+                }
+
                 console.log(typeof(section_options_list))
                 console.log(section_options_list)
 
@@ -75,9 +80,17 @@ document.addEventListener('click', function(event) {
 
                 // Append pop-up menu to the DOM
                 section_popup_menu_div.appendChild(section_popup_menu);
-                event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', section_popup_menu_div);
-                console.log(event.target.parentNode.parentNode.parentNode)
-                isSectionPopupVisible = true;
+                if (event.target.id == "recommendations-stn-ctls") {
+                    event.target.parentNode.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', section_popup_menu_div);
+                    console.log(event.target.parentNode.parentNode.parentNode)
+                    isSectionPopupVisible = true;
+                }
+                else {
+                    event.target.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', section_popup_menu_div);
+                    console.log(event.target.parentNode.parentNode.parentNode)
+                    isSectionPopupVisible = true;
+                }
+                
 
                 // Create elements to add watched date elements
                 let section_watched_date = null;
@@ -270,6 +283,38 @@ document.addEventListener('click', function(event) {
                         
 
 
+                        }
+
+                        else if (element.id =="recommendations-stn-ctls") {
+                           
+                            let data  = {
+                                movie_data_id: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.children[0].innerText,
+                                movie_title: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.children[2].firstElementChild.children[0].children[1].innerText,
+                                movie_year: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.children[2].firstElementChild.children[1].innerText,
+                                movie_stars: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.children[2].firstElementChild.children[2].innerText,
+                                movie_poster: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.children[1].firstElementChild.src,
+                                movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.children[1].firstElementChild.sizes,
+                                movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild.children[1].firstElementChild.srcset
+                            };
+                            console.log(data);
+
+                            let route = section_list_options[i].firstChild
+                            console.log(route);
+
+                            // Send data to server 
+                            fetch(route, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            })
+                            .then(response=> response.json())
+                            .then(data => {
+                                alert(data.message);
+                            })
+                            .catch((error) => console.error('Error:',error));
+                            
                         }
                         
                         else {
