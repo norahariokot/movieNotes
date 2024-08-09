@@ -347,4 +347,20 @@ nav {
     margin-bottom: 0;
 }
 
+/* Chat */
+.chat-container-div {
+    display: flex;
+    border: solid black;
+}
+
+.chat-nav {
+    width: 30%;
+    border: solid red;
+}
+
+.chat-area {
+    width: 65%;
+    border: solid blue;
+}
+
 

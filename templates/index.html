@@ -773,6 +773,7 @@
             <div class="movie-buddies-title-div">
                 <h2 class="section-title movie-buddies-stn-title"> Movie Buddies </h2>
                 <a href="/view_movie_buddyrequests">Movie Buddy Requests</a>
+                <a href="/buddy_chats">Chat with your Movie Buddies </a>
                
 
 
@@ -837,6 +838,28 @@
 
          {% endif %}
 
+        <!-- This section will display the message chats --> 
+        {% if buddy_chats %} 
+        <h2> View Buddy Chats </h2>
+       
+        <div class="chat-container-div">
+            <div class="chat-nav">
+                <h2>Chats</h2>
+                <div>
+                    <a href="http://">Send Msg</a>
+                </div>
+           
+
+            </div>
+            <div class="chat-area">
+
+            </div>
+
+
+        </div>
+
+        {% endif %}
+
 
         <!-- This section will display the movie notes for your movie buddies -->
         {% if view_buddynotes %}
@@ -856,14 +879,18 @@
             <h2> View my Movie Notes </h2>   
             
             <ul class="buddy-notes-nav">
-                <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-watched">Watched</a></li>
+                <!--<li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-watched">Watched</a></li>
                 <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-favourites">Favourites</a></li>
-                <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-currently-watching">Currently Watching</a></li>
+                <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-currently-watching">Currently Watching</a></li>-->
+                <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-watched" {% if not view_buddy_favourites and not view_buddy_currentlywatching %}class="active"{% endif %}>Watched</a></li>
+                <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-favourites" {% if view_buddy_favourites %}class="active"{% endif %}>Favourites</a></li>
+                <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-currently-watching" {% if view_buddy_currentlywatching %}class="active"{% endif %}>Currently Watching</a></li>
+    </ul>
             </ul>
 
             <div class="buddy-notes-display">
-                <p>See my watched notes</p>
-            {% if view_buddy_watched or view_buddynotes %}
+           
+            {%if view_buddy_watched or (not view_buddy_favourites and not view_buddy_currentlywatching and view_buddynotes) %}
             <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
                 <p>See my watched notes</p>
                 {% for dict_item in buddy_watched_notes %}
@@ -894,7 +921,7 @@
 
             {% if view_buddy_favourites %}
             <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
-                <p>See my watched notes</p>
+                <p>See my Favourite Movies</p>
                 {% for dict_item in buddy_favourites_notes %}
                     <div class="buddy-notes-container">
                         <p style="display: none;">{{dict_item["id"]}}</p>
@@ -923,7 +950,7 @@
 
             {% if view_buddy_currentlywatching %}
             <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
-                <p>See my watched notes</p>
+                <p>See what I am currently watching </p>
                 {% for dict_item in buddy_currentlywatching_notes %}
                     <div class="buddy-notes-container">
                         <p style="display: none;">{{dict_item["id"]}}</p>

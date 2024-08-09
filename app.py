@@ -872,6 +872,15 @@ def view_buddy_currentlywatching():
     return render_template("index.html", sections=sections, view_buddy_currentlywatching=view_buddy_currentlywatching, buddy_currentlywatching_notes=buddy_currentlywatching_notes,view_buddynotes=session["view_buddynotes"], buddy_notes_info=session["buddy_notes_info"], json_buddynotes_options=json_buddynotes_options, user_profile=session.get("user_profile"))
 
 
+# View Function to display buddy chats
+@app.route("/buddy_chats")  
+def buddy_chats():
+    buddy_chats = True 
+    print("View Buddy Chats")
+
+    return render_template("index.html", sections=sections, buddy_chats=buddy_chats, user_profile=session.get("user_profile"))
+
+
 
 
 
