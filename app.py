@@ -880,6 +880,23 @@ def buddy_chats():
 
     return render_template("index.html", sections=sections, buddy_chats=buddy_chats, user_profile=session.get("user_profile"))
 
+# View function to retrieve buddy info for buddy chats
+@app.route("/chat_buddies_profile")   
+def buddy_chat_profile():
+    print("Buddy Chat Profile route fired")
+
+    buddychat_profiles = db.execute("SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN movie_buddies ON users.id = movie_buddies.buddy_request_sender WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND buddy_status = 'Movie Buddies' AND users.id!= ? UNION SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN movie_buddies ON users.id = movie_buddies.buddy_request_recipient WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND buddy_status = 'Movie Buddies' AND users.id!= ?", session["user_id"], session["user_id"], session["user_id"], session["user_id"], session["user_id"], session["user_id"])
+    print(buddychat_profiles)
+
+    for dict_item in buddychat_profiles:
+        dict_item['full_name'] = dict_item['first_name'] + " " + dict_item['last_name']
+        dict_item.pop('first_name')
+        dict_item.pop('last_name')
+        if dict_item['profile_pic'] == None:
+            dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
+
+    return jsonify(buddychat_profiles)        
+        
 
 
 

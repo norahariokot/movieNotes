@@ -493,6 +493,7 @@
                 <div>
                     <p class="section-total">{{ movie|length }} Movies Watched </p>
                     <div class="section-search-wrapper">
+                        
                         <input  autocomplete="off" autofocus placeholder="Search Watched Movies"  type="text" id="watched-movie-search" class="section-search">
                         <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
                     </div>
@@ -846,7 +847,10 @@
             <div class="chat-nav">
                 <h2>Chats</h2>
                 <div>
-                    <a href="http://">Send Msg</a>
+                    <a href="#" id="send-msg-btn">Send Msg</a>
+                    <div id="chatbuddies-holder">
+
+                    </div>
                 </div>
            
 

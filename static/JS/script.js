@@ -1019,6 +1019,108 @@ document.addEventListener('click', function(event) {
     
    })
 
+// Function to send chat to a movie buddy
+document.addEventListener("click", function(event) {
+
+    // Add condition to check for specific element to trigger the event
+    if (event.target.id == "send-msg-btn") {
+        event.preventDefault();
+        console.log("Chat msg btn");
+
+        // Create pop menu with movie buddies
+        let chat_profile_div = document.createElement('div');
+        chat_profile_div.className = 'chat-profile-div';
+        chat_profile_div.id = 'chat-profile-container';
+
+        let close_chat_btn = document.createElement('a');
+        close_chat_btn.id = 'close-chat-btn';
+        close_chat_btn.innerText = "Close Chat";
+
+        let search_chat = document.createElement('input');
+        search_chat.id = 'buddy-chats-search';
+        search_chat.autocomplete = 'off';
+        search_chat.placeholder = "Search for Movie Buddy";
+        search_chat.type = "search";
+
+        let buddy_chat_profile = document.createElement('div');
+        buddy_chat_profile.className = "buddy-chat-profile-holder";
+        buddy_chat_profile.id = "buddy-chat-profile-holder"
+
+        
+
+        // Add elements to the DOM
+        chat_profile_div.appendChild(close_chat_btn);
+        chat_profile_div.appendChild(search_chat);
+        chat_profile_div.appendChild(buddy_chat_profile);
+
+        let chatholder = document.getElementById("chatbuddies-holder");
+        console.log(chatholder);
+        chatholder.appendChild(chat_profile_div);
+
+        fetch("/chat_buddies_profile")
+        .then(response => {
+            console.log("chat buddy info returned")
+            return response.json();
+        })
+        .then(chat_with => {
+            // Process data recieved
+            console.log(chat_with);
+
+            //Clear previous fetch request display
+            let cleared_content = document.getElementById("buddy-chat-profile-holder");
+            console.log(cleared_content);
+            cleared_content.innerHTML = " ";
+
+            chat_with.forEach(data_item => {
+                console.log(data_item)
+
+                let chatbuddy_div = document.createElement('div');
+                chatbuddy_div.className = 'chatbuddy_div';
+
+                let chatbuddy_profile = document.createElement('div');
+                chatbuddy_profile.className = 'chatbuddy_profile_div';
+
+                let profile_pic = document.createElement('img');
+                profile_pic.className = 'chatbuddy_profile_pic';
+                profile_pic.src = data_item.profile_pic;
+                chatbuddy_profile.appendChild(profile_pic);
+
+                let chatbuddy_info = document.createElement('div');
+                chatbuddy_info.className = 'chatbuddy_info';
+
+                let chatbuddy_id = document.createElement('p');
+                chatbuddy_id.className = "chatbuddy-id";
+                chatbuddy_id.innerText = data_item.id;
+                chatbuddy_id.style.display = 'none';
+
+                let chatbuddy_name = document.createElement('p');
+                chatbuddy_name.className = 'chatbuddy-name';
+                chatbuddy_name.innerText = data_item.full_name;
+
+                let chatbuddy_username = document.createElement('p');
+                chatbuddy_username.className = 'chatbuddy_username';
+                chatbuddy_username.innerText = data_item.user_name;
+
+                // append elements to the chat buddy info div
+                chatbuddy_info.appendChild(chatbuddy_id);
+                chatbuddy_info.appendChild(chatbuddy_name);
+                chatbuddy_info.appendChild(chatbuddy_username);
+
+                // append chatbuddy_profile and chatbuddy_info to chatbuddy div
+                chatbuddy_div.appendChild(chatbuddy_profile);
+                chatbuddy_div.appendChild(chatbuddy_info);
+
+                //append chatbuddy div to the DOM (buddy-chat-profile)
+                buddy_chat_profile.appendChild(chatbuddy_div);
+                
+            })
+            
+        })
+
+    }
+})
+
+
                             
 
 
