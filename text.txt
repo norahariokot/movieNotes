@@ -64,6 +64,16 @@ CREATE TABLE recommendations (
   FOREIGN KEY (recommendie) REFERENCES users(id)
 );
 
+CREATE TABLE chat_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  date_time TEXT NOT NULL,
+  message TEXT NOT NULL,
+  msg_sender INTEGER NOT NULL,
+  msg_recipient INTEGER NOT NULL,
+  FOREIGN KEY (msg_sender) REFERENCES users(id),
+  FOREIGN KEY (msg_recipient) REFERENCES users(id) 
+);
+
 
 SELECT users.id, first_name, last_name, user_name, profile_pic,buddy_request_sender, buddy_request_recipient
 FROM users 

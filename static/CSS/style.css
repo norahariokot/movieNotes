@@ -363,4 +363,26 @@ nav {
     border: solid blue;
 }
 
+.new-chat-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.chatbuddy_div {
+    display: flex;
+    /*border: solid red;*/
+}
+
+.chatbuddy-name,
+.chatbuddy_username {
+    margin-top: 0;
+    margin-bottom: .3rem;
+    /*border: solid black;*/
+}
+
+.chat-display {
+    width: 80%;
+    height: 40vh;
+    border: solid red;
+}
 

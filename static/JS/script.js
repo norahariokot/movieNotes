@@ -1019,44 +1019,32 @@ document.addEventListener('click', function(event) {
     
    })
 
-// Function to send chat to a movie buddy
+// Function to select with buddy to chat with
 document.addEventListener("click", function(event) {
 
     // Add condition to check for specific element to trigger the event
-    if (event.target.id == "send-msg-btn") {
+    if (event.target.id == "chatwith-btn") {
         event.preventDefault();
         console.log("Chat msg btn");
 
-        // Create pop menu with movie buddies
-        let chat_profile_div = document.createElement('div');
-        chat_profile_div.className = 'chat-profile-div';
-        chat_profile_div.id = 'chat-profile-container';
-
-        let close_chat_btn = document.createElement('a');
-        close_chat_btn.id = 'close-chat-btn';
-        close_chat_btn.innerText = "Close Chat";
-
-        let search_chat = document.createElement('input');
-        search_chat.id = 'buddy-chats-search';
-        search_chat.autocomplete = 'off';
-        search_chat.placeholder = "Search for Movie Buddy";
-        search_chat.type = "search";
-
-        let buddy_chat_profile = document.createElement('div');
-        buddy_chat_profile.className = "buddy-chat-profile-holder";
-        buddy_chat_profile.id = "buddy-chat-profile-holder"
-
-        
-
-        // Add elements to the DOM
-        chat_profile_div.appendChild(close_chat_btn);
-        chat_profile_div.appendChild(search_chat);
-        chat_profile_div.appendChild(buddy_chat_profile);
-
-        let chatholder = document.getElementById("chatbuddies-holder");
+        //Clear previous fetch request display
+        let chatholder = document.getElementById("newchatbuddies-profile-holder");
         console.log(chatholder);
-        chatholder.appendChild(chat_profile_div);
+        chatholder.innerHTML = " ";
+      
+        let visible_div = document.getElementById("newchatprofile-holder");
+        visible_div.style.display = "block";
 
+        let hidden_div = document.getElementById("defaultchat-profile");
+        hidden_div.style.display = "none";
+
+        let close_chat = document.getElementById("close-chat-btn");
+        close_chat.addEventListener("click", function(event) {
+            event.preventDefault();
+            visible_div.style.display = "none";
+            hidden_div.style.display = "block";
+        })
+             
         fetch("/chat_buddies_profile")
         .then(response => {
             console.log("chat buddy info returned")
@@ -1066,16 +1054,16 @@ document.addEventListener("click", function(event) {
             // Process data recieved
             console.log(chat_with);
 
-            //Clear previous fetch request display
-            let cleared_content = document.getElementById("buddy-chat-profile-holder");
-            console.log(cleared_content);
-            cleared_content.innerHTML = " ";
-
             chat_with.forEach(data_item => {
                 console.log(data_item)
 
+                let chatbuddy_link = document.createElement('a')
+                chatbuddy_link.href = "/chat_with";
+                chatbuddy_link.className = "chatbuddy-link";
+                
                 let chatbuddy_div = document.createElement('div');
                 chatbuddy_div.className = 'chatbuddy_div';
+                chatbuddy_div.id = "chatbuddy-div"
 
                 let chatbuddy_profile = document.createElement('div');
                 chatbuddy_profile.className = 'chatbuddy_profile_div';
@@ -1110,14 +1098,127 @@ document.addEventListener("click", function(event) {
                 chatbuddy_div.appendChild(chatbuddy_profile);
                 chatbuddy_div.appendChild(chatbuddy_info);
 
+                //append chatbuddy div to chatbuddy link
+                chatbuddy_link.appendChild(chatbuddy_div)
+
                 //append chatbuddy div to the DOM (buddy-chat-profile)
-                buddy_chat_profile.appendChild(chatbuddy_div);
+                chatholder.appendChild(chatbuddy_link);
+
+                // Keep updating the text area with buddy info you are chatting with
+                chatbuddy_link.addEventListener('click', function(event) {
+                    console.log(event.target);
+                    let chatwith_info = event.currentTarget;
+
+                    console.log(chatwith_info);
+                    event.preventDefault();
+                    console.log("Movie Buddy to chat with clicked")
+
+                    let chat_area_header = document.getElementById('chat-area-header');
+                    chat_area_header.innerHTML = ''; // clear previously added clones from the header div
+                    console.log(chat_area_header)
+
+                    let originalElement = chatwith_info.firstElementChild;
+                    console.log(originalElement);
+                    let clone = originalElement.cloneNode(true);
+
+                    chat_area_header.appendChild(clone);
+                    
+                })
+
                 
             })
             
         })
 
     }
+})
+
+
+// Function to send a message to a movie buddy
+document.addEventListener('click', function(event) {
+
+    // Add condition to check for click from particular element
+    if (event.target.id == "send-msg-btn") {
+        console.log("Send message to buddy clicked");
+
+        let msgsent_date_time = new Date ()
+
+        let text_holder = document.getElementById("type-msg-input");
+        let text = text_holder.value;
+        console.log(text);
+
+        text_holder.value = " "; // clear the text holder after msg is sent
+
+        let chat_msgdiv = document.createElement('div');
+
+        let chat_msg = document.createElement('p');
+        chat_msg.innerText = text;
+
+        let msg_time = document.createElement('p');
+        let hours = msgsent_date_time.getHours();
+        let minutes = msgsent_date_time.getMinutes()
+        if (hours < 10) {
+            hours = "0" + msgsent_date_time.getHours().toString();
+        }
+        else {
+            hours = msgsent_date_time.getHours().toString()
+        }
+        if (minutes < 10) {
+            minutes = "0" + msgsent_date_time.getMinutes().toString();          
+        }
+        else {
+            minutes = msgsent_date_time.getMinutes().toString();
+        }
+        msg_time.innerText = hours + ":" + minutes;
+        console.log(msg_time.innerText)
+
+        let chatmsg_display = document.getElementById('chat-display');
+        console.log(chatmsg_display);
+
+        // Append msg and time to chat_msg_div
+        chat_msgdiv.appendChild(chat_msg)
+        chat_msgdiv.appendChild(msg_time)
+
+        //Append chat_msgdiv to the DOM (chat-display)
+        chatmsg_display.appendChild(chat_msgdiv);
+
+        // send text to server side for recipeint to receive
+        let chat_data = {
+            chat_msg: text,
+            msg_recipient:chatmsg_display.previousElementSibling.firstElementChild.children[1].firstElementChild.innerText,
+            date_time: msgsent_date_time
+        }
+        console.log(chat_data);
+
+        fetch("/send_msg", {
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(chat_data)
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message)
+        })
+        .catch((error) => console.log('Error:', error))
+       
+
+        fetch("/show_chatmsgs")
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+                alert(data.message)
+            })
+        .catch((error) => console.log('Error:', error))
+
+
+    }
+
+    
 })
 
 

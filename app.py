@@ -895,7 +895,42 @@ def buddy_chat_profile():
         if dict_item['profile_pic'] == None:
             dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
 
-    return jsonify(buddychat_profiles)        
+    return jsonify(buddychat_profiles)     
+
+
+@app.route("/send_msg", methods=["POST"])
+def send_msg():
+    print("Send msg route fired")
+
+    chat_info = request.json
+    print(chat_info)
+
+    msg_recipient = int(chat_info["msg_recipient"])
+    chat_info["msg_recipient"] = msg_recipient
+    print(chat_info)
+
+    # store msg_recipient in session
+    session["msg_recipient"] = chat_info["msg_recipient"]
+
+    # store data in database
+    db.execute("INSERT INTO chat_messages (date_time, message, msg_sender, msg_recipient) VALUES (?,?,?,?)", chat_info["date_time"], chat_info["chat_msg"],chat_info["msg_recipient"],session["user_id"] )
+
+    return jsonify({"message": "Message sent"})  
+
+@app.route("/show_chatmsgs")    
+def show_chatmsgs():
+    show_chatmsgs = True
+    print("Show chatmsgs fired") 
+
+    print(session)
+    print(session["msg_recipient"])
+    msgs = db.execute("SELECT * FROM chat_messages WHERE (msg_sender = ? OR msg_sender = ?) AND (msg_recipient = ?  OR msg_recipient = ?)", session["user_id"], session["msg_recipient"],session["msg_recipient"], session["user_id"] )
+    print(msgs)
+
+    return render_template("index.html", sections=sections, show_chatmsgs=show_chatmsgs, user_profile=session.get("user_profile"))
+
+
+    
         
 
 
