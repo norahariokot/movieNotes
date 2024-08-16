@@ -89,3 +89,36 @@ SELECT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN m
 
 SELECT buddy_request_sender, buddy_request_recipient FROM movie_buddies WHERE (buddy_request_sender = 1 OR buddy_request_recipient = 1) AND buddy_status = "Movie Buddies";
 
+SELECT users.id, first_name, last_name, user_name, profile_pic, chat_messages.id, date_time, message
+FROM users
+JOIN chat_messages ON users.id = msg_recipient
+WHERE msg_sender = 1;
+
+SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic
+FROM users
+JOIN chat_messages ON users.id = chat_messages.msg_sender
+WHERE msg_recipient = 1
+
+UNION
+
+SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic
+FROM users
+JOIN chat_messages ON users.id = chat_messages.msg_recipient
+WHERE msg_sender = 1;
+
+SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN chat_messages ON users.id = chat_messages.msg_sender WHERE msg_recipient = ? UNION SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN chat_messages ON users.id = chat_messages.msg_recipient WHERE msg_sender = ?;
+
+SELECT users.id, first_name, last_name, user_name, profile_pic
+FROM users
+JOIN chat_messages ON users.id = chat_messages.msg_sender
+WHERE msg_recipient = 1
+
+UNION
+
+SELECT date_time, message FROM chat_messages WHERE msg_sender = 1 AND msg_recipient = 2 UNION SELECT date_time, message FROM chat_messages WHERE msg_sender = 2 AND msg_recipient = 1;
+
+
+
+
+
+

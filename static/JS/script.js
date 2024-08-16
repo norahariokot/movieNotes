@@ -1019,18 +1019,72 @@ document.addEventListener('click', function(event) {
     
    })
 
-// Function to select with buddy to chat with
+// Function to dynamically display and update data in the chat display area
+function chatwith(event) {
+    console.log("event.target:", event.target);
+    console.log("event.currentTarget:", event.currentTarget);
+    event.preventDefault();
+    let chatwith_info = event.target.closest("#chatwith_buddy");
+
+    console.log(chatwith_info);
+    console.log("Movie Buddy to chat with clicked")
+
+    let chat_area_header = document.getElementById('chat-area-header');
+    chat_area_header.innerHTML = ''; // clear previously added clones from the header div
+    console.log(chat_area_header)
+
+    let originalElement = chatwith_info.firstElementChild;
+    console.log(originalElement);
+    let clone = originalElement.cloneNode(true);
+    console.log(clone)
+
+    chat_area_header.appendChild(clone);
+
+    let visible_div = document.getElementById("newchatprofile-holder");
+    visible_div.style.display = "none";
+
+    let hidden_div = document.getElementById("defaultchat-profile");
+    hidden_div.style.display = "block";
+    
+    let chathistory_id = {
+        id:clone.children[1].firstElementChild.innerText
+    }
+    console.log(chathistory_id);
+
+    fetch("/previous_chatmsgs", {
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(chathistory_id)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        let chat_display = document.getElementById('chat-display');
+        chat_display.innerHTML = "";
+        data.forEach(msg => {
+        let p = document.createElement("p");
+        p.textContent = msg.message;
+        chat_display.appendChild(p)
+        });                
+    })
+    .catch((error) => console.log('Error:', error)) 
+    
+} 
+
+// Function for when new chat is clicked
 document.addEventListener("click", function(event) {
 
     // Add condition to check for specific element to trigger the event
-    if (event.target.id == "chatwith-btn") {
+    if (event.target.id == "newchat-btn") {
         event.preventDefault();
-        console.log("Chat msg btn");
+        console.log("New Chat button clicked");
 
         //Clear previous fetch request display
-        let chatholder = document.getElementById("newchatbuddies-profile-holder");
-        console.log(chatholder);
-        chatholder.innerHTML = " ";
+        let new_chatholder = document.getElementById("newchatbuddies-profile-holder");
+        console.log(new_chatholder);
+        new_chatholder.innerHTML = " ";
       
         let visible_div = document.getElementById("newchatprofile-holder");
         visible_div.style.display = "block";
@@ -1057,56 +1111,59 @@ document.addEventListener("click", function(event) {
             chat_with.forEach(data_item => {
                 console.log(data_item)
 
-                let chatbuddy_link = document.createElement('a')
-                chatbuddy_link.href = "/chat_with";
-                chatbuddy_link.className = "chatbuddy-link";
+                let newchatbuddy_link = document.createElement('a')
+                newchatbuddy_link.href = "/chat_with";
+                newchatbuddy_link.className = "newchatbuddy-link";
+                newchatbuddy_link.id = "chatwith_buddy";
                 
-                let chatbuddy_div = document.createElement('div');
-                chatbuddy_div.className = 'chatbuddy_div';
-                chatbuddy_div.id = "chatbuddy-div"
+                let newchatbuddy_div = document.createElement('div');
+                newchatbuddy_div.className = 'newchatbuddy_div';
+                newchatbuddy_div.id = "newchatbuddy-div"
 
-                let chatbuddy_profile = document.createElement('div');
-                chatbuddy_profile.className = 'chatbuddy_profile_div';
+                let newchatbuddy_profile = document.createElement('div');
+                newchatbuddy_profile.className = 'newchatbuddy_profile_div';
 
-                let profile_pic = document.createElement('img');
-                profile_pic.className = 'chatbuddy_profile_pic';
-                profile_pic.src = data_item.profile_pic;
-                chatbuddy_profile.appendChild(profile_pic);
+                let newchat_profile_pic = document.createElement('img');
+                newchat_profile_pic.className = 'newchatbuddy_profile_pic';
+                newchat_profile_pic.src = data_item.profile_pic;
+                newchatbuddy_profile.appendChild(newchat_profile_pic);
 
-                let chatbuddy_info = document.createElement('div');
-                chatbuddy_info.className = 'chatbuddy_info';
+                let newchatbuddy_info = document.createElement('div');
+                newchatbuddy_info.className = 'newchatbuddy_info';
 
-                let chatbuddy_id = document.createElement('p');
-                chatbuddy_id.className = "chatbuddy-id";
-                chatbuddy_id.innerText = data_item.id;
-                chatbuddy_id.style.display = 'none';
+                let newchatbuddy_id = document.createElement('p');
+                newchatbuddy_id.className = "newchatbuddy-id";
+                newchatbuddy_id.innerText = data_item.id;
+                newchatbuddy_id.style.display = 'none';
 
-                let chatbuddy_name = document.createElement('p');
-                chatbuddy_name.className = 'chatbuddy-name';
-                chatbuddy_name.innerText = data_item.full_name;
+                let newchatbuddy_name = document.createElement('p');
+                newchatbuddy_name.className = 'newchatbuddy-name';
+                newchatbuddy_name.innerText = data_item.full_name;
 
-                let chatbuddy_username = document.createElement('p');
-                chatbuddy_username.className = 'chatbuddy_username';
-                chatbuddy_username.innerText = data_item.user_name;
+                let newchatbuddy_username = document.createElement('p');
+                newchatbuddy_username.className = 'newchatbuddy_username';
+                newchatbuddy_username.innerText = data_item.user_name;
 
                 // append elements to the chat buddy info div
-                chatbuddy_info.appendChild(chatbuddy_id);
-                chatbuddy_info.appendChild(chatbuddy_name);
-                chatbuddy_info.appendChild(chatbuddy_username);
+                newchatbuddy_info.appendChild(newchatbuddy_id);
+                newchatbuddy_info.appendChild(newchatbuddy_name);
+                newchatbuddy_info.appendChild(newchatbuddy_username);
 
                 // append chatbuddy_profile and chatbuddy_info to chatbuddy div
-                chatbuddy_div.appendChild(chatbuddy_profile);
-                chatbuddy_div.appendChild(chatbuddy_info);
+                newchatbuddy_div.appendChild(newchatbuddy_profile);
+                newchatbuddy_div.appendChild(newchatbuddy_info);
 
                 //append chatbuddy div to chatbuddy link
-                chatbuddy_link.appendChild(chatbuddy_div)
+                newchatbuddy_link.appendChild(newchatbuddy_div)
 
                 //append chatbuddy div to the DOM (buddy-chat-profile)
-                chatholder.appendChild(chatbuddy_link);
+                new_chatholder.appendChild(newchatbuddy_link);
 
                 // Keep updating the text area with buddy info you are chatting with
-                chatbuddy_link.addEventListener('click', function(event) {
+                newchatbuddy_link.addEventListener('click', chatwith)
+                /*newchatbuddy_link.addEventListener('click', function(event) {
                     console.log(event.target);
+                    event.preventDefault();
                     let chatwith_info = event.currentTarget;
 
                     console.log(chatwith_info);
@@ -1120,10 +1177,39 @@ document.addEventListener("click", function(event) {
                     let originalElement = chatwith_info.firstElementChild;
                     console.log(originalElement);
                     let clone = originalElement.cloneNode(true);
+                    console.log(clone)
 
                     chat_area_header.appendChild(clone);
+
+                    visible_div.style.display = "none";
+                    hidden_div.style.display = "block";
+
+                    let chathistory_id = {
+                        id:clone.children[1].firstElementChild.innerText
+                    }
+                    console.log(chathistory_id);
+
+                    fetch("/previous_chatmsgs", {
+                        method:'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(chathistory_id)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        let chat_display = document.getElementById('chat-display');
+                        chat_display.innerHTML = "";
+                        data.forEach(msg => {
+                        let p = document.createElement("p");
+                        p.textContent = msg.message;
+                        chat_display.appendChild(p)
+                        });                
+                    })
+                    .catch((error) => console.log('Error:', error)) 
                     
-                })
+                })*/
 
                 
             })
@@ -1170,8 +1256,9 @@ document.addEventListener('click', function(event) {
             minutes = msgsent_date_time.getMinutes().toString();
         }
         msg_time.innerText = hours + ":" + minutes;
-        console.log(msg_time.innerText)
+        console.log(msg_time.innerText)       
 
+        // send text to server side for recipeint to receive
         let chatmsg_display = document.getElementById('chat-display');
         console.log(chatmsg_display);
 
@@ -1182,7 +1269,6 @@ document.addEventListener('click', function(event) {
         //Append chat_msgdiv to the DOM (chat-display)
         chatmsg_display.appendChild(chat_msgdiv);
 
-        // send text to server side for recipeint to receive
         let chat_data = {
             chat_msg: text,
             msg_recipient:chatmsg_display.previousElementSibling.firstElementChild.children[1].firstElementChild.innerText,
@@ -1205,21 +1291,32 @@ document.addEventListener('click', function(event) {
         })
         .catch((error) => console.log('Error:', error))
        
-
-        fetch("/show_chatmsgs")
-        .then(response => {
-            return response.json()
-        })
+        /*fetch("/show_chatmsgs")
+        .then(response => response.json())
         .then(data => {
-                alert(data.message)
+                console.log(data);
+                let chat_display = document.getElementById('chat-display');
+                chat_display.innerHTML = "";
+                data.msgs.forEach(msg => {
+                    let p = document.createElement("p");
+                    p.textContent = msg.message;
+                    chat_display.appendChild(p)
+                });                
             })
-        .catch((error) => console.log('Error:', error))
-
-
+        .catch((error) => console.log('Error:', error)) */
     }
 
     
 })
+
+
+document.addEventListener('click', function(event) {
+    console.log(event.target)
+    if (event.target.closest("#chatwith_buddy")) {
+        console.log("Chat with Buddy clicked")
+        chatwith(event)
+    }
+});
 
 
                             

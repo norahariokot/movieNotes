@@ -847,9 +847,25 @@
             <div class="chat-nav">
                 <h2>Chats</h2>
                 <div>
-                    <a href="#" id="chatwith-btn">Send Msg</a>
+                    <a href="#" id="newchat-btn">New Chat</a>
                     <div id="defaultchat-profile">
+                    {%if buddy_chats %}   
+                        {%for dict_item in chat_history_buddies%}
+                        <a href="#" class="chatbuddy_link" id="chatwith_buddy">
+                            <div class="chatbuddy_div">
+                                <div class="chatbuddy_profile_div">
+                                    <img src="{{dict_item['profile_pic']}}" alt="profile-pic" srcset="" class="chatbuddy_profile_pic">
+                                </div>
+                                <div class="chatbuddy_info">
+                                    <p class="chatbuddy-id" style="display: none;">{{dict_item["id"]}}</p>
+                                    <p class="chatbuddy-name">{{dict_item["full_name"]}}</p>
+                                    <p class="chatbuddy_username">{{dict_item["user_name"]}}</p>
 
+                                </div>
+                            </div>
+                        </a>
+                        {%endfor%}
+                    {% endif %}
                     </div>
                     <div id="newchatprofile-holder" style="display: none;">
                         <div class="new-chat-menu">
@@ -870,7 +886,8 @@
 
                 </div>
                 <div class="chat-display" id="chat-display">
-
+                    <h2>Chat area</h2>
+                    
                 </div>
                 <div class="type-chat">
                     <input type="text" placeholder="Type a message" id="type-msg-input">

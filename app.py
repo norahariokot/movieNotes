@@ -878,7 +878,21 @@ def buddy_chats():
     buddy_chats = True 
     print("View Buddy Chats")
 
-    return render_template("index.html", sections=sections, buddy_chats=buddy_chats, user_profile=session.get("user_profile"))
+    # Retrieve user profile of movie buddies previously chatted with
+    print("Previous chats")
+    chat_history_buddies = db.execute("SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN chat_messages ON users.id = chat_messages.msg_sender WHERE msg_recipient = ? UNION SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN chat_messages ON users.id = chat_messages.msg_recipient WHERE msg_sender = ?", session["user_id"], session["user_id"] )
+    print(chat_history_buddies)
+
+    for dict_item in chat_history_buddies:
+        dict_item['full_name'] = dict_item['first_name'] + " " + dict_item['last_name']
+        dict_item.pop('first_name')
+        dict_item.pop('last_name')
+        if dict_item['profile_pic'] == None:
+            dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
+
+    print(chat_history_buddies)        
+
+    return render_template("index.html", sections=sections, chat_history_buddies=chat_history_buddies, buddy_chats=buddy_chats, user_profile=session.get("user_profile"))
 
 # View function to retrieve buddy info for buddy chats
 @app.route("/chat_buddies_profile")   
@@ -927,7 +941,24 @@ def show_chatmsgs():
     msgs = db.execute("SELECT * FROM chat_messages WHERE (msg_sender = ? OR msg_sender = ?) AND (msg_recipient = ?  OR msg_recipient = ?)", session["user_id"], session["msg_recipient"],session["msg_recipient"], session["user_id"] )
     print(msgs)
 
-    return render_template("index.html", sections=sections, show_chatmsgs=show_chatmsgs, user_profile=session.get("user_profile"))
+    return jsonify(msgs=msgs)
+
+
+# View function to display previous chat messages
+@app.route("/previous_chatmsgs", methods=["POST"])   
+def previous_chatmsgs():
+    print("Show previous chat msgs") 
+
+    previous_chatid = request.json
+    print(previous_chatid)
+
+    previous_chatswith = int(previous_chatid["id"])
+    print(previous_chatswith)
+
+    chat_history = db.execute("SELECT date_time, message FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ? UNION SELECT date_time, message FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ?", session["user_id"], previous_chatswith, previous_chatswith, session["user_id"] )
+    print(chat_history)
+
+    return jsonify(chat_history)
 
 
     

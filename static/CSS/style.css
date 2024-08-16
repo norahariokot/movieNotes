@@ -368,6 +368,7 @@ nav {
     flex-direction: column;
 }
 
+.newchatbuddy_div,
 .chatbuddy_div {
     display: flex;
     /*border: solid red;*/
