@@ -1227,7 +1227,8 @@ document.addEventListener('click', function(event) {
     if (event.target.id == "send-msg-btn") {
         console.log("Send message to buddy clicked");
 
-        let msgsent_date_time = new Date ()
+        let msgsent_date_time = new Date ();
+        let time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         let text_holder = document.getElementById("type-msg-input");
         let text = text_holder.value;
@@ -1262,7 +1263,7 @@ document.addEventListener('click', function(event) {
         let chatmsg_display = document.getElementById('chat-display');
         console.log(chatmsg_display);
 
-        // Append msg and time to chat_msg_div
+        //Append msg and time to chat_msg_div
         chat_msgdiv.appendChild(chat_msg)
         chat_msgdiv.appendChild(msg_time)
 
@@ -1272,7 +1273,8 @@ document.addEventListener('click', function(event) {
         let chat_data = {
             chat_msg: text,
             msg_recipient:chatmsg_display.previousElementSibling.firstElementChild.children[1].firstElementChild.innerText,
-            date_time: msgsent_date_time
+            date_time: msgsent_date_time,
+            time_zone:time_zone
         }
         console.log(chat_data);
 

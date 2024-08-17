@@ -1,11 +1,12 @@
-import datetime
 import os
 import json
+import pytz
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, g, session, jsonify
 from flask_session import Session
 from dotenv import load_dotenv
+from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 from scrapper import user_query
 from forms import CreateUserForm, LoginForm
@@ -923,11 +924,40 @@ def send_msg():
     chat_info["msg_recipient"] = msg_recipient
     print(chat_info)
 
-    # store msg_recipient in session
-    session["msg_recipient"] = chat_info["msg_recipient"]
+    # Time zone
+    # Assume you receive these from the client
+    utc_time_str = chat_info["date_time"]
+    user_time_zone = chat_info["time_zone"]
+
+    # Parse the UTC time
+    utc_time = datetime.fromisoformat(utc_time_str.replace('Z', '+00:00'))
+    print(utc_time)
+
+    # Convert to user's local time
+    local_tz = pytz.timezone(user_time_zone)
+    local_time = utc_time.astimezone(local_tz)
+
+
+    print(local_tz)
+    print(local_time)
+
+    # Extract date and time separetely
+    msg_date = local_time.strftime('%Y-%m-%d')
+    msg_time = local_time.strftime('%H:%M:%S')
+    msgtimezone_offset = local_time.strftime('%z')
+    formatted_timezone_offset = msgtimezone_offset[:3] + ':' + msgtimezone_offset[3:]
+
+    print(msg_date)
+    print(msg_time)
+    print(msgtimezone_offset)
+    print(formatted_timezone_offset)
+
+    # store msg_recipient
+    msg_recipient = int(chat_info["msg_recipient"])
+    print(msg_recipient)
 
     # store data in database
-    db.execute("INSERT INTO chat_messages (date_time, message, msg_sender, msg_recipient) VALUES (?,?,?,?)", chat_info["date_time"], chat_info["chat_msg"],chat_info["msg_recipient"],session["user_id"] )
+    db.execute("INSERT INTO chat_messages (date, time, time_zone, utc_timestamp, timezone_offset, message, msg_sender, msg_recipient) VALUES (?,?,?,?,?,?,?,?)", msg_date, msg_time, user_time_zone, chat_info["date_time"], formatted_timezone_offset, chat_info["chat_msg"], session["user_id"], msg_recipient )
 
     return jsonify({"message": "Message sent"})  
 
@@ -955,7 +985,7 @@ def previous_chatmsgs():
     previous_chatswith = int(previous_chatid["id"])
     print(previous_chatswith)
 
-    chat_history = db.execute("SELECT date_time, message FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ? UNION SELECT date_time, message FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ?", session["user_id"], previous_chatswith, previous_chatswith, session["user_id"] )
+    chat_history = db.execute("SELECT date, time, message FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ? UNION SELECT date, time, message FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ?", session["user_id"], previous_chatswith, previous_chatswith, session["user_id"] )
     print(chat_history)
 
     return jsonify(chat_history)

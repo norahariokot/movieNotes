@@ -66,7 +66,11 @@ CREATE TABLE recommendations (
 
 CREATE TABLE chat_messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  date_time TEXT NOT NULL,
+  date TEXT NOT NULL,
+  time TEXT NOT NULL,
+  time_zone TEXT NOT NULL,
+  utc_timestamp TEXT NOT NULL,
+  timezone_offset TEXT NOT NULL,
   message TEXT NOT NULL,
   msg_sender INTEGER NOT NULL,
   msg_recipient INTEGER NOT NULL,
