@@ -239,6 +239,7 @@ def search_watched ():
         watched_search_response = db.execute("SELECT * FROM watched WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
     else:
         watched_search_response = []
+        
     #print(search_response) 
     for dict_item in watched_search_response:
         print(dict_item["movie_title"])   
@@ -248,13 +249,53 @@ def search_watched ():
 @app.route("/watched_section", methods=["GET"]) 
 def watched_section():
     watched_section = True
+    all_watched_movies =True
     movie = db.execute ("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
     watched_options = [["Favourites", "/favourites"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]
     json_watched_options = json.dumps(watched_options)
     #print(watched_options)
-    #print(movie)
+    print(movie)
     
-    return render_template("index.html", watched_section=watched_section, sections=sections, movie=movie, json_watched_options=json_watched_options, user_profile=session.get("user_profile"))   
+    return render_template("index.html", watched_section=watched_section, all_watched_movies=all_watched_movies, sections=sections, movie=movie, json_watched_options=json_watched_options, user_profile=session.get("user_profile"))   
+
+
+@app.route("/watched_by_year", methods=["GET"])
+def watched_by_year():
+    print("Watched by year fired")
+    watched_section = True
+    watched_by_year = True
+
+    # obtain movie watche years
+    movie_watched_years = db.execute("SELECT DISTINCT strftime('%Y', movie_watched_date) AS watched_year FROM watched WHERE user_id = ? ORDER BY watched_year DESC", session["user_id"])
+    print(movie_watched_years)
+
+    # remove empty watched year - none
+    for dict_item in movie_watched_years:
+        if dict_item["watched_year"] == None:
+            movie_watched_years.remove(dict_item)
+        else:
+            dict_item["route"] = "/watched_in_year"  
+            dict_item["yearwatched_info"] = dict_item["watched_year"] 
+    print(movie_watched_years)   
+
+    
+    return render_template("index.html", watched_section=watched_section, watched_by_year=watched_by_year, movie_watched_years=movie_watched_years,sections=sections, user_profile=session.get("user_profile"))   
+
+
+
+@app.route("/watched_in_year", methods=["POST"])
+def watched_in_year():
+    print("Watched in year route fired")
+    
+    #Receive data from frontend via fetch function:
+    year_watched = request.get_json()
+    print(year_watched)
+
+    # Retrieve movies watched in year_watched from database
+    movieswatched_inyear = db.execute("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear FROM watched WHERE user_id = ? AND WatchedYear = ?", session["user_id"], year_watched)
+    print(movieswatched_inyear)
+
+    return jsonify(movieswatched_inyear)
 
 
 @app.route("/favourites", methods=["POST"])
@@ -881,7 +922,7 @@ def buddy_chats():
 
     # Retrieve user profile of movie buddies previously chatted with
     print("Previous chats")
-    chat_history_buddies = db.execute("SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN chat_messages ON users.id = chat_messages.msg_sender WHERE msg_recipient = ? UNION SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN chat_messages ON users.id = chat_messages.msg_recipient WHERE msg_sender = ?", session["user_id"], session["user_id"] )
+    chat_history_buddies = db.execute("SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN ( SELECT msg_sender AS user_id, MAX(date || ' ' || time) AS latest_message FROM chat_messages WHERE msg_recipient = ? GROUP BY msg_sender UNION SELECT msg_recipient AS user_id, MAX(date || ' ' || time) AS latest_message FROM chat_messages WHERE msg_sender = ? GROUP BY msg_recipient ) AS latest_messages ON users.id = latest_messages.user_id ORDER BY latest_messages.latest_message DESC", session["user_id"], session["user_id"] )
     print(chat_history_buddies)
 
     for dict_item in chat_history_buddies:
@@ -985,10 +1026,12 @@ def previous_chatmsgs():
     previous_chatswith = int(previous_chatid["id"])
     print(previous_chatswith)
 
-    chat_history = db.execute("SELECT date, time, message FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ? UNION SELECT date, time, message FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ?", session["user_id"], previous_chatswith, previous_chatswith, session["user_id"] )
+    chat_history = db.execute("SELECT date, time, message, msg_sender FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ? UNION SELECT date, time, message, msg_sender FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ? ", session["user_id"], previous_chatswith, previous_chatswith, session["user_id"] )
     print(chat_history)
 
-    return jsonify(chat_history)
+    user_sessionid = session["user_id"]
+
+    return jsonify({"chat_history": chat_history, "user_id": user_sessionid})
 
 
     

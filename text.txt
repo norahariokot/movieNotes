@@ -122,6 +122,8 @@ UNION
 SELECT date_time, message FROM chat_messages WHERE msg_sender = 1 AND msg_recipient = 2 UNION SELECT date_time, message FROM chat_messages WHERE msg_sender = 2 AND msg_recipient = 1;
 
 
+SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN ( SELECT msg_sender AS user_id, MAX(date || ' ' || time) AS latest_message FROM chat_messages WHERE msg_recipient = ? GROUP BY msg_sender UNION SELECT msg_recipient AS user_id, MAX(date || ' ' || time) AS latest_message FROM chat_messages WHERE msg_sender = ? GROUP BY msg_recipient ) AS latest_messages ON users.id = latest_messages.user_id ORDER BY latest_messages.latest_message DESC;
+
 
 
 

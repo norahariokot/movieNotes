@@ -490,6 +490,13 @@
         {% if watched_section %}
             <div class="watched-section-wrapper">
                 <h2 class="section-title"> Watched Movies</h2>
+
+                <div class="watched-view-btns">
+                    <a href="/watched_section" id="all-watched-movies">All Watched Movies</a>
+                    <a href="/watched_by_year" id="watched-by-year">Watched Movies by Year</a>
+                </div>
+
+                {% if all_watched_movies %} 
                 <div>
                     <p class="section-total">{{ movie|length }} Movies Watched </p>
                     <div class="section-search-wrapper">
@@ -502,13 +509,11 @@
                 </div>
                
 
-                <div class="watched-view-btns">
-                    <button>All</button>
-                    <button>View by Year</button>
-                </div>
+                
 
                 <p style="display: none;" id="watched-options-list" class="movie_data_id">{{ json_watched_options }}</p>
                 <div id="allwatched-movie-display" class="section-display">
+                  
                     {% for dict_item in movie %}
                         <div class="movie-info-container">
                             <p style="display: none;">{{dict_item["id"]}}</p>                                                      
@@ -534,10 +539,22 @@
                     
                         
                     {% endfor %}
+                {% endif %}    
 
                 </div>
 
                 <div class="watched-year-movie-display">
+                    {% if watched_by_year %}
+                        <h3> Watched movies by year </h3>
+
+                        <div class="watched-movie-years">
+
+                            {% for year in movie_watched_years %}
+                                <a href="#" id="watched-movie-year">{{year["watched_year"]}} </a>
+                            {% endfor %}
+
+                        </div>
+                    {%endif%}
                     
                 </div>
 

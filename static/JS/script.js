@@ -1,7 +1,6 @@
 let recommendie_ids = []; // This list is being defined here to store ids for recommendie buddies. It is in outer scope to retain state
 
-// Function to create pop menu for section control buttons
-         
+// Function to create pop menu for section control buttons       
 let isSectionPopupVisible = false;
 let section_popup_menu;
 let section_popup_menu_div;
@@ -146,10 +145,7 @@ document.addEventListener('click', function(event) {
                 buddy_recommendations_div.appendChild(recommend_btn);
                 buddy_recommendations_div.style.display = "none";
                 section_popup_menu_div.insertAdjacentElement('afterend', buddy_recommendations_div)
-               
-                           
-
-
+              
                 //Add event handlers to all links in the list items to send data to the server side
                 for(let i = 0; i < section_list_options.length; i++) {
                     console.log(i);
@@ -157,7 +153,6 @@ document.addEventListener('click', function(event) {
                         event.preventDefault();
                         console.log(event.target);
                         
-
                         if(section_list_options[i].firstChild.innerText == "Recommend") {
 
                             fetch("/buddy_recommend_info")
@@ -279,10 +274,7 @@ document.addEventListener('click', function(event) {
                                 })
                             });
 
-                        
-                        
-
-
+                       
                         }
 
                         else if (element.id =="recommendations-stn-ctls") {
@@ -353,16 +345,8 @@ document.addEventListener('click', function(event) {
                             alert(data.message);
                         })
                         .catch((error) => console.error('Error:', error));
-                    
-                     
+                                        
                         }
-
-
-                        
-
-                        
-
-                        
 
                     });
                 }  
@@ -403,8 +387,6 @@ document.addEventListener('click', function(event) {
                         url = "/watch"
                     }
 
-
-
                     console.log(movie_data_id);
                     console.log(data)
 
@@ -429,8 +411,6 @@ document.addEventListener('click', function(event) {
     }
 
 });
-
-
 
 // Function for search functions within watched, favourite, currenctly-watching, watchlist and movie-buddies sections
 //Step 1: Select the search element using class name
@@ -486,14 +466,8 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log(section_display_tohide);
             section_display_tohide.style.display = "none";
         }
-
-      
-
         });
-
-        
-     
-        
+             
     // Step 3: input event is then added to the search input
     section_search_input[i].addEventListener('input', async function(event) {
         let search_close = document.getElementById('search-close')
@@ -552,9 +526,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Step 4: use fetch function to send the user query inputed in section search to the server
-
-        
-
+      
         let response = await fetch(fetch_url + event.target.value);
         let feedback = await response.json();
         console.log(feedback);
@@ -1061,13 +1033,67 @@ function chatwith(event) {
     .then(response => response.json())
     .then(data => {
         console.log(data);
+        let chats = data.chat_history;
+        let user_id = data.user_id
+        let grouped_msgs = chats.reduce((acc, chat) => {
+            let date = chat.date;
+            if(!acc[date]) {
+                acc[date] = [];
+            }
+            acc[date].push(chat);
+            return acc;
+        }, {});
+        console.log("Grouped_msgs:", grouped_msgs);
         let chat_display = document.getElementById('chat-display');
         chat_display.innerHTML = "";
-        data.forEach(msg => {
-        let p = document.createElement("p");
-        p.textContent = msg.message;
-        chat_display.appendChild(p)
-        });                
+        for(let date in grouped_msgs) {
+            let today = new Date().toDateString();
+            let db_date = new Date(date).toDateString()
+            let display_date; // variable to store the date that will be displayed in chat display
+            if (db_date == today) {
+                display_date = "Today";
+            }
+            else if ((today - 1) == db_date) {
+                display_date = "Yesterday";
+            }
+            else {
+                display_date = date;
+            }
+            // Create variable to display date in chat display
+            let text_date = document.createElement("div");
+            text_date.innerText = display_date;
+            text_date.className = "text-date-title"
+            chat_display.appendChild(text_date);
+
+            grouped_msgs[date].forEach(msg => {
+                console.log(msg)
+                // Create a div and paragraphs elements to display text and time    
+                let text_div = document.createElement("div");   
+                let msg_text = document.createElement("p");
+                msg_text.textContent = msg.message;
+                let msg_time = document.createElement("p");
+                msg_time.textContent = msg.time;
+                let msg_sender = document.createElement("span");
+                msg_sender.textContent = msg.msg_sender;
+                msg_text.appendChild(msg_sender);
+                msg_sender.style.display = "None";
+                // Append elements to DOM
+                if (msg_sender.textContent == user_id) {
+                        text_div.className = "sent-by-user"
+                }
+                else {
+                text_div.className = "chat-msg"
+                }
+                text_div.appendChild(msg_text);
+                text_div.appendChild(msg_time);
+                chat_display.appendChild(text_div);
+                
+            })
+        }
+
+        console.log(chats);
+        console.log(user_id)
+        
     })
     .catch((error) => console.log('Error:', error)) 
     
@@ -1161,57 +1187,7 @@ document.addEventListener("click", function(event) {
 
                 // Keep updating the text area with buddy info you are chatting with
                 newchatbuddy_link.addEventListener('click', chatwith)
-                /*newchatbuddy_link.addEventListener('click', function(event) {
-                    console.log(event.target);
-                    event.preventDefault();
-                    let chatwith_info = event.currentTarget;
-
-                    console.log(chatwith_info);
-                    event.preventDefault();
-                    console.log("Movie Buddy to chat with clicked")
-
-                    let chat_area_header = document.getElementById('chat-area-header');
-                    chat_area_header.innerHTML = ''; // clear previously added clones from the header div
-                    console.log(chat_area_header)
-
-                    let originalElement = chatwith_info.firstElementChild;
-                    console.log(originalElement);
-                    let clone = originalElement.cloneNode(true);
-                    console.log(clone)
-
-                    chat_area_header.appendChild(clone);
-
-                    visible_div.style.display = "none";
-                    hidden_div.style.display = "block";
-
-                    let chathistory_id = {
-                        id:clone.children[1].firstElementChild.innerText
-                    }
-                    console.log(chathistory_id);
-
-                    fetch("/previous_chatmsgs", {
-                        method:'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(chathistory_id)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        let chat_display = document.getElementById('chat-display');
-                        chat_display.innerHTML = "";
-                        data.forEach(msg => {
-                        let p = document.createElement("p");
-                        p.textContent = msg.message;
-                        chat_display.appendChild(p)
-                        });                
-                    })
-                    .catch((error) => console.log('Error:', error)) 
-                    
-                })*/
-
-                
+               
             })
             
         })
@@ -1237,6 +1213,7 @@ document.addEventListener('click', function(event) {
         text_holder.value = " "; // clear the text holder after msg is sent
 
         let chat_msgdiv = document.createElement('div');
+        chat_msgdiv.className = "sent-by-user";
 
         let chat_msg = document.createElement('p');
         chat_msg.innerText = text;
@@ -1292,23 +1269,8 @@ document.addEventListener('click', function(event) {
             alert(data.message)
         })
         .catch((error) => console.log('Error:', error))
-       
-        /*fetch("/show_chatmsgs")
-        .then(response => response.json())
-        .then(data => {
-                console.log(data);
-                let chat_display = document.getElementById('chat-display');
-                chat_display.innerHTML = "";
-                data.msgs.forEach(msg => {
-                    let p = document.createElement("p");
-                    p.textContent = msg.message;
-                    chat_display.appendChild(p)
-                });                
-            })
-        .catch((error) => console.log('Error:', error)) */
-    }
-
-    
+             
+    }   
 })
 
 
@@ -1318,6 +1280,32 @@ document.addEventListener('click', function(event) {
         console.log("Chat with Buddy clicked")
         chatwith(event)
     }
+});
+
+// Function to display movie year info
+document.addEventListener('click', function(event) {
+    console.log(event.target)
+    let year;
+    if(event.target.id == "watched-movie-year") {
+        event.preventDefault();
+        year = document.getElementById("watched-movie-year").innerText;
+
+        console.log(year)
+
+        // Send the year to the server to request for watched movies in that year
+        fetch("/watched_in_year", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(year)
+        })
+        .then(response=> response.json())
+        .then(yearwatched_movie_info => {
+            console.log(yearwatched_movie_info)
+        })
+        .catch((error) => console.error('Error:', error));
+    } 
 });
 
 

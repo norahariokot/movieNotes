@@ -195,8 +195,17 @@ nav {
     /*border: solid black;*/
 }
 .watched-year-movie-display {
-    display: grid;
-    grid-template-columns: minmax(1em,1fr) repeat(5, minmax(20%,1fr)) minmax(1em,1fr);
+    
+}
+
+.watched-movie-years {
+    display: flex;
+
+    & * {
+          margin-right: 1em;
+    }
+   
+        
 }
 
 .section-movie-container {
@@ -382,9 +391,41 @@ nav {
 }
 
 .chat-display {
-    width: 80%;
-    min-height: 40vh;
-    max-height: fit-content;
+    width: 100%;
+    min-height: 50vh;
+    max-height: max-content;
     border: solid red;
+    display: flex;
+    flex-direction: column;
 }
+
+.sent-by-user {
+    align-self: end;
+    background-color: aqua;
+    border: solid black;
+    & * {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.chat-msg {
+    align-self: start;
+    background-color: yellowgreen;
+    border: solid black;
+    & * {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.text-date-title {
+    border: solid black;
+    align-self: center;
+    padding: .3em;
+    border-radius: 15%;
+
+}
+
+
 
