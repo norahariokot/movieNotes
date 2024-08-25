@@ -150,7 +150,9 @@ def search():
     return jsonify(movies)  
 
 
+# Route to add movies to watched list
 @app.route("/watched", methods=["POST"])
+@login_required
 def watched():
     print("Watched route followed")
     movie_info = request.get_json()
@@ -178,10 +180,15 @@ def watched():
 
 # Route to handle completed watching
 @app.route("/completed_watch", methods=["POST"])
+@login_required
 def completed_watch():
     print("Completed watching route")
+
+    # Retrieve movie data from fetch function
     movie_info = request.get_json()
     print(movie_info)
+
+    # Extract data from movie_info object
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     watched_date = movie_info["date"]
     watched_route = movie_info["data_route"]
@@ -215,8 +222,10 @@ def completed_watch():
             db.execute("DELETE FROM watchlist WHERE id = ?", data_id)    
         return jsonify({"message":f"Movie added successfully added to your Watched List and removed from your {watched_route}"})  
 
-    
+
+# Route to delete watche movie from watched list    
 @app.route("/delete_watched", methods=["POST"])
+@login_required
 def delete_watched():
     print("Delete watched movie route")
     # Receive data from frontend via fetch function:
@@ -231,27 +240,39 @@ def delete_watched():
     db.execute("DELETE FROM watched WHERE id = ?", movie_info_id)
     return jsonify({"message": "Movie successfully removed from your Watched List"})
 
-@app.route("/search_watched")   
+
+# Route to search for all watched movies
+@app.route("/search_watched")  
+@login_required 
 def search_watched ():
     print("Search watched fired")
+
+    # Retrieve search request
     q = request.args.get("q")
     if q:
         watched_search_response = db.execute("SELECT * FROM watched WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
     else:
         watched_search_response = []
-        
+
     #print(search_response) 
     for dict_item in watched_search_response:
         print(dict_item["movie_title"])   
-    return jsonify(watched_search_response)
-        
+    
 
+
+# Route to display all watched movies
 @app.route("/watched_section", methods=["GET"]) 
+@login_required
 def watched_section():
     watched_section = True
     all_watched_movies =True
+
+    # Retrieve all watched movies from watched table in database
     movie = db.execute ("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
+    
+    # Control options for all watched movies
     watched_options = [["Favourites", "/favourites"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]
+    # Convert the control options to json object
     json_watched_options = json.dumps(watched_options)
     #print(watched_options)
     print(movie)
@@ -259,7 +280,9 @@ def watched_section():
     return render_template("index.html", watched_section=watched_section, all_watched_movies=all_watched_movies, sections=sections, movie=movie, json_watched_options=json_watched_options, user_profile=session.get("user_profile"))   
 
 
+# Route to display movies watched by year watched
 @app.route("/watched_by_year", methods=["GET"])
+@login_required
 def watched_by_year():
     print("Watched by year fired")
     watched_section = True
@@ -282,8 +305,9 @@ def watched_by_year():
     return render_template("index.html", watched_section=watched_section, watched_by_year=watched_by_year, movie_watched_years=movie_watched_years,sections=sections, user_profile=session.get("user_profile"))   
 
 
-
+# Route to display movies watched in a particular year
 @app.route("/watched_in_year", methods=["POST"])
+@login_required
 def watched_in_year():
     print("Watched in year route fired")
     
@@ -298,11 +322,17 @@ def watched_in_year():
     return jsonify(movieswatched_inyear)
 
 
+# Route to add movies to the favourites list
 @app.route("/favourites", methods=["POST"])
+@login_required
 def favourites():
     print("Favourites route followed")
+
+    # Retrieve movie info from fetch request
     movie_info= request.get_json()
     print(movie_info)
+
+    # Extract the data from the object
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     
     #Ensure that the movie doesnt already exit in user list before adding it to the db
@@ -323,7 +353,9 @@ def favourites():
     return jsonify({"message": "Movie successfully added to your Favourites list"})  
 
 
+# Route to delete movies from favourites 
 @app.route("/delete_favourite", methods=["POST"])
+@login_required
 def delete_favourite():
     print("Delete Favourite movie route")
     # Receive data from frontend via fetch function:
@@ -339,36 +371,52 @@ def delete_favourite():
     return jsonify({"message": "Movie successfully deleted from your Favourites List"})
 
 
+# Route to display movies in the favourites section
 @app.route("/favourites_section", methods=["GET"])
+@login_required
 def favourites_section():
     print("Favourites sections")
     favourite_section = True
+
+    # Retrieve favourites movies from the database
     favourite_movies = db.execute("SELECT * FROM favourites WHERE user_id = ?", session["user_id"])
+
+    # Control options for movies in the favourites section
     favourite_ctl_options = [["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_favourite"]]
     json_favourite_options = json.dumps(favourite_ctl_options)
     return render_template("index.html", favourite_section=favourite_section, sections=sections, favourite_movies=favourite_movies, json_favourite_options=json_favourite_options, user_profile=session.get("user_profile"))
 
 
-@app.route("/search_favourites")   
+# Route to search for movies in favourites section
+@app.route("/search_favourites")  
+@login_required 
 def search_favourites ():
     print("Search favourites fired")
+
+    # Retrieve movies from the search request
     q = request.args.get("q")
     if q:
         favourites_search_response = db.execute("SELECT * FROM favourites WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
     else:
         favourites_search_response = []
     #print(search_response) 
+
+    # Print only the titles of the favourite movies
     for dict_item in favourites_search_response:
         print(dict_item["movie_title"])   
     return jsonify(favourites_search_response)
         
 
-
+# Route to add movies to currently watching list
 @app.route("/currently_watching", methods=["POST"])
+@login_required
 def currently_watching():
     print("Currently_watching route followed")
+
+    # Retrieve movie info from fetch request
     movie_info= request.get_json()
     print(movie_info)
+
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
     
     # Ensure movie doesnt already exist in currently watching before adding it to database
@@ -388,7 +436,9 @@ def currently_watching():
     return jsonify({"message": "Movie successfully added to Currently Watching List"}) 
 
 
+# Route to delete movies from currently watching list
 @app.route("/delete_currentlywatching", methods=["POST"])
+@login_required
 def delete_currentlywatching():
     print("Delete Currently watching route")
     # Receive data from frontend via fetch function:
@@ -404,20 +454,31 @@ def delete_currentlywatching():
     return jsonify({"message": "Movie successfully deleted from your Currently Watching List"})
 
 
+# Route to display movies in currently watching list
 @app.route("/currently_watching_section")
+@login_required
 def currently_watching_section():
     print("Currently watching section")
     currently_watching = True
+
+    # Retrieve currently watching movies from database
     currently_watching_movies = db.execute("SELECT *  FROM currently_watching WHERE user_id = ?", session["user_id"])    
     print(currently_watching_movies)
+
+    # Currently watching options
     currently_watching_options = [["Completed Watching", "/completed_watch"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_currentlywatching"]] 
-    json_currently_watching_options = json.dumps(currently_watching_options)    
+    json_currently_watching_options = json.dumps(currently_watching_options)   
+
     return render_template("index.html", sections=sections, currently_watching=currently_watching, currently_watching_movies=currently_watching_movies, json_currently_watching_options=json_currently_watching_options, user_profile=session.get("user_profile")) 
 
 
+# Route to search for movies in the currently watching section
 @app.route("/search_currentlyWatching")   
+@login_required
 def search_currentlyWatching ():
     print("Search Currently watching fired")
+
+    # Retrieve search query
     q = request.args.get("q")
     if q:
         currentlyWatching_search_response = db.execute("SELECT * FROM currently_watching WHERE movie_title LIKE ? AND user_id = ?", "%" + q + "%", session["user_id"])
@@ -426,13 +487,17 @@ def search_currentlyWatching ():
     #print(search_response) 
     for dict_item in currentlyWatching_search_response:
         print(dict_item["movie_title"])   
+
     return jsonify(currentlyWatching_search_response)
 
 
-
+# Route to add movies to the watchlist 
 @app.route("/watchlist", methods=["POST"])
+@login_required
 def watchlist():
     print("Watchlist route followed")
+
+
     movie_info= request.get_json()
     print(movie_info)
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
@@ -932,7 +997,7 @@ def buddy_chats():
         if dict_item['profile_pic'] == None:
             dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
 
-    print(chat_history_buddies)        
+    print(chat_history_buddies)         
 
     return render_template("index.html", sections=sections, chat_history_buddies=chat_history_buddies, buddy_chats=buddy_chats, user_profile=session.get("user_profile"))
 
@@ -977,7 +1042,6 @@ def send_msg():
     # Convert to user's local time
     local_tz = pytz.timezone(user_time_zone)
     local_time = utc_time.astimezone(local_tz)
-
 
     print(local_tz)
     print(local_time)

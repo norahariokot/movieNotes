@@ -17,8 +17,7 @@ document.addEventListener('click', function(event) {
             //remove popup menu
             section_popup_menu.remove();
             isSectionPopupVisible = false;
-        }
-
+        } 
         else {
                 section_popup_menu_div = document.createElement("div");
                 section_popup_menu_div.className = "popup-menu-wrapper";
@@ -30,40 +29,31 @@ document.addEventListener('click', function(event) {
                 // Add diffrent popup options to deferent links 
                 if (event.target.id == 'watched-stn-ctls') {
                     console.log(event.target)
-                    section_options_list = JSON.parse(document.getElementById('watched-options-list').innerText);
-                
-                }
-
+                    section_options_list = JSON.parse(document.getElementById('watched-options-list').innerText);                
+                } 
                 else if (event.target.id == "favourite-stn-ctls") {
                         console.log("Favourites sections options")
                         section_options_list = JSON.parse(document.getElementById('favourite-options-list').innerText);
-                }
-
+                } 
                 else if (event.target.id == "currentlywatching-stn-ctls") {
                     section_options_list = JSON.parse(document.getElementById('currentlywatching-options-list').innerText);
-                }
-
+                } 
                 else if (event.target.id == "watchlist-stn-ctls") {
                     section_options_list = JSON.parse(document.getElementById('watchlist-options-list').innerText);
-                }
-
+                } 
                 else if (event.target.id == "buddy-watched-stn-ctls") {
                     section_options_list = JSON.parse(document.getElementById('buddynotes-options-list').innerText);
-                }
-
+                } 
                 else if (event.target.id == "recommendations-stn-ctls") {
                     section_options_list = JSON.parse(document.getElementById('recommendations-sections-list').innerText);
-                }
-
-                console.log(typeof(section_options_list))
+                }               
                 console.log(section_options_list)
 
                 let section_options = {}
                 section_options_list.forEach(list_item => {
                     section_options[list_item[0]] = list_item[1]
                 });
-                console.log(section_options)
-
+              
                 let section_list_options = [];
                 for (let key in section_options) {
                     let section_popup_options = document.createElement("li");
@@ -75,8 +65,7 @@ document.addEventListener('click', function(event) {
                     section_popup_menu.appendChild(section_popup_options);
                     section_list_options.push(section_popup_options);
                 }
-                console.log(section_list_options);
-
+          
                 // Append pop-up menu to the DOM
                 section_popup_menu_div.appendChild(section_popup_menu);
                 if (event.target.id == "recommendations-stn-ctls") {
@@ -89,8 +78,7 @@ document.addEventListener('click', function(event) {
                     console.log(event.target.parentNode.parentNode.parentNode)
                     isSectionPopupVisible = true;
                 }
-                
-
+              
                 // Create elements to add watched date elements
                 let section_watched_date = null;
                 let section_date_div = document.createElement("div");
@@ -203,10 +191,7 @@ document.addEventListener('click', function(event) {
                                             if(index !== -1) {
                                                 recommendie_ids.splice(index, 1)
                                             }
-
                                         }
-
-                                        
                                     });
                                     
                                     let recommendie_div = document.createElement('div');
@@ -250,12 +235,8 @@ document.addEventListener('click', function(event) {
                                     recommendie_wrapper.appendChild(recommendie_div);
                             
                                     // append recommendie_wrapper to recommendations
-                                    recommendations.appendChild(recommendie_wrapper);
-
-
-                                })
-
-                                
+                                    recommendations.appendChild(recommendie_wrapper); 
+                                }) 
                             })
                             .catch(error => {
                                 // Handle any errors that occurred during the fetch
@@ -273,8 +254,6 @@ document.addEventListener('click', function(event) {
                                     checkbox.checked = false;
                                 })
                             });
-
-                       
                         }
 
                         else if (element.id =="recommendations-stn-ctls") {
@@ -305,8 +284,7 @@ document.addEventListener('click', function(event) {
                             .then(data => {
                                 alert(data.message);
                             })
-                            .catch((error) => console.error('Error:',error));
-                            
+                            .catch((error) => console.error('Error:',error));                             
                         }
                         
                         else {
@@ -324,8 +302,7 @@ document.addEventListener('click', function(event) {
                                 if (section_list_options[i].firstChild.innerText == "Completed Watching") {
                                     data.date = section_watched_date;
                                     data.data_route = document.getElementsByClassName('route')[0].innerText;
-                                }
-        
+                                }         
                                 else if (section_list_options[i].firstChild.innerText == "Watched") {
                                     data.date = section_watched_date;
                                 }
@@ -351,8 +328,7 @@ document.addEventListener('click', function(event) {
                     });
                 }  
 
-                // Send data to the back end when section_date is updated
-                
+                // Send data to the back end when section_date is updated               
                 function upDateWatchedDate() {
                         section_watched_date = section_date.value;
                 }
@@ -372,22 +348,18 @@ document.addEventListener('click', function(event) {
                         movie_poster: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.src,
                         movie_poster_sizes: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
                         movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset,
-                        date: section_watched_date 
-                                             
+                        date: section_watched_date                                              
                     }
                     let url;
 
                     if (section_list_options[i].firstChild.innerText == "Completed Watching") {
                         data.data_route = document.getElementsByClassName('route')[0].innerText;
                         url = "/completed_watch";
-                    }
-
+                    } 
                     else if (section_list_options[i].firstChild.innerText == "Watched") {
                         data.date = section_watched_date;
                         url = "/watch"
                     }
-
-                    console.log(movie_data_id);
                     console.log(data)
 
                     fetch(url, {
@@ -407,7 +379,6 @@ document.addEventListener('click', function(event) {
 
             }
 
-        
     }
 
 });
@@ -439,22 +410,18 @@ document.addEventListener("DOMContentLoaded", function() {
         if (event.target.id == 'watched-movie-search') {
             section_display_tohide = document.getElementById('allwatched-movie-display');            
             console.log(section_display_tohide);
-            section_display_tohide.style.display = "none";
-                      
-        }  
-        
+            section_display_tohide.style.display = "none";                       
+        }       
         else if (event.target.id == 'favourite-movie-search') {
             section_display_tohide = document.getElementById('favourite-movie-display');            
             console.log(section_display_tohide);
             section_display_tohide.style.display = "none";
-        }
-
+        } 
         else if (event.target.id == 'currentlyWatching-movie-search') {
             section_display_tohide = document.getElementById('currentlywatching-movie-display');            
             console.log(section_display_tohide);
             section_display_tohide.style.display = "none";
         }
-
         else if (event.target.id == 'watchlist-movie-search') {
             section_display_tohide = document.getElementById('watchlist-movie-display');            
             console.log(section_display_tohide);
@@ -472,8 +439,6 @@ document.addEventListener("DOMContentLoaded", function() {
     section_search_input[i].addEventListener('input', async function(event) {
         let search_close = document.getElementById('search-close')
         search_close.style.display = "inline";
-
-           
          
         if (event.target.id == 'watched-movie-search') {
             section_display_tohide = document.getElementById('allwatched-movie-display'); 
@@ -481,52 +446,42 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log(section_display_tohide);
             section_display_tohide.style.display = "none";
             section_search_display.style.display = "block";
-            fetch_url = '/search_watched?q='
-          
-        }
-
+            fetch_url = '/search_watched?q='           
+        } 
         else if (event.target.id == 'favourite-movie-search') {
             section_display_tohide = document.getElementById('favourite-movie-display'); 
             section_search_display = document.getElementById('search-favourites-wrapper');        
             console.log(section_display_tohide);
             section_display_tohide.style.display = "none";
             section_search_display.style.display = "block";
-            fetch_url = '/search_favourites?q='
-          
-        }
-
+            fetch_url = '/search_favourites?q='           
+        } 
         else if (event.target.id == 'currentlyWatching-movie-search') {
             section_display_tohide = document.getElementById('currentlywatching-movie-display'); 
             section_search_display = document.getElementById('search-currentlyWatching-wrapper');        
             console.log(section_display_tohide);
             section_display_tohide.style.display = "none";
             section_search_display.style.display = "block";
-            fetch_url = '/search_currentlyWatching?q='
-          
-        }
-
+            fetch_url = '/search_currentlyWatching?q='           
+        } 
         else if (event.target.id == 'watchlist-movie-search') {
             section_display_tohide = document.getElementById('watchlist-movie-display'); 
             section_search_display = document.getElementById('search-watchlist-wrapper');        
             console.log(section_display_tohide);
             section_display_tohide.style.display = "none";
             section_search_display.style.display = "block";
-            fetch_url = '/search_watchlist?q='
-          
-        }
-
+            fetch_url = '/search_watchlist?q='           
+        } 
         else if (event.target.id == 'movie-buddies-search') {
             section_display_tohide = document.getElementById('movie-buddies-display'); 
             section_search_display = document.getElementById('search-moviebuddies-wrapper');        
             console.log(section_display_tohide);
             section_display_tohide.style.display = "none";
             section_search_display.style.display = "block";
-            fetch_url = '/search_moviebuddies?q='
-          
+            fetch_url = '/search_moviebuddies?q='           
         }
 
         // Step 4: use fetch function to send the user query inputed in section search to the server
-      
         let response = await fetch(fetch_url + event.target.value);
         let feedback = await response.json();
         console.log(feedback);
@@ -567,7 +522,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (status == "Send Movie Buddy Request" || status == "Accept Movie Buddy Request") {
                     movie_buddy_status = document.createElement("button")
                     movie_buddy_status.textContent = status;
-
                     
                     if(status == "Send Movie Buddy Request") {
                         movie_buddy_status.id = "send_buddyrequest";
@@ -575,12 +529,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     else if (status == "Accept Movie Buddy Request") {
                         movie_buddy_status.id = "accept_buddyrequest";
                     }
-                }
-
+                } 
                 else {
                     movie_buddy_status = document.createElement("span")
                     movie_buddy_status.textContent = "\u2022" + " "+ status;
-                }
+                } 
 
                 if (status == "Accept Movie Buddy Request" || status == "Buddy Request Declined") {
                     buddy_cta = document.createElement("button")
@@ -596,18 +549,13 @@ document.addEventListener("DOMContentLoaded", function() {
                         buddy_cta.id = "cta_resend_request"
                     }
                 }
-
-                
-               
-                
-                
+                               
                 movie_buddy_status.className = "movie-buddy-status"
                 movie_buddyuser_name.appendChild(movie_buddy_status);
                 if (buddy_cta) {
                     movie_buddyuser_name.appendChild(buddy_cta);
                 }
-             
-               
+                            
                 movie_buddy_info.appendChild(moviebuddy_id);
                 movie_buddy_info.appendChild(movie_buddyname);
                 movie_buddy_info.appendChild(movie_buddyuser_name);
@@ -624,11 +572,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
                 else {
                     section_search_display.appendChild(moviebuddy_container);
-                }
-                
-                
-            }
-
+                }               
+         }
 
         }
         else {
@@ -658,22 +603,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 let controls = document.createElement("img");
                 controls.className = "section-controls";
                 if (section_search_display.id == 'search-watched-wrapper') {
-                    console.log("Watched section ctls")
                     controls.id ='watched-stn-ctls'
-                }
-                
+                }                 
                 else if (section_search_display.id == 'search-favourites-wrapper') {
-                    console.log("Favourite section ctls")
                     controls.id ='favourite-stn-ctls'
-                }
-    
+                }     
                 else if (section_search_display.id == 'search-currentlyWatching-wrapper') {
-                    console.log("Currently watching section ctls")
                     controls.id ='currentlywatching-stn-ctls'
                 }
                 
                 else if (section_search_display.id == 'search-watchlist-wrapper') {
-                    console.log("Currently watching section ctls")
                     controls.id ='watchlist-stn-ctls'
                 };
     
@@ -682,17 +621,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 controls_btn.type = "button";
                 controls_btn.className = "controls-btn";
                 controls_btn.appendChild(controls);
-    
-                 
+                     
                 let movie_poster_div = document.createElement("div");
                 movie_poster_div.className= ("movie-poster-div")
                 let movie_poster = document.createElement("img");
                 movie_poster.src = poster;
                 movie_poster.sizes = "50vw, (min-width: 480px) 34vw, (min-width: 600px) 26vw, (min-width: 1024px) 16vw, (min-width: 1280px) 16vw";
-                movie_poster.srcset = posterset;
-                            
-                
-               
+                movie_poster.srcset = posterset;                            
                 movie_poster_div.appendChild(movie_poster);
     
                 let movie_title_div = document.createElement("div");
@@ -714,18 +649,12 @@ document.addEventListener("DOMContentLoaded", function() {
                             
                 movie_container_div.append(movie_id);
                 movie_container_div.appendChild(movie_poster_div);
-                movie_container_div.appendChild(movie_info_div);
-    
-    
-                            
+                movie_container_div.appendChild(movie_info_div);     
+                               
                 //document.getElementById("search-watched-wrapper").appendChild(movie_container_div);
-                section_search_display.appendChild(movie_container_div);
-               
-                                      
+                section_search_display.appendChild(movie_container_div);    
             }
-
         }
-        
               
     });
 
@@ -742,8 +671,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 }    
 });
-
-
 
     /*1. Target search element in DOM
         2. When targeted display the search content window, initial display is hidden
@@ -878,8 +805,6 @@ document.addEventListener("click", function(event) {
         });
     }
 
-    
-    
 });
 
 
@@ -893,30 +818,24 @@ document.addEventListener("click", function(event) {
     let url_1; //stores the initial flask route to be fired, to store the user id of buddy being viewed on the server
     let url_2; //stores the flask route where user is redirected to view the notes of the buddy 
     let buddy_info = document.getElementById("buddy-notes-view-id").innerText;
-    console.log(buddy_info)
-    
+    console.log(buddy_info)   
 
     // select element that triggers click event based on this condition
     if(movie_notes_id == "buddy-notes-watched") {
         console.log(movie_notes_id);
         url_1 = "/send_info_buddywatched";
-        url_2 = "/view_buddy_watched"
-      
+        url_2 = "/view_buddy_watched"       
     } 
-
     else if (movie_notes_id == "buddy-notes-favourites") {
         console.log(movie_notes_id);
         url_1 = "/send_info_buddy_favourites";
         url_2 = "/view_buddy_favourites";
-    }
-
+    } 
     else if (movie_notes_id == "buddy-notes-currently-watching") {
         console.log(movie_notes_id);
         url_1 = "/send_info_buddy_currentlywatching";
         url_2 = "/view_buddy_currentlywatching";
     }
-
-
 
     let buddy_data = {
         id:buddy_info
@@ -939,14 +858,8 @@ document.addEventListener("click", function(event) {
     .catch((error) => {
         console.error('Error:', error);
     });
-
-
     }
-
-    
-
 });
-
 
 document.addEventListener('click', function(event) {
     if(event.target.id == "recommend_btn" && recommendie_ids.length >= 1) {
