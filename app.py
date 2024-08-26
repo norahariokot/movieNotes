@@ -1,3 +1,4 @@
+import calendar
 import os
 import json
 import pytz
@@ -257,7 +258,7 @@ def search_watched ():
     #print(search_response) 
     for dict_item in watched_search_response:
         print(dict_item["movie_title"])   
-    
+    ##
 
 
 # Route to display all watched movies
@@ -316,10 +317,47 @@ def watched_in_year():
     print(year_watched)
 
     # Retrieve movies watched in year_watched from database
-    movieswatched_inyear = db.execute("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear FROM watched WHERE user_id = ? AND WatchedYear = ?", session["user_id"], year_watched)
+    movieswatched_inyear = db.execute("SELECT *, strftime('%Y', movie_watched_date)  AS watched_year, strftime('%m', movie_watched_date) AS watched_month FROM watched WHERE user_id = ? AND watched_year = ? ORDER BY watched_month", session["user_id"], year_watched)
     print(movieswatched_inyear)
 
-    return jsonify(movieswatched_inyear)
+    for dict_item in movieswatched_inyear:
+        month_info = dict_item["watched_month"].split("0")
+        month_number = int(month_info[1])
+        month = (calendar.month_name[month_number])
+
+        print(month_info)
+        print(month_number)
+        print(month)
+
+        dict_item["watched_month"] = month
+        dict_item["month_number"] = month_number
+
+    print(movieswatched_inyear) 
+    print(len(movieswatched_inyear))   
+
+    group_bymonth = {}
+    for dict_item in movieswatched_inyear:
+        month = dict_item["watched_month"]
+        
+        if dict_item["watched_month"] not in group_bymonth:
+            print("Not found")
+            movies_list = []
+            movies_list.append(dict_item)
+            group_bymonth[month] = movies_list
+        else:
+            print("found")
+            group_bymonth[month].append(dict_item) 
+        print(group_bymonth)       
+
+    print(f"Group by month {group_bymonth}") 
+    print(len(group_bymonth))  
+
+    month_watched = [] 
+    month_watched.append(group_bymonth)
+
+        
+
+    return jsonify(month_watched)
 
 
 # Route to add movies to the favourites list

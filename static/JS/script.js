@@ -8,7 +8,6 @@ let section_popup_menu_div;
 document.addEventListener('click', function(event) {
     console.log(event.target);
     let element = event.target;
-    console.log(element)
      
     // Target the control buttons in the search page and section pages
     if (event.target.matches('.section-controls')) {
@@ -98,8 +97,7 @@ document.addEventListener('click', function(event) {
                         console.log("Completed watching or watched found")
                  
                         list_option.addEventListener('mouseover', function() {
-                            section_date_div.style.display = "block";
-                           
+                            section_date_div.style.display = "block"; 
                         });
 
                         section_date_div.addEventListener('mouseover', function() {
@@ -109,7 +107,6 @@ document.addEventListener('click', function(event) {
                         section_date_div.addEventListener('mouseout', function() {
                             section_date_div.style.display = "none";
                         });
-
                    }
                 })
 
@@ -142,13 +139,11 @@ document.addEventListener('click', function(event) {
                         console.log(event.target);
                         
                         if(section_list_options[i].firstChild.innerText == "Recommend") {
-
                             fetch("/buddy_recommend_info")
                             .then(response => {
                                // Convert the response to JSON
                                console.log("buddy recommendation info returned")
-                               return response.json();
-                               
+                               return response.json();                                
                             })
                             .then(recommend_to => {
                                 //Process the JSON data
@@ -1201,9 +1196,12 @@ document.addEventListener('click', function(event) {
     let year;
     if(event.target.id == "watched-movie-year") {
         event.preventDefault();
-        year = document.getElementById("watched-movie-year").innerText;
+        year = event.target.innerText;
 
         console.log(year)
+        let display_div = document.getElementById("watchedyear-movie-display");
+        console.log(display_div);
+        display_div.innerHTML = " "
 
         // Send the year to the server to request for watched movies in that year
         fetch("/watched_in_year", {
@@ -1216,6 +1214,49 @@ document.addEventListener('click', function(event) {
         .then(response=> response.json())
         .then(yearwatched_movie_info => {
             console.log(yearwatched_movie_info)
+
+            // Convert the object to an array of month objects
+            let monthArray = Object.keys(yearwatched_movie_info[0]).map(month => {
+                return {
+                    month: month,
+                    month_number: yearwatched_movie_info[0][month][0].month_number,
+                    movies: yearwatched_movie_info[0][month]
+                };
+            });
+
+            // Sort the array by month_number
+            monthArray.sort((a, b) => a.month_number - b.month_number);
+
+            console.log(monthArray);
+
+            // If you need it back as an object, you can convert it back
+            //let sortedYearWatchedMovieInfo = {};
+            //monthArray.forEach(item => {
+                //sortedYearWatchedMovieInfo[item.month] = item.movies;
+            //});
+            //console.log("Sorted by month",sortedYearWatchedMovieInfo);
+
+
+
+
+            // Create elements to display watched movies by year
+
+         
+            monthArray.forEach(movie_info => {
+                console.log(movie_info)
+                let month = document.createElement("div");
+                month.className = "";
+                month.innerHTML = movie_info["month"];
+                display_div.appendChild(month)
+                movie_info["movies"].forEach(movie => {
+                    console.log("Movie of movie_info", movie)
+                    let title = document.createElement("p");
+                    title.innerText = movie["movie_title"];
+                    display_div.appendChild(title);
+                })
+                
+            })
+
         })
         .catch((error) => console.error('Error:', error));
     } 

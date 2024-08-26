@@ -543,7 +543,7 @@
 
                 </div>
 
-                <div class="watched-year-movie-display">
+                <div class="watched-year-movie-display" >
                     {% if watched_by_year %}
                         <h3> Watched movies by year </h3>
 
@@ -552,6 +552,10 @@
                             {% for year in movie_watched_years %}
                                 <a href="#" id="watched-movie-year">{{year["watched_year"]}} </a>
                             {% endfor %}
+
+                        </div>
+
+                        <div id="watchedyear-movie-display">
 
                         </div>
                     {%endif%}
