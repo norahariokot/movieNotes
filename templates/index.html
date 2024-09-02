@@ -1,6 +1,31 @@
 {% extends "layout.html" %}
 
 {% block main %}
+<header>
+    <nav>
+        <img class="logo" src="../static/Images/Movie Notes-logo/Movie Notes (4).png" alt="">
+
+        <ul class="nav-list">
+            <li>
+                <a href="/user_profile" class="dashboard-user-profile">
+                                    <div class="login-user-profile">
+                        <div class="login-user-profile-pic">
+                            <img src="{{user_profile['profile_pic']}}" alt="user profile picture">
+                        </div>
+                        <div class="login-user-profile-info">
+                            <p class="user-name">{{user_profile['user_name']}}</p> 
+                        </div>
+
+                    </div>
+                    
+                </a>
+            </li>
+            <li><a href="/logout">Log out</a></li>
+        </ul>
+    </nav>
+</header>
+
+
 <div class="user-dashboard-container">
     <div class="user-menu">
         <ul>

@@ -5,38 +5,58 @@
 {% endblock %}
 
 {% block main %}
-    <h2 class="log-in-title">Log in</h2>
+    <div class="login-grid">
+        <div class="login-info">
+            <h2 class="log-in-title">Log in</h2>
 
-    <form action="/login" method="POST" class="login-form">
-        {{ login_form.csrf_token }}
-       <div>
-            {{ login_form.user_name.label }}
-            {{ login_form.user_name }}
-       </div>
+            <form action="/login" method="POST" class="login-form">
+                {{ login_form.csrf_token }}
+                    <div class="login-form-lbl">
+                    {{ login_form.user_name.label }}
+                    </div>
+                    <div class="login-form-input">
+                    {{ login_form.user_name }}
+                    </div>
        
-       {% if login_form.user_name.errors %}
-            <ul class="errors">
-                {% for error in login_form.user_name.errors %}
-                    <li>{{error}}</li>
-                {% endfor %}
-            </ul>
-       {% endif %}
+                {% if login_form.user_name.errors %}
+                    <ul class="errors">
+                        {% for error in login_form.user_name.errors %}
+                            <li>{{error}}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
-       <div>
-            {{ login_form.password.label }}
-            {{ login_form.password }}
-        </div>
+                <div class="login-form-lbl">
+                    {{ login_form.password.label }}
+                </div>
+                <div class="login-form-input">
+                   {{ login_form.password }}
+                </div>
    
-        {% if login_form.password.errors %}
-            <ul class="errors">
-                {% for error in login_form.password.errors %}
-                    <li>{{error}}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                {% if login_form.password.errors %}
+                    <ul class="errors">
+                        {% for error in login_form.password.errors %}
+                            <li>{{error}}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
-        <button type="submit">Login</button>
-    </form>
+                <button type="submit" class="login-form-btn">Login</button>
+            </form>
+
+            <div class="login-page-create-acc">
+                <h4 class="create-title"> New to Movie Notes? </h4>
+                <a href="/create_account" class="create-link">Create an account</a>
+            </div>
+        </div>
+
+        <div class="login-image">
+            <img src="../static/Images/Movie Notes login image 3.png" alt="">
+
+        </div>
+
+    </div>
+    
 
 
 

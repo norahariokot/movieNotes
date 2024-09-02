@@ -6,84 +6,108 @@
 
 {% block main %}
 
-    <h2 class="create-act-title">Create Account</h2>
-    <!--<form action="/create_account" method="POST" class="create-account-form">
-        <label for="fullname" class="create-act-lbl"> Full Name </label>
-        <input type="text" autocomplete="off" id="fullname" class="create-act-input fullname" name="fullname">
-        <label for="username" class="create-act-lbl"> Username </label>
-        <input type="text" autocomplete="off" id="username" class="create-act-input username" name="username">
-        <label for="password" class="create-act-lbl">Password</label>
-        <input type="password" autocomplete="off" id="password" class="create-act-input password" name="password">
-        <label for="confirm-password" class="create-act-lbl">Confirm Password</label>
-        <input type="password" autocomplete="off" id="password" class="create-act-input password" name="confirm-password">
-        <button type="submit" class="create-act-submit-btn">Creat Account </button>
-       
- 
-    </form>-->
+    <div class="create-user-logo-div">
+        <img src="../static/Images/Movie Notes-logo/Movie Notes (4).png" alt="" class="create-user-logo">
+    </div>
 
-    <form action="/create_account" method="POST">
-        {{ reg_form.csrf_token }}
-        <div class="form-name-field">
-            {{ reg_form.first_name.label}}
-            {{ reg_form.first_name()}}
-            {{ reg_form.last_name.label}}
-            {{ reg_form.last_name()}}
-        </div>
+    <div class="create-user-div">
 
-        {% if reg_form.first_name.errors or reg_form.last_name.errors %}
-            <ul class="errors">
-                {% for error in reg_form.first_name.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-                {% for error in reg_form.last_name.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}   
-        
-        <div>
-            {{ reg_form.user_name.label}}
-            {{ reg_form.user_name()}}
-        </div>
-
-        {% if reg_form.user_name.errors %}
-        <ul class="errors">
-            {% for error in reg_form.user_name.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}            
-        </ul>
-       {% endif %}   
-
-       <div>
-            {{ reg_form.password.label }}
-            {{ reg_form.password() }}
-       </div>
-
-       {% if reg_form.password.errors %}
-       <ul class="errors">
-           {% for error in reg_form.password.errors %}
-               <li>{{ error }}</li>
-           {% endfor %}            
-       </ul>
-      {% endif %}   
-
-      <div>
-        {{ reg_form.verify_password.label }}
-        {{ reg_form.verify_password() }}
-      </div>
-
-        {% if reg_form.verify_password.errors %}
-            <ul class="errors">
-                 {% for error in reg_form.verify_password.errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}            
-            </ul>
-        {% endif %}   
-
-        <button type="submit">Create Account </button>
+        <h2 class="create-act-title">Create Account</h2>
+        <!--<form action="/create_account" method="POST" class="create-account-form">
+            <label for="fullname" class="create-act-lbl"> Full Name </label>
+            <input type="text" autocomplete="off" id="fullname" class="create-act-input fullname" name="fullname">
+            <label for="username" class="create-act-lbl"> Username </label>
+            <input type="text" autocomplete="off" id="username" class="create-act-input username" name="username">
+            <label for="password" class="create-act-lbl">Password</label>
+            <input type="password" autocomplete="off" id="password" class="create-act-input password" name="password">
+            <input type="password" autocomplete="off" id="password" class="create-act-input password" name="confirm-password">
+            <button type="submit" class="create-act-submit-btn">Creat Account </button>
+           
+     
+        </form>-->
     
+        <form action="/create_account" method="POST" class="create-acc-form">
+            {{ reg_form.csrf_token }}
+            <div class="form-div">
+                {{ reg_form.first_name.label}} 
+            </div>
+            <div class="form-div">
+                {{ reg_form.first_name()}}
+            </div>
+            <div class="form-div">
+                {{ reg_form.last_name.label}}
+            </div>
+            <div class="form-div">
+                {{ reg_form.last_name()}}
+            </div>
+    
+            {% if reg_form.first_name.errors or reg_form.last_name.errors %}
+                <ul class="errors">
+                    {% for error in reg_form.first_name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    {% for error in reg_form.last_name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}   
+            
+            <div class="form-div">
+                {{ reg_form.user_name.label}}
+            </div>
+            <div class="form-div">
+                 {{ reg_form.user_name()}}
+            </div>
+    
+            {% if reg_form.user_name.errors %}
+            <ul class="errors">
+                {% for error in reg_form.user_name.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}            
+            </ul>
+           {% endif %}   
+    
+           <div class="form-div">
+                {{ reg_form.password.label }}
+            </div>
+           <div class="form-div">
+              {{ reg_form.password() }}
+            </div>
+    
+           {% if reg_form.password.errors %}
+           <ul class="errors">
+               {% for error in reg_form.password.errors %}
+                   <li>{{ error }}</li>
+               {% endfor %}            
+           </ul>
+          {% endif %}   
+    
+          <div class="form-div">
+            {{ reg_form.verify_password.label }}
+          </div>
+          <div class="form-div">
+            {{ reg_form.verify_password() }}
+          </div>
+    
+            {% if reg_form.verify_password.errors %}
+                <ul class="errors">
+                     {% for error in reg_form.verify_password.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}            
+                </ul>
+            {% endif %}   
+    
+            <button type="submit" class="create-account-btn">Create Account </button>
+        
+    
+        </form>
+    
+        <div class="create-user-login">
+            <p>Already have an account?<a href="/login" class="sign-in-link">Sign in </a></p>
+        </div>
+    
+    </div>
 
-    </form>
 
    
 

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div class="user-profile-page-div">
+    <div class="profile-page-nav">
+        <a href="/" class="user-profile-page-nav-btn">Back to home </a>      
+    </div>
+
+    <div class="user-profile-page-img-div">
+        <img src="{{user_profile_info ['profile_pic']}}" alt="user profile picture" class="profile-page-img">
+
+        <div class="user-profile-page-info">
+            <p class="user-profile-page-info-name">{{user_profile_info ['full_name']}}</p>
+            <p class="user-profile-page-info-username">{{user_profile_info ['user_name']}}</p>
+            <a href="/edit_profile" class="edit-profile-btn">Edit profile </a>
+        </div>
+
+    </div>
+    <div class="user-profile-page-stats">
+        <p class="user_stat">Watched movies: {{movies_watched_count[0]['watched_count']}}</p>
+        <p class="user_stat">Favourite movies: {{favourites_count[0]['favourites_count']}}</p>
+        <p class="user_stat">Currently watching: {{currently_watching_count[0]['currentlywatching_count']}}</p>
+        <p class="user_stat">Watchlist: {{watchlist_count[0]['watchlist_count']}}</p>
+        <p class="user_stat">Movie Buddies: {{movie_buddies_count[0]['movie_buddies_count']}}</p>               
+    </div>
+
+
+    
+</div>
+
+{% endblock %}

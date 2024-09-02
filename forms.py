@@ -34,11 +34,11 @@ def password_validator(form, field):
 
 #Create a Form Class
 class CreateUserForm(FlaskForm):
-    first_name = StringField('First Name', validators=[InputRequired(), name_validator])
-    last_name = StringField('Last Name', validators=[InputRequired(), name_validator])
-    user_name = StringField('User Name', validators=[InputRequired(), user_name_validator])
-    password = PasswordField('Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator])
-    verify_password = PasswordField('Repeat Password', validators=[InputRequired(message='Please repeat the new password')])
+    first_name = StringField('First Name', validators=[InputRequired(), name_validator], render_kw={"class": "create-acc-form-ctl"})
+    last_name = StringField('Last Name', validators=[InputRequired(), name_validator], render_kw={"class": "create-acc-form-ctl"})
+    user_name = StringField('User Name', validators=[InputRequired(), user_name_validator], render_kw={"class": "create-acc-form-ctl"})
+    password = PasswordField('Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator], render_kw={"class": "create-acc-form-ctl"})
+    verify_password = PasswordField('Verify Password', validators=[InputRequired(message='Please repeat the new password')], render_kw={"class": "create-acc-form-ctl"})
 
 
 # Custom validator for username verification at login
@@ -62,8 +62,8 @@ def login_password_validator(form, field):
 
 # Create a Form Class for the login form
 class LoginForm(FlaskForm):
-    user_name = StringField('User Name', validators=[InputRequired(), login_username_validator])
-    password = PasswordField('Password', validators=[InputRequired(), login_password_validator])
+    user_name = StringField('User Name', validators=[InputRequired(), login_username_validator], render_kw={"class": "login-form-ctl"})
+    password = PasswordField('Password', validators=[InputRequired(), login_password_validator], render_kw={"class": "login-form-ctl"})
 
 
 

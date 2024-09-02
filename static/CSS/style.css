@@ -13,11 +13,141 @@ body {
 /* ===============
     Typography    
     ============== */
-
+.log-in-title {
+    margin-top: 1em;
+    /*border: solid red;*/
+}
 
 /* ===============
     Layout   
-    ============== */    
+    ============== */  
+/* --- Login Page --- */
+.login-grid {
+    display: grid;
+    grid-template-columns: minmax(1em, 1fr)  minmax(90%, 1fr) minmax(1em, 1fr);
+    /*border: solid black;*/
+}
+
+.login-info,
+.login-image {
+    grid-column: 2;
+}
+
+.login-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-image {
+    display: none;
+}
+
+
+.login-form {
+    width: 90%;
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    /*border: solid black;*/
+
+}
+
+.login-form-lbl,
+.login-form-input {
+    margin-bottom: .5em;
+    /*border: solid red;*/
+}
+
+.login-form-ctl {
+    width: 80%;
+    padding: .5em;
+}
+
+.login-form-btn {
+    width: 80%;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.login-page-create-acc {
+    /*border: solid black;*/
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-top: 1em;
+    border-top: solid 1px rgb(187, 183, 183);
+}
+
+.create-title {
+    margin-top: 1em;
+    width: 80%;
+    /*border: solid red;*/
+    text-align: center;
+    margin-bottom: .3em;
+
+}
+
+.create-link {
+   width: 80%; 
+   /*border: solid yellow;*/
+   text-align: center;
+   border: solid 1px grey;
+   padding-top: .5em;
+   padding-bottom: .5em;
+   text-decoration: none;
+   color: black;
+
+}
+
+/* Create Account Page */
+.create-user-div {
+    margin-inline: auto;
+    border: solid black;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: solid 1px rgb(184, 181, 181);
+    border-radius: 2%;
+}
+
+.create-user-logo-div {
+    text-align: center;
+    /*border: solid red;*/
+}
+
+.create-user-logo {
+    /*border: solid black;*/
+    height: 140px;
+    width: 140px;
+}
+
+.form-div {
+    margin-bottom: .5em;
+    width: 80%;
+}
+
+.create-acc-form-ctl {
+    padding: .5em;
+    width: 100%;
+}
+
+.create-acc-form {
+    /*border: solid blue;*/
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sign-in-link {
+    text-decoration: none;
+    color: #1744e5;
+    margin-left: .5em;
+}
+
+
+/* Navigation */      
 nav {
     display: flex;
     justify-content: space-between;
@@ -25,79 +155,153 @@ nav {
 }  
 
 .logo {
-    width: 150px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     /*border: solid green;*/
     & img {
         height: 100%;
         width: 100%;
-        object-fit: contain;
+        object-fit:contain;
     }
 
 }
 
 .nav-list {
     display: flex;
+    border: solid blue;
+    margin-top: 0;
 
     & li {
         list-style: none;
-        border: solid black;
+        /*border: solid black;*/
         margin-right: 1em;
     }
 }
 
+/* User profile */
 
 
-/* --- Login Page --- */
-/* Login form & Create Account form*/
+.login-user-profile {
+    border: solid red;
+    margin-top: .1em;
+    display: flex;
+}
 
-.create-act-title,
-.log-in-title{
-    text-align: center;
+.login-user-profile-pic {
+    border: solid black;
+}
+
+.login-user-profile-info {
+    border: solid green;
+    & * {
+        border: red solid;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+/* User profile page*/
+
+.user-profile-page-div {
+    display: grid;
+    grid-template-columns:minmax(1em, 1fr)  minmax(90%, 1fr) minmax(1em, 1fr);
+    margin-inline: auto;
+    width:80%;
+    border: solid blue;
+    margin-bottom: 1em;
+}
+
+.profile-page-nav {
+    /*border: solid red;*/
+    grid-column: 2;
+    margin-top: 1.5em;
+    height: max-content;
+    margin-bottom: 2em;
+}
+
+.user-profile-page-nav-btn {
+    text-decoration: none;
+    width: fit-content;
+    padding: .5em;
+    /*border: solid black;*/
+    border: solid black 1px;
+    border-radius: 5%;
+    
+}
+
+.user-profile-page-img-div {
+    grid-column: 2;
+    display: flex;
 }
 
 
-.login-form,
-.create-account-form {
-    width: 20%;
-    margin-top: 2em;
-    margin-inline: auto;
+
+.user-profile-page-stats {
+    grid-column: 2;
+}
+
+.profile-page-img {
+    border: solid black;
+    border-radius: 50%;
+    padding: .5em;
+    height: 100px;
+    width: 100px;
+    margin-top: 1em;
+}
+
+.user-profile-page-info {
+    /*border: solid black;*/
+    margin-left: 2em;
+    margin-top: 1em;
     display: flex;
     flex-direction: column;
-    /*border: solid black;*/
 }
 
-.login-lbl,
-.create-act-lbl {
-
+.user-profile-page-info-name {
+    /*border: solid red;*/
+    margin-bottom: .3em;
 }
 
-.login-input,
-.create-act-input {
-    margin-bottom: 1em;
-    padding: .5em;
+.user-profile-page-info-username {
+    margin-top: 0;
 }
 
-.login-submit-btn,
-.create-act-submit-btn {
-    align-self: center;
+.edit-profile-btn {
+    text-decoration: none;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    border: solid black 1px;
+    color: gray;
+    text-align: center;
+    border-radius: 8%;
+
+    
 }
 
+.user-profile-page-stats {
+    border: solid black;
+    margin-top: 2em;
+    padding-left: 2em;
+}
 
-/* --- Login Page --- */
+.
+
+
+
+/* --- Dashboard --- */
 .user-dashboard-container {
     display: grid;
-    grid-template-columns: minmax(2em,1fr) minmax(20%,1fr) minmax(60%,1fr) minmax(2em,1fr);
+    grid-template-columns: minmax(20%,1fr) minmax(80%,1fr) ;
     margin-inline: auto;
 }
 
 .user-menu {
-    grid-column: 2;
+    grid-column: 1;
     border: solid black;
 }
 
 .user-content{
-    grid-column: 3;
+    grid-column: 2;
     border: solid green;
 }
 
@@ -267,23 +471,7 @@ nav {
 }
 
 
-/* User profile */
-.login-user-profile {
-    border: solid red;
-}
 
-.login-user-profile-pic {
-    border: solid black;
-}
-
-.login-user-profile-info {
-    border: solid green;
-    & * {
-        border: red solid;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-}
 
 /* Recommendations */
 .recommendie_wrapper,
@@ -425,6 +613,43 @@ nav {
     padding: .3em;
     border-radius: 15%;
 
+}
+
+/* ================
+    Media-Queries
+    =============== */
+    @media (min-width:600px) {
+    /* Login page */
+    .login-grid {
+        grid-template-columns: minmax(3em, 1fr) minmax(30%,1fr) minmax(40%,1fr) minmax(3em, 1fr);
+     
+    }  
+    
+    .login-info {
+        grid-column: 2;
+        /*border: solid red;*/
+        margin-top: 8em;
+    
+       
+    }
+
+    .login-image {
+        display: block;
+        grid-column: 3;
+        border: solid blue;
+        height: 97vh;
+        & img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+
+    /* Create Account Page*/ 
+    .create-user-div {
+        width: 30%;
+        
+    }
 }
 
 

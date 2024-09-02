@@ -87,6 +87,54 @@ def login():
     return render_template("login.html", login_form=login_form, current_route="/login")
 
 
+# View Function to display user profile page
+@app.route("/user_profile")
+def user_profile():
+    print("User profile page displayed")
+
+    # Retrieve user profile info from database
+    user_info = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+
+    user_profile_info = {}
+    user_profile_info["full_name"] = user_info[0]['first_name'] +" " + user_info[0]['last_name']
+    user_profile_info["user_name"] = user_info[0]['user_name']
+    user_profile_info["profile_pic"] = user_info[0]['profile_pic']
+    if user_profile_info["profile_pic"] == None:
+                user_profile_info["profile_pic"] = "../static/Images/Icons/user_profile.png"
+
+    print(user_profile_info)            
+    
+    # Retrieve count of user's watched movies
+    movies_watched_count = db.execute("SELECT COUNT(movie_title) AS watched_count FROM watched WHERE user_id = ?", session["user_id"])
+    print(movies_watched_count)
+
+    # Retrieve count of user's favourite movies
+    favourites_count = db.execute("SELECT COUNT(movie_title) AS favourites_count FROM favourites WHERE user_id = ?", session["user_id"])
+    print(favourites_count)
+
+    # Retrieve count of user's currently_watching movies
+    currently_watching_count = db.execute("SELECT COUNT(movie_title) AS currentlywatching_count FROM currently_watching WHERE user_id = ?", session["user_id"])
+    print(currently_watching_count)
+
+    # Retrieve count of user's watchlist movies
+    watchlist_count = db.execute("SELECT COUNT(movie_title) AS watchlist_count FROM watchlist WHERE user_id = ?", session["user_id"])
+    print(watchlist_count)
+
+    # Retrieve count of user's movie buddies
+    movie_buddies_count = db.execute("SELECT COUNT(id) AS movie_buddies_count FROM movie_buddies WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND buddy_status = ?", session["user_id"], session["user_id"], "Movie Buddies")
+    print(movie_buddies_count)
+
+    return render_template("user_profile.html", user_profile_info=user_profile_info, movies_watched_count=movies_watched_count, favourites_count=favourites_count, currently_watching_count=currently_watching_count, watchlist_count=watchlist_count, movie_buddies_count=movie_buddies_count)
+
+
+# View function to edit 
+@app.route("/edit_profile")
+def edit_profile():
+    print("Edit profile route followed")
+
+    return render_template("edit_profile.html")
+
+
 @app.route("/logout")
 def logout():
     """ Log user out """

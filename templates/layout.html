@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="../static/CSS/style.css">
 
-    <title> {% block title %}{% endblock %}</title>
+    <title> Movie Notes </title>
     <script src="../static/JS/script.js"></script>
     <script>
         
@@ -15,40 +15,7 @@
 </head>
 <body>
     <header>
-        <!-- should I use user id session or use route to change display between signed in or not-->
-        {% if current_route == "/login" or current_route=="/create_account" %}
-            <nav>
-                <img class="logo" src="../static/Images/Movie Notes-logo/Logo 6.png" alt="">
-
-                <ul class="nav-list">
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/create_account">Create Account</a></li>
-                </ul>
-            </nav>
-
-        {% else %}
-            <nav>
-                <img class="logo" src="../static/Images/Movie Notes-logo/Logo 6.png" alt="">
-
-                <ul class="nav-list">
-                    <li>
-                        <a href="#">
-                            <div class="login-user-profile">
-                                <div class="login-user-profile-pic">
-                                    <img src="{{user_profile['profile_pic']}}" alt="user profile picture">
-                                </div>
-                                <div class="login-user-profile-info">
-                                    <p class="user-name">{{user_profile['user_name']}}</p> 
-                                </div>
-
-                            </div>
-                        
-                        </a>
-                    </li>
-                    <li><a href="/logout">Log out</a></li>
-                </ul>
-            </nav>
-        {% endif %}    
+    
 
     </header>
 
