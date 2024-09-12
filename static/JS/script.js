@@ -364,11 +364,7 @@ document.addEventListener('click', function(event) {
                             },
                     body: JSON.stringify(data)
                     })
-                    .then(response=> response.json())
-                    .then(data => {
-                        alert(data.message);
-                    })
-                    .catch((error) => console.error('Error:', error));
+                    
                 });
                 watched_date = null;
 
@@ -1261,6 +1257,78 @@ document.addEventListener('click', function(event) {
         .catch((error) => console.error('Error:', error));
     } 
 });
+
+
+// Function to update profile picture in update user profile
+document.addEventListener('click', function(event) {
+    let element = event.target;
+
+    if (element.id == 'update-profile-pic') {
+        event.preventDefault();
+
+        let visible_div = document.getElementById('update-profile-pic-div')
+        console.log("Visible div: ", visible_div)
+        visible_div.style.display = "block"
+
+        profile_pic_controls = document.getElementsByClassName('profile-pic-ctls')
+        console.log(profile_pic_controls)
+        profile_pic_ctls_list = Array.from(profile_pic_controls)
+        console.log(profile_pic_ctls_list)
+
+        profile_pic_ctls_list.forEach(list_item => {
+            console.log(list_item)
+            list_item.addEventListener('click', function(event) {
+
+                if (event.target.id == 'upload-profile-pic') {
+                    event.preventDefault()
+
+                     console.log("upload-profile-pic-btn-clicked")
+                    let upload = document.getElementById('upload-profile-pic-form');
+                    console.log(upload)
+                    upload.style.display = "block";
+                    /*console.log("upload-profile-pic-btn-clicked")
+                    fetch("/upload_profilepic", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response=> response.json())
+                    .then(data => {
+                        console.log(data);
+                        })
+                    .catch((error) => console.error('Error:', error));*/
+                }    
+            });
+
+            
+        })
+        
+        
+    }
+
+    /*if (event.target.matches('update-profile-pic-ctls')) {
+        let data = {user_id: document.getElementById("profile-pic-id").innerText }
+        console.log(data)
+        console.log("Update profile pic controls clicked")
+
+        if (event.target.id == 'upload-profile-pic') {
+            fetch("/upload_pic", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response=> response.json())
+            .then(data => {
+                console.log(data);
+                })
+            .catch((error) => console.error('Error:', error));
+        }
+    }*/
+})
 
 
                             

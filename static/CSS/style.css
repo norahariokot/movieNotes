@@ -61,6 +61,8 @@ body {
 .login-form-ctl {
     width: 80%;
     padding: .5em;
+    margin-bottom: 1em;
+    border: solid yellowgreen;
 }
 
 .login-form-btn {
@@ -146,6 +148,19 @@ body {
     margin-left: .5em;
 }
 
+/* Edit profile page*/
+.update-profile-form {
+    border: solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-img-update {
+    border: solid red;
+}
+
+
+
 
 /* Navigation */      
 nav {
@@ -189,6 +204,18 @@ nav {
 
 .login-user-profile-pic {
     border: solid black;
+    border-radius: 50%;
+    padding: .5em;
+    height: 80px;
+    width: 80px;
+
+    & img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        padding: .5em;
+    }
+    
 }
 
 .login-user-profile-info {
@@ -283,8 +310,6 @@ nav {
     margin-top: 2em;
     padding-left: 2em;
 }
-
-.
 
 
 

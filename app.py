@@ -4,19 +4,22 @@ import json
 import pytz
 
 from cs50 import SQL
+from datetime import datetime
+from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, request, g, session, jsonify
 from flask_session import Session
-from dotenv import load_dotenv
-from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
-from scrapper import user_query
-from forms import CreateUserForm, LoginForm
+from werkzeug.utils import secure_filename
+
+from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic
 from helpers import login_required, section_links, search_options, extract_movie_info, json_buddynotes_options
+from scrapper import user_query
 
 
 # Configure application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("app_secret_key")
+app.config['UPLOAD_FOLDER'] =os.path.join("static", "Images", "user_profilepics") #  Set upload folder for profile pic uploads inside the static directory
 
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -70,6 +73,8 @@ def login():
             user_profile["profile_pic"] = user_info[0]['profile_pic']
             if user_profile["profile_pic"] == None:
                 user_profile["profile_pic"] = "../static/Images/Icons/user_profile.png"
+            else:
+                user_profile["profile_pic"] = "../static/Images/user_profilepics/" +  user_profile["profile_pic"] 
 
             session["user_profile"] = user_profile
             print(session["user_profile"])  
@@ -100,7 +105,10 @@ def user_profile():
     user_profile_info["user_name"] = user_info[0]['user_name']
     user_profile_info["profile_pic"] = user_info[0]['profile_pic']
     if user_profile_info["profile_pic"] == None:
-                user_profile_info["profile_pic"] = "../static/Images/Icons/user_profile.png"
+        user_profile_info["profile_pic"] = "../static/Images/Icons/user_profile.png"
+    else:
+        user_profile_info["profile_pic"] = "../static/Images/user_profilepics/" +  user_profile_info["profile_pic"]
+
 
     print(user_profile_info)            
     
@@ -127,12 +135,80 @@ def user_profile():
     return render_template("user_profile.html", user_profile_info=user_profile_info, movies_watched_count=movies_watched_count, favourites_count=favourites_count, currently_watching_count=currently_watching_count, watchlist_count=watchlist_count, movie_buddies_count=movie_buddies_count)
 
 
-# View function to edit 
-@app.route("/edit_profile")
+# View function to edit user profile info
+@app.route("/edit_profile", methods=["GET","POST"])
+@login_required
 def edit_profile():
     print("Edit profile route followed")
 
-    return render_template("edit_profile.html")
+    # Fetch existing user data from database
+    user_data = db.execute("SELECT id, first_name, last_name, user_name, profile_pic FROM users WHERE id=?", session["user_id"])
+    print(user_data)
+
+    if user_data[0]['profile_pic'] == None:
+        profile_pic = "../static/Images/Icons/user_profile.png"
+    else:
+        profile_pic =  "../static/Images/user_profilepics/" + user_data[0]['profile_pic']
+
+    # Pre populate form with user current data
+    updateprofile_form = UpdateUserProfile(
+    current_user_id = session['user_id'],    
+    first_name=user_data[0]['first_name'],
+    last_name = user_data[0]['last_name'],
+    user_name = user_data[0]['user_name'],
+    )
+
+    update_profilepic_form = UpdateProficPic(
+          current_user_id = session['user_id'],  
+    )
+
+
+    # Validate form:
+    if updateprofile_form.validate_on_submit():
+        #Update user info in the database
+        db.execute("UPDATE users SET first_name = ?, last_name = ?, user_name = ? WHERE id = ?", updateprofile_form.first_name.data, updateprofile_form.last_name.data, updateprofile_form.user_name.data, session['user_id'])
+            
+        flash("Your profile has been updated successfully!", "success")   
+        return redirect("/login")    
+
+    return render_template("edit_profile.html", updateprofile_form=updateprofile_form, update_profilepic_form=update_profilepic_form, profile_pic=profile_pic, user_id=session['user_id'])        
+
+
+# View function to upload user profile pic
+@app.route("/upload_profilepic", methods=["GET","POST"])
+@login_required
+def edit_profilepic():
+    print("Edit profile pic route followed")
+
+    update_profilepic_form = UpdateProficPic(
+          current_user_id = session['user_id'],  
+    )
+
+    update_profile = True
+
+    # Validate form:
+    if update_profilepic_form.validate_on_submit():
+
+            
+        # Handle profile picture update
+        file = update_profilepic_form.profile_pic.data
+        print(file)
+
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"],filename))
+           
+            # Save the file path (relative to the static folder) in the database
+            db.execute("UPDATE users SET profile_pic = ? WHERE id = ?", filename, session['user_id'])
+
+            flash("Your profile picture has been updated successfully!", "success")  
+
+            # Retrieve updated profile pic and display it
+            new_profile_pic = db.execute("SELECT profile_pic FROM users WHERE id = ?", session['user_id']) 
+            newprofile_pic = new_profile_pic[0]
+            return redirect("/edit_profile", newprofile_pic=newprofile_pic)    
+
+    return render_template("edit_profile.html", update_profilepic_form=update_profilepic_form)  
 
 
 @app.route("/logout")
@@ -660,6 +736,8 @@ def recommendations_section():
         user_name_dict = {}
         if dict_item["profile_pic"] == None:
             dict_item["profile_pic"] = "../static/Images/Icons/user_profile.png"
+        else:
+            dict_item["profile_pic"] = "../static/Images/user_profilepics/" + dict_item["profile_pic"]
         user_name_dict["user_id"]   = dict_item["user_id"]
         user_name_dict['first_name'] = dict_item['first_name']
         user_name_dict['last_name'] = dict_item['last_name']
@@ -715,6 +793,9 @@ def buddy_recommend_info():
         dict_item.pop('last_name')
         if dict_item['profile_pic'] == None:
             dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
+        else:
+            dict_item['profile_pic'] = "../static/Images/user_profilepics/" +  dict_item['profile_pic'] 
+
     
     return jsonify(buddy_info)  
 
@@ -762,9 +843,6 @@ def recommend_movie():
     return jsonify({"message": "Movie successfully recommended"})
 
 
-
-
-
 @app.route("/movie_buddies_section", methods=["GET"])
 def moviebuddies_section():
     print("Movie Buddies section")
@@ -799,6 +877,8 @@ def moviebuddies_section():
         if profile_pic == None:
             print("profile pic empty")
             profile_pic = "../static/Images/Icons/user_profile.png"
+        else:
+            profile_pic =  "../static/Images/user_profilepics/" + profile_pic
 
         buddy_dict = {}
         buddy_dict["id"] = id
@@ -972,6 +1052,9 @@ def view_buddy_movienotes():
         buddy_info_dict["profile_pic"] = buddy_info[0]["profile_pic"]
         if buddy_info_dict["profile_pic"] == None:
             buddy_info_dict["profile_pic"] = "../static/Images/Icons/user_profile.png"
+        else:
+            buddy_info_dict["profile_pic"] = "../static/Images/user_profilepics/" + buddy_info_dict["profile_pic"]
+
         session["buddy_notes_info"] = buddy_info_dict
         print(session["buddy_notes_info"])
         print(session)
@@ -1082,6 +1165,9 @@ def buddy_chats():
         dict_item.pop('last_name')
         if dict_item['profile_pic'] == None:
             dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
+        else:
+            dict_item['profile_pic'] = "../static/Images/user_profilepics/" + dict_item['profile_pic']
+
 
     print(chat_history_buddies)         
 
@@ -1101,6 +1187,9 @@ def buddy_chat_profile():
         dict_item.pop('last_name')
         if dict_item['profile_pic'] == None:
             dict_item['profile_pic'] = "../static/Images/Icons/user_profile.png"
+        else:
+            dict_item['profile_pic'] = "../static/Images/user_profilepics/" + dict_item['profile_pic']
+
 
     return jsonify(buddychat_profiles)     
 

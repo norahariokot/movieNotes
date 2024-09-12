@@ -7,6 +7,79 @@
         <li><a href="/user_profile"> User profile</a></li>
     </ul>
 
+    <h2> Update user profile</h2>
+
+    <div>
+        {% if profile_pic_uploaded %}
+            <img src="{{newprofile_pic}}" alt="updated user profile picture">
+        {% else %}    
+            <img src="{{profile_pic}}" alt="user profile picture" srcset="" class="profile-img-update">
+        {% endif %}    
+
+        <a href="#" id="update-profile-pic"> Update Profile Picture </a>
+
+        <div class="update-profile-pic-div" style="display: none;" id="update-profile-pic-div">
+            <h3> Change Profile Photo </h3>
+            <ul class="profile-pic-update-options">
+                <li><a href="http:" class="profile-pic-ctls" id="upload-profile-pic">Upload Photo</a></li>
+                <li><a href="http:" class="profile-pic-ctls">Remove Current Photo</a></li>
+                <li><a href="http:" class="profile-pic-ctls">Cancel</a></li>
+            </ul>
+        </div>
+      
+            <form action="/upload_profilepic" method="POST" class="update-profilepic-form" id="upload-profile-pic-form" style="display: none;" enctype="multipart/form-data">
+                {{ update_profilepic_form.csrf_token }}
+                    {{update_profilepic_form.current_user_id}}
+    
+                
+                    {{ update_profilepic_form.profile_pic }}
+                <button type="submit" class="updateprofile-btn"> Update Profile Picture </button>
+            </form>
+     
+
+
+
+    </div>
+    <form action="/edit_profile" method="POST" class="update-profile-form" enctype="multipart/form-data">
+        {{ updateprofile_form.csrf_token }}
+            {{updateprofile_form.current_user_id}}
+
+            <label for="first_name" class="form-lbl"> {{updateprofile_form.first_name.label}} </label>   
+            {{ updateprofile_form.first_name }}
+
+            <label for="last_name" class="form-lbl"> {{updateprofile_form.last_name.label}} </label>   
+            {{ updateprofile_form.last_name }}
+
+            {% if updateprofile_form.first_name.errors or updateprofile_form.last_name.errors %}
+                <ul class="errors">
+                    {% for error in updateprofile_form.first_name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    {% for error in updateprofile_form.last_name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}  
+
+            <label for="user-name" class="form-lbl"> {{ updateprofile_form.user_name.label}} </label>
+            {{ updateprofile_form.user_name()}}
+
+            {% if updateprofile_form.user_name.errors %}
+                <ul class="errors">
+                    {% for error in updateprofile_form.user_name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}            
+                </ul>
+           {% endif %} 
+
+           <button type="submit" class="updateprofile-btn"> Update Profile</button>
+
+
+
+    </form>
+
+    <a href="http://">Update Password</a>
+
 </div>
 
 {% endblock %}
