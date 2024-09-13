@@ -109,7 +109,7 @@ def verify_username_validator(form, field):
      
 # Create a form class to verify user account before updating password
 class VerifyUsername(FlaskForm):
-    user_name = StringField('User Name', validators=[InputRequired(), verify_username_validator], render_kw={"class": "verify-acc-form-ctl"})
+    user_name = StringField('User Name', validators=[InputRequired(), verify_username_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
 
 # Custom validator for security question 1
 def question_one_validator(form, field):
@@ -145,7 +145,7 @@ def question_two_validator(form, field):
         raise ValidationError("Wrong answer, try again")    
 
 
-# Custom validator for security question 1
+# Custom validator for security question 3
 def question_three_validator(form, field):
     username = session.get('verified_username')
 
@@ -169,9 +169,9 @@ def question_three_validator(form, field):
 
 # Security questions
 class SecurityQuestions(FlaskForm):
-    question_1 = StringField('Enter one of your Favourite movies', validators=[InputRequired(), question_one_validator], render_kw={"class": "verify-acc-form-ctl"})
-    question_2 = StringField('Enter one movie on your Watch List', validators=[InputRequired(), question_two_validator], render_kw={"class": "verify-acc-form-ctl"})
-    question_3 = StringField('Enter one of movie buddies user name', validators=[InputRequired(), question_three_validator], render_kw={"class": "verify-acc-form-ctl"}) 
+    question_one = StringField('Enter one of your Favourite movies', validators=[InputRequired(), question_one_validator], render_kw={"class": "verify-acc-form-ctl"})
+    question_two = StringField('Enter one movie on your Watch List', validators=[InputRequired(), question_two_validator], render_kw={"class": "verify-acc-form-ctl"})
+    question_three = StringField('Enter one of movie buddies user name', validators=[InputRequired(), question_three_validator], render_kw={"class": "verify-acc-form-ctl"}) 
 
 
 

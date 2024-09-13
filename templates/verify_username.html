@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<h2> Verify account </h2>
+
+<form action="/verify_username" method="POST" class="verify_username" >
+    {{ verify_username_form.csrf_token }}
+      
+        <label for="user_name" class="form-lbl"> {{verify_username_form.user_name.label}} </label>   
+        {{ verify_username_form.user_name }}
+
+        {% if verify_username_form.user_name.errors %}
+            <ul class="errors">
+                {% for error in verify_username_form.user_name.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}            
+            </ul>
+       {% endif %} 
+
+       <button type="submit" class="verify-username-btn"> Verify Username </button>
+</form>
+
+
+{% endblock %}

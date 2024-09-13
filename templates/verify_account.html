@@ -3,7 +3,45 @@
 {% block main %}
 <h2> Verify account </h2>
 
+<form action="/verify_account" method="POST" class="verify-account-form">
+    {{ verify_account_form.csrf_token }}
+        <label for="question-one" class="form-lbl"> {{verify_account_form.question_one.label}} </label>   
+        {{ verify_account_form.question_one }}
+
+        {% if verify_account_form.question_one.errors %}
+            <ul class="errors">
+                {% for error in verify_account_form.question_one.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}            
+            </ul>
+       {% endif %} 
+
+       <label for="question-two" class="form-lbl"> {{verify_account_form.question_two.label}} </label>   
+        {{ verify_account_form.question_two }}
+
+        {% if verify_account_form.question_two.errors %}
+            <ul class="errors">
+                {% for error in verify_account_form.question_two.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}            
+            </ul>
+       {% endif %} 
+
+       <label for="question-three" class="form-lbl"> {{verify_account_form.question_three.label}} </label>   
+        {{ verify_account_form.question_three }}
+
+        {% if verify_account_form.question_three.errors %}
+            <ul class="errors">
+                {% for error in verify_account_form.question_three.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}            
+            </ul>
+       {% endif %} 
+
+       <button type="submit" class="Verify account-btn"> Verify account </button>
 
 
+
+</form> 
 
 {% endblock %}

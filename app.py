@@ -11,7 +11,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
-from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic
+from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic, VerifyUsername, SecurityQuestions
 from helpers import login_required, section_links, search_options, extract_movie_info, json_buddynotes_options
 from scrapper import user_query
 
@@ -90,6 +90,49 @@ def login():
         return redirect("/")
 
     return render_template("login.html", login_form=login_form, current_route="/login")
+
+
+# View function to verify username
+@app.route("/verify_username", methods=["GET", "POST"])
+def verify_username():
+    print("Verify username route followed")
+
+    verify_username_form = VerifyUsername()
+
+    # Validate form
+    if verify_username_form.validate_on_submit():
+        # Validated username stored in session to be used by account security questions to further verify user
+        session['verified_username'] = verify_username_form.user_name.data 
+        print(session['verified_username'])
+
+        return redirect("/verify_account")
+
+    return render_template("verify_username.html", verify_username_form=verify_username_form)    
+
+
+# View function to verify user account before password reset
+@app.route("/verify_account", methods=["GET", "POST"])
+def verify_account():
+    print("Verify account username")
+
+    verify_account_form = SecurityQuestions()
+
+    # Validate form
+    if verify_account_form.validate_on_submit():
+        verified_username = session.get('verified_username')
+        print(f"Verified username is {verified_username}")
+        verified_user_id = db.execute("SELECT id FROM users WHERE user_name = ?", verified_username)
+        print(verified_user_id)
+        session['verified_userid'] = verified_user_id[0]
+        print(session['verified_userid'])
+        return redirect("reset_password")
+
+    return render_template("verify_account.html", verify_account_form=verify_account_form)
+
+
+
+
+
 
 
 # View Function to display user profile page
