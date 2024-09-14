@@ -39,7 +39,7 @@ class CreateUserForm(FlaskForm):
     first_name = StringField('First Name', validators=[InputRequired(), name_validator], render_kw={"class": "create-acc-form-ctl"})
     last_name = StringField('Last Name', validators=[InputRequired(), name_validator], render_kw={"class": "create-acc-form-ctl"})
     user_name = StringField('User Name', validators=[InputRequired(), user_name_validator], render_kw={"class": "create-acc-form-ctl"})
-    password = PasswordField('Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator], render_kw={"class": "create-acc-form-ctl"})
+    password = PasswordField('Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator], render_kw={"class": "create-acc-form-ctl", "id": "password"})
     verify_password = PasswordField('Verify Password', validators=[InputRequired(message='Please repeat the new password')], render_kw={"class": "create-acc-form-ctl"})
 
 
@@ -116,13 +116,15 @@ def question_one_validator(form, field):
     username = session.get('verified_username')
 
     # Query database for user_id
-    user_id = g.db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()
+    user_id = g.db.execute("SELECT id FROM users WHERE user_name = ?", username)
+    id = user_id[0]['id']
+    #print(id)
    
     # Access user input to question
     title = field.data
 
     # Verify user input to security question
-    favourite_movie = g.db.execute("SELECT title FROM favourites WHERE title = ? AND user_id = ?", (title, user_id['id'])).fetchone()
+    favourite_movie = g.db.execute("SELECT movie_title FROM favourites WHERE LOWER(movie_title) = LOWER(?) AND user_id = ?", title, id)
 
     if not favourite_movie:
         raise ValidationError("Wrong answer, try again")
@@ -133,13 +135,15 @@ def question_two_validator(form, field):
     username = session.get('verified_username')
 
     # Query database for user_id
-    user_id = g.db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()
+    user_id = g.db.execute("SELECT id FROM users WHERE user_name = ?", username)
+    id = user_id[0]['id']
+    #print(id)
    
     # Access user input to question
     title = field.data
 
     # Verify user input to security question
-    watchlist_movie = g.db.execute("SELECT title FROM watchlist WHERE title = ? AND user_id = ?", (title, user_id['id'])).fetchone
+    watchlist_movie = g.db.execute("SELECT movie_title FROM watchlist WHERE LOWER(movie_title) = LOWER(?) AND user_id = ?", title, id)
 
     if not watchlist_movie:
         raise ValidationError("Wrong answer, try again")    
@@ -150,28 +154,43 @@ def question_three_validator(form, field):
     username = session.get('verified_username')
 
     # Query database for user_id
-    user_id = g.db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()
+    user_id = g.db.execute("SELECT id FROM users WHERE user_name = ?", username)
+    id = user_id[0]['id']
+    #print(id)
+
    
     # Access user input to question
     buddy_name = field.data
 
     # Verify buddy_name
-    buddy_name_exists = g.db.execute("SELECT id FROM users WHERE user_name = ?", (buddy_name,)).fetchone()
+    buddy_name_exists = g.db.execute("SELECT id FROM users WHERE user_name = ?", buddy_name)
 
-    if not buddy_name_exists:
-        raise ValidationError("Invalid buddy_name, this user doesnt exist")
+    if buddy_name_exists:
+        buddy_id = buddy_name_exists[0]['id']
 
-    # Verify user input to security question
-    movie_buddy = g.db.execute("SELECT * FROM movie_buddies WHERE (buddy_request_sender = ? AND buddy_request_recipient = ?) AND buddy_status = ? UNION SELECT * FROM movie_buddies WHERE (buddy_request_sender = ? AND buddy_request_recipient = ?) AND buddy_status = ?", (user_id['id'], buddy_name_exists['id'], "Movie Buddies", buddy_name_exists['id'], user_id['id'], "Movie Buddies" )).fetchone()
+        # Verify user input to security question
+        movie_buddy = g.db.execute("SELECT * FROM movie_buddies WHERE (buddy_request_sender = ? AND buddy_request_recipient = ?) AND buddy_status = ? UNION SELECT * FROM movie_buddies WHERE (buddy_request_sender = ? AND buddy_request_recipient = ?) AND buddy_status = ?", id, buddy_id, "Movie Buddies", buddy_id, id, "Movie Buddies" )
     
-    if not movie_buddy:
-        raise ValidationError("Not your movie buddy, try again")            
+        if not movie_buddy:
+            raise ValidationError("Not your movie buddy, try again")    
+    else:
+        raise ValidationError("Invalid buddy_name, this user doesnt exist")
+        
 
-# Security questions
+# Security questions Form
 class SecurityQuestions(FlaskForm):
-    question_one = StringField('Enter one of your Favourite movies', validators=[InputRequired(), question_one_validator], render_kw={"class": "verify-acc-form-ctl"})
-    question_two = StringField('Enter one movie on your Watch List', validators=[InputRequired(), question_two_validator], render_kw={"class": "verify-acc-form-ctl"})
-    question_three = StringField('Enter one of movie buddies user name', validators=[InputRequired(), question_three_validator], render_kw={"class": "verify-acc-form-ctl"}) 
+    question_one = StringField('Enter one of your Favourite movies', validators=[InputRequired(), question_one_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
+    question_two = StringField('Enter one movie on your Watch List', validators=[InputRequired(), question_two_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
+    question_three = StringField('Enter one of movie buddies user name', validators=[InputRequired(), question_three_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"}) 
+
+
+# New password Form
+class PasswordReset(FlaskForm):
+    new_password = PasswordField('New Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator], render_kw={"class": "create-acc-form-ctl", "id": "new-password"})
+    verify_newpassword = PasswordField('Verify New Password', validators=[InputRequired(message='Please repeat the new password')], render_kw={"class": "create-acc-form-ctl"})
+
+
+
 
 
 

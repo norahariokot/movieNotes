@@ -1286,49 +1286,43 @@ document.addEventListener('click', function(event) {
                     let upload = document.getElementById('upload-profile-pic-form');
                     console.log(upload)
                     upload.style.display = "block";
-                    /*console.log("upload-profile-pic-btn-clicked")
-                    fetch("/upload_profilepic", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response=> response.json())
-                    .then(data => {
-                        console.log(data);
-                        })
-                    .catch((error) => console.error('Error:', error));*/
                 }    
             });
-
-            
+   
         })
-        
-        
+     
     }
 
-    /*if (event.target.matches('update-profile-pic-ctls')) {
-        let data = {user_id: document.getElementById("profile-pic-id").innerText }
-        console.log(data)
-        console.log("Update profile pic controls clicked")
-
-        if (event.target.id == 'upload-profile-pic') {
-            fetch("/upload_pic", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response=> response.json())
-            .then(data => {
-                console.log(data);
-                })
-            .catch((error) => console.error('Error:', error));
-        }
-    }*/
 })
+
+// Function to display and hide password guidelines in the create account route
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.pathname === '/create_account') {
+        document.getElementById('password').addEventListener('focus', function() {
+            document.getElementById('password-guidelines').style.display = 'block';
+        });
+    
+        document.getElementById('new-password').addEventListener('focus', function() {
+            document.getElementById('password-guidelines').style.display = 'block';
+        });
+    }
+})
+
+// Function to display and hide the password guidelines for the new password route
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.pathname === "/reset_password") {
+        document.getElementById('new-password').addEventListener('focus', function() {
+            document.getElementById('password-guidelines').style.display = 'block';
+        });
+    
+        document.getElementById('new-password').addEventListener('blur', function() {
+            document.getElementById('password-guidelines').style.display = 'none';
+        });
+    }
+})
+
+
+
 
 
                             

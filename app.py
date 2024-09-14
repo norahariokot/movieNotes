@@ -11,7 +11,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
-from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic, VerifyUsername, SecurityQuestions
+from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic, VerifyUsername, SecurityQuestions, PasswordReset
 from helpers import login_required, section_links, search_options, extract_movie_info, json_buddynotes_options
 from scrapper import user_query
 
@@ -123,16 +123,35 @@ def verify_account():
         print(f"Verified username is {verified_username}")
         verified_user_id = db.execute("SELECT id FROM users WHERE user_name = ?", verified_username)
         print(verified_user_id)
-        session['verified_userid'] = verified_user_id[0]
+        session['verified_userid'] = verified_user_id[0]['id']
         print(session['verified_userid'])
-        return redirect("reset_password")
+        return redirect("/reset_password")
 
     return render_template("verify_account.html", verify_account_form=verify_account_form)
 
 
+# View Function for reseting password
+@app.route("/reset_password", methods=["GET","POST"])
+def reset_password():
+    print("Type new password route")
 
+    id = session['verified_userid']
+    print(id)
 
+    reset_password_form = PasswordReset()
 
+    #Validate form
+    if reset_password_form.validate_on_submit():
+        password = reset_password_form.new_password.data
+
+        # Generate hash for password
+        hash = generate_password_hash(password)
+
+        # Update user's password in database
+        db.execute("UPDATE users SET hash = ? WHERE id = ?", hash, id)
+        return redirect("/login")
+
+    return render_template("new_password.html", reset_password_form=reset_password_form)
 
 
 # View Function to display user profile page
