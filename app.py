@@ -6,13 +6,13 @@ import pytz
 from cs50 import SQL
 from datetime import datetime
 from dotenv import load_dotenv
-from flask import Flask, flash, redirect, render_template, request, g, session, jsonify
+from flask import Flask, flash, redirect, render_template, request, g, session, jsonify, send_file, url_for
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic, VerifyUsername, SecurityQuestions, PasswordReset
-from helpers import login_required, section_links, search_options, extract_movie_info, json_buddynotes_options
+from helpers import login_required, section_links, search_options, extract_movie_info, json_buddynotes_options, resize_image
 from scrapper import user_query
 
 
@@ -41,9 +41,37 @@ def before_request():
 @app.route("/")
 @login_required
 def index():
+    print("Home route followed")
+    id = session["user_id"]
+    print(id)
+    home_page = True
+
+    # query database for currently logged in user
+    user_info = db.execute("SELECT first_name, last_name, user_name, profile_pic FROM users WHERE id = ?", id)
+    print(user_info)
+
+    user_profile = {}
+    user_profile["first_name"] = user_info[0]['first_name']
+    user_profile["full_name"] = user_info[0]['first_name'] +" " + user_info[0]['last_name']
+    user_profile["user_name"] = user_info[0]['user_name']
+    user_profile["profile_pic"] = user_info[0]['profile_pic']
+    # Use default profile pic image if not profile picture is uploaded
+    if user_profile["profile_pic"] == None:
+        user_profile["profile_pic"] = "../static/Images/Icons/user_profile.png" 
+    else:
+        # Construct URL for the original image
+        user_profile["profile_pic"] = "../static/Images/user_profilepics/" +  user_profile["profile_pic"] 
+
+               
+    session["user_profile"] = user_profile
+    print(session["user_profile"])  
+    print(session)  
+
+    user_profile = session.get("user_profile")
+    print(user_profile)
    
     #print(sections)
-    return render_template("index.html", sections=sections, user_profile=session.get("user_profile"))
+    return render_template("index.html", sections=sections, user_profile=session.get("user_profile"), home_page=home_page)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -65,31 +93,13 @@ def login():
         if user_info:
             session.clear()
             session["user_id"] = user_info[0]['id']
-
+                
             
-            user_profile = {}
-            user_profile["full_name"] = user_info[0]['first_name'] +" " + user_info[0]['last_name']
-            user_profile["user_name"] = user_info[0]['user_name']
-            user_profile["profile_pic"] = user_info[0]['profile_pic']
-            if user_profile["profile_pic"] == None:
-                user_profile["profile_pic"] = "../static/Images/Icons/user_profile.png"
-            else:
-                user_profile["profile_pic"] = "../static/Images/user_profilepics/" +  user_profile["profile_pic"] 
-
-            session["user_profile"] = user_profile
-            print(session["user_profile"])  
-            print(session)  
-
-            user_profile = session.get("user_profile")
-            print(user_profile)
-            
-        
-
-
         # Redirect user to the home page
         return redirect("/")
 
-    return render_template("login.html", login_form=login_form, current_route="/login")
+    return render_template("login.html", login_form=login_form, current_route="/login", )
+
 
 
 # View function to verify username
@@ -107,7 +117,12 @@ def verify_username():
 
         return redirect("/verify_account")
 
-    return render_template("verify_username.html", verify_username_form=verify_username_form)    
+    if "user_id" in session:
+        session["logged_in"] = True 
+    else:
+        session["logged_in"] = False    
+
+    return render_template("verify_username.html", verify_username_form=verify_username_form, logged_in=session["logged_in"])    
 
 
 # View function to verify user account before password reset
@@ -127,7 +142,12 @@ def verify_account():
         print(session['verified_userid'])
         return redirect("/reset_password")
 
-    return render_template("verify_account.html", verify_account_form=verify_account_form)
+    if "user_id" in session:
+        session["logged_in"] = True 
+    else:
+        session["logged_in"] = False   
+
+    return render_template("verify_account.html", verify_account_form=verify_account_form, logged_in=session["logged_in"])
 
 
 # View Function for reseting password
@@ -151,7 +171,12 @@ def reset_password():
         db.execute("UPDATE users SET hash = ? WHERE id = ?", hash, id)
         return redirect("/login")
 
-    return render_template("new_password.html", reset_password_form=reset_password_form)
+    if "user_id" in session:
+        session["logged_in"] = True 
+    else:
+        session["logged_in"] = False       
+
+    return render_template("new_password.html", reset_password_form=reset_password_form, logged_in=session["logged_in"] )
 
 
 # View Function to display user profile page
@@ -211,6 +236,7 @@ def edit_profile():
         profile_pic = "../static/Images/Icons/user_profile.png"
     else:
         profile_pic =  "../static/Images/user_profilepics/" + user_data[0]['profile_pic']
+    edit_profile_pic = True    
 
     # Pre populate form with user current data
     updateprofile_form = UpdateUserProfile(
@@ -231,9 +257,9 @@ def edit_profile():
         db.execute("UPDATE users SET first_name = ?, last_name = ?, user_name = ? WHERE id = ?", updateprofile_form.first_name.data, updateprofile_form.last_name.data, updateprofile_form.user_name.data, session['user_id'])
             
         flash("Your profile has been updated successfully!", "success")   
-        return redirect("/login")    
+        return redirect("/")    
 
-    return render_template("edit_profile.html", updateprofile_form=updateprofile_form, update_profilepic_form=update_profilepic_form, profile_pic=profile_pic, user_id=session['user_id'])        
+    return render_template("edit_profile.html", updateprofile_form=updateprofile_form, update_profilepic_form=update_profilepic_form, profile_pic=profile_pic, user_id=session['user_id'], edit_profile_pic=edit_profile_pic)        
 
 
 # View function to upload user profile pic
@@ -263,15 +289,33 @@ def edit_profilepic():
             # Save the file path (relative to the static folder) in the database
             db.execute("UPDATE users SET profile_pic = ? WHERE id = ?", filename, session['user_id'])
 
-            flash("Your profile picture has been updated successfully!", "success")  
-
             # Retrieve updated profile pic and display it
             new_profile_pic = db.execute("SELECT profile_pic FROM users WHERE id = ?", session['user_id']) 
-            newprofile_pic = new_profile_pic[0]
-            return redirect("/edit_profile", newprofile_pic=newprofile_pic)    
+            profile_pic = new_profile_pic[0]['profile_pic']
+            print(profile_pic)
+            newprofile_pic = "../static/Images/user_profilepics" + profile_pic
+            return redirect(url_for('edit_profile', newprofile_pic=newprofile_pic))    
 
     return render_template("edit_profile.html", update_profilepic_form=update_profilepic_form)  
 
+
+
+# View function to remove user profile pic when updating profile
+@app.route("/remove_profile_pic", methods=["POST"])
+@login_required
+def remove_profile_pic():
+    print("Remove profile pic route followed")
+
+    id = session["user_id"]
+    print(id)
+
+    removed_profile_pic = None
+
+    # Update database with remove profile pics
+    db.execute("UPDATE users SET profile_pic = ? WHERE id = ?", removed_profile_pic, id )
+
+    return redirect("/edit_profile")
+    
 
 @app.route("/logout")
 def logout():
@@ -475,7 +519,7 @@ def watched_by_year():
     watched_section = True
     watched_by_year = True
 
-    # obtain movie watche years
+    # obtain movie watched years
     movie_watched_years = db.execute("SELECT DISTINCT strftime('%Y', movie_watched_date) AS watched_year FROM watched WHERE user_id = ? ORDER BY watched_year DESC", session["user_id"])
     print(movie_watched_years)
 
@@ -487,6 +531,7 @@ def watched_by_year():
             dict_item["route"] = "/watched_in_year"  
             dict_item["yearwatched_info"] = dict_item["watched_year"] 
     print(movie_watched_years)   
+    session["watched_years"] = movie_watched_years
 
     
     return render_template("index.html", watched_section=watched_section, watched_by_year=watched_by_year, movie_watched_years=movie_watched_years,sections=sections, user_profile=session.get("user_profile"))   
@@ -496,18 +541,30 @@ def watched_by_year():
 @app.route("/watched_in_year", methods=["POST"])
 @login_required
 def watched_in_year():
+    watched_in_year = True
+    watched_section = True
     print("Watched in year route fired")
     
     #Receive data from frontend via fetch function:
-    year_watched = request.get_json()
-    print(year_watched)
+    year_watched = request.form['watched_year']
+    print(f"year_watched: {year_watched}")
+    
+    """
+    query = "SELECT *, strftime('%Y', movie_watched_date) AS watched_year, strftime('%m', movie_watched_date) AS watched_month FROM watched WHERE user_id = ? AND watched_year = ?"
+    params = (session['user_id'], year)
+    print(query, params)
+    movieswatched_inyear = db.execute(query, *params)
+    print(movieswatched_inyear)
+    This helped me debug a problem with the data being sent by the form.It had an extra white space and as result did give the desired response
+    """
 
-    # Retrieve movies watched in year_watched from database
-    movieswatched_inyear = db.execute("SELECT *, strftime('%Y', movie_watched_date)  AS watched_year, strftime('%m', movie_watched_date) AS watched_month FROM watched WHERE user_id = ? AND watched_year = ? ORDER BY watched_month", session["user_id"], year_watched)
+    movieswatched_inyear = db.execute("SELECT *, strftime('%Y', movie_watched_date)  AS watched_year, strftime('%m', movie_watched_date) AS watched_month FROM watched WHERE user_id = ? AND watched_year = ? ORDER BY watched_month", session['user_id'], year_watched)
     print(movieswatched_inyear)
 
-    for dict_item in movieswatched_inyear:
+    movies_watched_inyear_count  = 0
+    for dict_item in movieswatched_inyear:        
         month_info = dict_item["watched_month"].split("0")
+        print(type(month_info))
         month_number = int(month_info[1])
         month = (calendar.month_name[month_number])
 
@@ -522,7 +579,9 @@ def watched_in_year():
     print(len(movieswatched_inyear))   
 
     group_bymonth = {}
+    movies_watched_inyear_count  = 0
     for dict_item in movieswatched_inyear:
+        movies_watched_inyear_count+=1
         month = dict_item["watched_month"]
         
         if dict_item["watched_month"] not in group_bymonth:
@@ -533,17 +592,22 @@ def watched_in_year():
         else:
             print("found")
             group_bymonth[month].append(dict_item) 
-        print(group_bymonth)       
+        #print(group_bymonth)       
 
-    print(f"Group by month {group_bymonth}") 
-    print(len(group_bymonth))  
+    #print(f"Group by month {group_bymonth}") 
+    #print(len(group_bymonth))  
+
+    print(group_bymonth)
+    print(f"Movies watched in year: {movies_watched_inyear_count}")
 
     month_watched = [] 
     month_watched.append(group_bymonth)
+    count_of_movies_watched_inyear= {year_watched:movies_watched_inyear_count}
+    print(count_of_movies_watched_inyear)
+    print(session["watched_years"])
 
-        
+    return render_template("index.html", year_watched=year_watched,watched_section=watched_section, watched_in_year=watched_in_year, watched_years=session.get("watched_years"), group_bymonth=group_bymonth, count_of_movies_watched_inyear=count_of_movies_watched_inyear,sections=sections, user_profile=session.get("user_profile"))   
 
-    return jsonify(month_watched)
 
 
 # Route to add movies to the favourites list

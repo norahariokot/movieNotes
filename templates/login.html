@@ -6,7 +6,12 @@
 
 {% block main %}
     <div class="login-grid">
+        
         <div class="login-info">
+            <div class="login-logo-div">
+                <img src="../static/Images/Movie Notes-logo/Movie Notes (4).png" alt="" class="create-user-logo">
+            </div>
+            
             <h2 class="log-in-title">Log in</h2>
 
             <form action="/login" method="POST" class="login-form">
@@ -35,7 +40,7 @@
                         </ul>
                     {% endif %}
 
-                    <a href="/verify_username">Forgot password?</a>
+                    <a href="/verify_username" class="forgot-password-link">Forgot password?</a>
 
                 <button type="submit" class="login-form-btn">Login</button>
             </form>

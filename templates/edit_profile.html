@@ -2,41 +2,47 @@
 
 {% block main %}
 <div class="edit_profile_div">
-    <ul class="edit_profile_div">
-        <li><a href="/">Back to home</a></li>
-        <li><a href="/user_profile"> User profile</a></li>
+    <ul class="edit_profile_nav">
+        <li class="edit-profile-nav-item"><a href="/">Back to Home</a></li>
+        <li class="edit-profile-nav-item"><a href="/user_profile"> User profile</a></li>
     </ul>
 
-    <h2> Update user profile</h2>
+    <h2> Edit Your Profile </h2>
 
-    <div>
-        {% if profile_pic_uploaded %}
-            <img src="{{newprofile_pic}}" alt="updated user profile picture">
-        {% else %}    
-            <img src="{{profile_pic}}" alt="user profile picture" srcset="" class="profile-img-update">
-        {% endif %}    
-
-        <a href="#" id="update-profile-pic"> Update Profile Picture </a>
+    <div class="edit-profile-pic-div">
+    {% if edit_profile_pic %}    
+        <div id="default-profile-pic-div">
+            {% if profile_pic_uploaded %}
+                <img src="{{newprofile_pic}}" alt="updated user profile picture" class="profile-img-update">
+            {% else %}    
+                <img src="{{profile_pic}}" alt="user profile picture" srcset="" class="profile-img-update">
+            {% endif %}  
+        </div>
+    {% endif %}    
+        
+        
+        <img src="../static/Images/Icons/user_profile.png" alt="" id="removed-profile-pic" style="display: none;" class="profile-img-update">
+        <p id="user-profile-pic-id" style="display: none;">{{user_id}} </p>
+        <a href="#" id="update-profile-pic" class="update-profile-pic-btn"> Update Profile Picture </a>
 
         <div class="update-profile-pic-div" style="display: none;" id="update-profile-pic-div">
-            <h3> Change Profile Photo </h3>
+            <button class="close-profilepic-btn" id="close-update-profilepic"><img src="../static/Images/Icons/close.png" alt="icon for close button" id="close-update-profile-ctls"></button>
             <ul class="profile-pic-update-options">
-                <li><a href="http:" class="profile-pic-ctls" id="upload-profile-pic">Upload Photo</a></li>
-                <li><a href="http:" class="profile-pic-ctls">Remove Current Photo</a></li>
-                <li><a href="http:" class="profile-pic-ctls">Cancel</a></li>
+                <li class="update-profilepic-li"><a href="#" class="profile-pic-ctls" id="upload-profile-pic">Upload Photo</a></li>
+                <form action="/upload_profilepic" method="POST" class="update-profilepic-form" id="upload-profile-pic-form"  enctype="multipart/form-data" style="display: none;">
+                    {{ update_profilepic_form.csrf_token }}
+                    {{update_profilepic_form.current_user_id}}
+                    {{ update_profilepic_form.profile_pic }}                        
+                </form>
+             
+                <form action="/remove_profile_pic" method="POST" id="remove-profile-pic-form">
+                    <li class="update-profilepic-li"><a href="#" class="profile-pic-ctls" id="remove-profile-pic">Remove Current Photo</a></li>
+                </form>                
+                
             </ul>
         </div>
       
-            <form action="/upload_profilepic" method="POST" class="update-profilepic-form" id="upload-profile-pic-form" style="display: none;" enctype="multipart/form-data">
-                {{ update_profilepic_form.csrf_token }}
-                    {{update_profilepic_form.current_user_id}}
-    
-                
-                    {{ update_profilepic_form.profile_pic }}
-                <button type="submit" class="updateprofile-btn"> Update Profile Picture </button>
-            </form>
-     
-
+        
 
 
     </div>
@@ -44,10 +50,10 @@
         {{ updateprofile_form.csrf_token }}
             {{updateprofile_form.current_user_id}}
 
-            <label for="first_name" class="form-lbl"> {{updateprofile_form.first_name.label}} </label>   
+            <label for="first_name" class="edit-profile-form-lbl"> {{updateprofile_form.first_name.label}} </label>   
             {{ updateprofile_form.first_name }}
 
-            <label for="last_name" class="form-lbl"> {{updateprofile_form.last_name.label}} </label>   
+            <label for="last_name" class="edit-profile-form-lbl"> {{updateprofile_form.last_name.label}} </label>   
             {{ updateprofile_form.last_name }}
 
             {% if updateprofile_form.first_name.errors or updateprofile_form.last_name.errors %}
@@ -61,7 +67,7 @@
                 </ul>
             {% endif %}  
 
-            <label for="user-name" class="form-lbl"> {{ updateprofile_form.user_name.label}} </label>
+            <label for="user-name" class="edit-profile-form-lbl"> {{ updateprofile_form.user_name.label}} </label>
             {{ updateprofile_form.user_name()}}
 
             {% if updateprofile_form.user_name.errors %}
@@ -78,7 +84,7 @@
 
     </form>
 
-    <a href="/verify_username">Update Password</a>
+    <a href="/verify_username" class="edit-password-btn">Update Password</a>
 
 </div>
 

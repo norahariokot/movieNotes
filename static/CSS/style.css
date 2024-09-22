@@ -7,7 +7,9 @@ html {
 body {
     padding: 0;
     margin: 0;
-
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+  
 }
 
 /* ===============
@@ -62,13 +64,27 @@ body {
     width: 80%;
     padding: .5em;
     margin-bottom: 1em;
-    border: solid yellowgreen;
+    border: solid #c6e0ff;
+    border: solid 1.5px rgb(187, 184, 184);
 }
+
+.login-form-ctl:focus {
+    outline: solid 2px #1b6ef3ff;
+    
+}
+
 
 .login-form-btn {
     width: 80%;
     padding-top: .5em;
     padding-bottom: .5em;
+    background-color: #1744e5;
+    color: #fff;
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+    border: none;
+    font-weight: 700;
+    letter-spacing: .8pt;
 }
 
 .login-page-create-acc {
@@ -89,15 +105,23 @@ body {
 
 }
 
+.errors {
+    & li {
+        list-style-image: url(../Images/Icons/cancel.png);
+    }
+}
+
 .create-link {
    width: 80%; 
    /*border: solid yellow;*/
    text-align: center;
    border: solid 1px grey;
+   border: solid 1.5px rgb(187, 184, 184);
    padding-top: .5em;
    padding-bottom: .5em;
    text-decoration: none;
-   color: black;
+   color: #1744e5;
+   font-weight: bold;
 
 }
 
@@ -113,7 +137,8 @@ body {
     border-radius: 2%;
 }
 
-.create-user-logo-div {
+.create-user-logo-div,
+.login-logo-div {
     text-align: center;
     /*border: solid red;*/
 }
@@ -124,14 +149,22 @@ body {
     width: 140px;
 }
 
-.form-div {
+.create-acc-form-lbl {
     margin-bottom: .5em;
-    width: 80%;
+    width: 100%;
+    /*border: solid black;*/
 }
 
 .create-acc-form-ctl {
     padding: .5em;
     width: 100%;
+    margin-bottom: .5em;
+    border: solid 1.5px rgb(187, 184, 184);
+    
+}
+
+.create-acc-form-ctl:focus {
+    outline: solid 2px #1b6ef3ff;
 }
 
 .create-acc-form {
@@ -142,6 +175,29 @@ body {
     align-items: center;
 }
 
+.create-account-btn {
+    margin-top: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-inline: 1.5em;
+    background-color: #1744e5;
+    font-family: "Roboto", sans-serif;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    letter-spacing: 1pt;
+}
+
+.password-guideline {
+    list-style-type:square;
+
+}
+
+.password-guideline::marker {
+    color: #10a075;
+}
+
 .sign-in-link {
     text-decoration: none;
     color: #1744e5;
@@ -149,16 +205,244 @@ body {
 }
 
 /* Edit profile page*/
-.update-profile-form {
-    border: solid black;
+.edit_profile_div {
+    /*border: solid red;*/
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-inline: auto;
+    padding: 1em;
+}
+
+.edit_profile_nav {
+    /*border: solid blue;*/
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding-left: 0;
+}
+
+.edit-profile-nav-item {
+    list-style: none;
+    text-decoration: none;
+   
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-inline: 1em;
+    border: solid black 1px;
+    border-radius: 5%;
+
+    & a {
+        text-decoration: none;
+    }
+}
+
+.edit-profile-pic-div {
     display: flex;
     flex-direction: column;
 }
 
 .profile-img-update {
-    border: solid red;
+    /*border: solid red;*/
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: solid black;
+    
 }
 
+.update-profile-pic-div {
+    border: solid black 1px;
+    width: 40%;
+    padding: 1em;
+}
+
+.profile-pic-update-options {
+    /*border: solid blue;*/
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-left: 0;
+    
+}
+
+.close-profilepic-btn {
+    width: fit-content;
+    /*border: solid red;*/
+    text-align: right;
+}
+
+
+
+.update-profilepic-li {
+    list-style: none;
+    border: solid yellowgreen;
+    text-align: center;
+    margin-bottom: .5em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-inline: 1em;
+    
+}
+
+.profile-pic-ctls {
+    text-decoration: none;
+    /*border: solid blue;*/
+
+}
+
+.update-profile-pic-btn,
+.edit-password-btn {
+    text-decoration: none;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-inline: 1em;
+    border: solid black 1px;
+    width: fit-content;
+    margin-top: 1em;
+    margin-bottom: 1em;
+
+
+
+}
+
+.update-profile-form {
+    /*border: solid black;*/
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+   
+    
+}
+
+.edit-profile-form-lbl {
+    margin-bottom: .5em;
+    /*border: solid blue;*/
+}
+
+.profile-update-form-ctl {
+    margin-bottom: .5em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-inline: 1em;
+}
+
+/* Veirify username page */
+.verify-username-div {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    /*border: solid red;*/
+    margin-inline: auto;
+    align-items: center;
+}
+
+.verify-username-form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.verify-username-form-lbl {
+    /*border: solid blue;*/
+    margin-bottom: .5em;
+    align-self: center;
+}
+
+.verify-username-form-ctl {
+    /*border: solid red;*/
+    padding-inline: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.verification-nav {
+    /*border: solid greenyellow;*/
+    margin-top: 2em;
+    margin-bottom: 2em;
+    height: max-content;
+    margin-left: 1em;
+}
+
+.nav-btn {
+    border: solid black 1px;
+    padding-inline: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    margin-top: 2em;
+    text-decoration: none;
+}
+
+.verify-username-btn {
+    align-self: center;
+    width: 50%;
+    margin-top: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+
+/* Verify account page*/
+.verify-account-div {
+    /*border: solid blue;*/
+    width: 90%;
+    margin-inline: auto;
+    margin-top: 1em;
+    padding: 1em;
+}
+
+.verify-account-form {
+    display: flex;
+    flex-direction: column;
+    /*border: solid red;*/
+}
+
+.verify-acc-form-ctl {
+    margin-bottom: 1em;
+    margin-top: .3em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.verify-account-btn {
+    width: 50%;
+    border: solid black 1px;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    align-self: center;
+}
+
+.verification-title {
+    text-align: center;
+}
+
+/* New password page*/
+.new-password-div {
+    /*border: solid red;*/
+    width: 90%;
+    margin-top: 1em;
+    margin-inline: auto;
+}
+
+.reset-password-form {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin-inline: auto;
+}
+
+.update-password-form-ctl {
+    margin-bottom: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.reset-password-btn {
+    width: 45%;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
 
 
 
@@ -166,7 +450,9 @@ body {
 nav {
     display: flex;
     justify-content: space-between;
-    border: solid red;
+    /*border: solid red;*/
+    padding-inline: 2em;
+    margin-top: 1em;
 }  
 
 .logo {
@@ -183,48 +469,95 @@ nav {
 
 .nav-list {
     display: flex;
-    border: solid blue;
+    /*border: solid blue;*/
     margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
 
     & li {
         list-style: none;
         /*border: solid black;*/
-        margin-right: 1em;
+        margin-right: 2em;
+        
     }
 }
 
+.nav-user-info {
+    margin-left: 4em;
+    /*border: solid blue;*/
+    margin-bottom: 0;
+}
+
+.nav-logout-btn {
+    align-self: center;
+    padding-inline: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    /*border: solid black 1px;*/
+    border-radius: 5px;
+    background-color: #1744e5;
+
+    & a {
+        text-decoration: none;
+        color: #fff;
+    }
+
+}
+
 /* User profile */
-
-
 .login-user-profile {
-    border: solid red;
+    /*border: solid green;*/
     margin-top: .1em;
     display: flex;
+    margin-bottom: 0;
 }
 
 .login-user-profile-pic {
-    border: solid black;
+    border: solid gainsboro 1px;
     border-radius: 50%;
-    padding: .5em;
-    height: 80px;
-    width: 80px;
+   
+    height: 70px;
+    width: 70px;
 
     & img {
         height: 100%;
         width: 100%;
         object-fit: cover;
-        padding: .5em;
+        overflow: hidden;
+        border-radius: 50%;
     }
     
 }
 
 .login-user-profile-info {
-    border: solid green;
+    align-self: center;
+    /*border: solid green;*/
+    margin-left: .5em;
     & * {
-        border: red solid;
+        /*border: red solid;*/
         margin-top: 0;
         margin-bottom: 0;
+       
     }
+}
+
+.dashboard-user-profile {
+    text-decoration: none;
+  
+}
+
+.dashboard-user-profile:visited {
+    color: black;
+}
+
+.forgot-password-link {
+    text-decoration: none;
+    padding-bottom: .5em;
+    /*border: solid blue;*/
+    margin-top: -0.7em;
+    font-size: .9rem;
+    color: #1744e5;
+   
 }
 
 /* User profile page*/
@@ -270,7 +603,6 @@ nav {
 .profile-page-img {
     border: solid black;
     border-radius: 50%;
-    padding: .5em;
     height: 100px;
     width: 100px;
     margin-top: 1em;
@@ -316,31 +648,214 @@ nav {
 /* --- Dashboard --- */
 .user-dashboard-container {
     display: grid;
-    grid-template-columns: minmax(20%,1fr) minmax(80%,1fr) ;
+    grid-template-columns: minmax(1em,1fr) minmax(90%,1fr)  minmax(1em, 1fr) ;
     margin-inline: auto;
+    /*border: solid red;*/
 }
 
 .user-menu {
-    grid-column: 1;
-    border: solid black;
+    grid-column: 2;
+    /*border: solid black;*/
+    padding-left: 2em;
+    padding-top: 2em;
+   
+}
+
+.search-link {
+    border: solid blue;
+    padding-left: 1em;  
+    padding-right: 1em; 
+    padding-top: .5em;
+    padding-bottom: .5em; 
+    text-decoration: none;
+    color: #000;
+    border-radius: 25px;
+    border: solid 1.5px rgb(187, 184, 184);
+}
+
+.search-icon {
+    /*border: solid red;*/
+    margin-right: 1em;
+    & img {
+        height: 20px;
+        width: 20px;
+        
+    }
+
 }
 
 .user-content{
     grid-column: 2;
-    border: solid green;
+    /*border: solid green;*/
+   
 }
 
+.dashboard-menu-title {
+    /*border: solid black;*/
+    width: 60%;
+    padding-left: 1em;
+    margin-top: 2em;
+    
+}
+
+.dashboard-menu-list {
+    margin-top: .8em;
+    list-style: none;
+    padding-left: 0;
+    /*border: solid blue;*/
+    width: 90%;
+    
+}
+
+.dashboard-menu-li {
+    /*border: solid black;*/
+    border-radius: 5px;
+    padding-left: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    margin-bottom: .5em;
+
+    
+  
+    & a {
+        text-decoration: none;
+        color: #000;
+        /*border: solid red;*/
+        
+    }
+
+    & a:visited {
+        color: #000;
+    }
+
+    
+}
+
+.dashboard-menu-li:hover,
+.dashboard-menu-li:focus,
+.dashboard-menu-li:visited {
+    background-color: #8cc0ff54;
+    & a {
+        font-weight: bold;
+    }
+}
+
+.dashboard-icon {
+    margin-right: 1em;
+    /*border: solid green;*/
+
+    & img {
+        height: 25px;
+        width: 25px;
+        margin-bottom: -.3em;
+    }
+}
+
+/* ---- Home Page ----- */
+.home-title {
+    margin-top: 0;
+    /*border: solid black;*/
+}
+
+.home-section {
+    /*border: solid 1px red;*/
+    border-radius: 25Px;
+    padding-inline: 1em;
+    padding-top: 1em;
+    padding-bottom: 4em;
+    margin-left: -1em;
+   
+    
+    background-color: #ecf3feff;
+    color: #000;
+    display: flex;
+   
+    width: 105%;
+}
+
+.home-info {
+    /*border: solid black;*/
+    text-align: justify;
+    width: 110%;
+    
+}
+
+.app-title {
+    font-size: 1.5rem;
+    color: #1744e5;
+    font-weight: bold;        
+}
+
+.app-instruction-title {
+    margin-bottom: 0;
+}
+
+.app-instruction-subtitle {
+    margin-bottom: 0;
+    /*border: solid green;*/
+}
+
+.movie-buddie-instruction {
+    margin-top: 0;
+    /*border: solid red;*/
+}
+
+.app-instruction-list {
+    /*border: solid red;*/
+    margin-top: 0;
+}
+
+.app-info-span {
+    font-weight: bold;
+}
+
+.app-guide-icon {
+    /*border: solid red;*/
+    height: 30px;
+    width: 30px;
+    margin-bottom: -.6em;
+    
+}
+
+.home-img {
+    display: none;
+    
+    
+}
+
+
 /* --- Search Page --- */
+.search-input {
+    width: 80%;
+    padding-left: 1em;
+    padding-top: .8em;
+    padding-bottom: .8em;
+    border-radius: 25px;
+    font-family: "Roboto", sans-serif;
+    font-size: .8rem;
+    
+}
+
+.search-input::placeholder {
+    font-family: "Roboto", sans-serif;
+    font-size: .7rem;
+}
+.movieList {
+    /*border: #10a075 solid;*/
+}
+
+.movie-info-container {
+    width: 100%;
+}
 
 .movie-info-container,
 .buddy-notes-container {
     /*border: solid red;*/
     display: flex;
     margin-bottom: 1em;
-    margin-left: 1em;
     margin-right: 5em;
     border-bottom: solid 1px gainsboro;
-    padding-inline: 1em;
+    padding-inline: 0;
     padding-bottom: .5em;
 }
 
@@ -360,6 +875,7 @@ nav {
 
     }
 }
+
 
 .movie_info_title_wrapper,
 .buddy-notes-title-wrapper {
@@ -383,8 +899,17 @@ nav {
 }
 
 .search-movie-title {
+    font-size: 1rem;
     /*margin-top: 0;*/
 }
+
+.movie-year,
+.movie-stars {
+    font-size: .9rem;
+    
+}
+
+
 
 .search-controls {
     align-self: center;
@@ -400,12 +925,16 @@ nav {
 .movie-poster-div,
 .buddy-notes-movieposter {
    
-   /*border: solid red;*/
+   /*border: solid purple;*/
+   height: 15vh;
+   width: 20%;
+   
 
     & img {
-        height: 100px;
-        width: 80px;
+        height: 100%;
+        width: 100%;
         object-fit: contain;
+        /*border: solid yellow;*/
     }
 }
 
@@ -422,7 +951,108 @@ nav {
 
 .date-div {
     /*border: solid black;*/
+
 }
+
+/* Sections*/
+.section-header {
+    /*border: solid black;*/
+    padding-left: 2em;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    border-radius: 25px;
+    background-color: #c6e0ff;
+}
+
+.section-header-img {
+    /*border: solid blue;*/
+    height: 10vh;
+    width: 25%;
+    padding: 0;
+
+    & img {
+        /*border: greenyellow;*/
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        padding: 0;
+       
+     
+    }
+}
+
+.section-header-info {
+   /* border: solid red;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    & * {
+       /* border: solid yellow;*/
+    }
+    
+}
+
+
+.section-title {
+    /*border: solid black;*/
+    margin-bottom: 0;
+    font-size: 2rem;
+  
+}
+
+.section-total {
+    margin-top: 0;
+}
+
+.section-search {
+    padding-left: 1em;
+    margin-top: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    width: 80%;
+    border-radius: 25px;
+    border: solid 2px rgb(187, 184, 184);
+    font-family: "Roboto", sans-serif;
+    font-size: .9rem;
+    margin-bottom: 1rem;
+    
+}
+
+.section-search::placeholder {
+    font-family: "Roboto", sans-serif;
+    font-size: .9rem;
+}
+
+/* Watch section */
+.watched-view-btns {
+    /*border: solid red;*/
+    height: max-content;
+    margin-bottom: 2em;
+    padding-left: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.watch-view-btn {
+    text-decoration: none;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-inline: .5em;
+    /*border: 1px solid black;*/
+    color: #fff;
+    background-color: #1b6ef3ff;
+    font-weight: 400;
+    margin-bottom: .6em;
+    width: 60%
+
+}
+
+.watch-view-btn:hover {
+    font-weight: bold;
+}
+
 .watched-year-movie-display {
     
 }
@@ -443,6 +1073,104 @@ nav {
 
 .section-movie-container:first-child {
     grid-column: 2 / span 1; 
+}
+
+/* -------- Watched by year -------- */
+.watchedyear-movie-display {
+    /*border: solid black;*/
+}
+
+.month-movies-div {
+    /*border: solid blue;*/
+    padding-bottom: 1em;
+    border-bottom: solid 1px gainsboro;
+}
+
+.month-movie-container {
+    /*border: solid red;*/
+    display: flex;
+
+}
+.month-movie-poster {
+    /*border: solid purple;*/
+    height: 20vh;
+    width: 20%;
+    & img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
+
+}
+
+
+.month-movie-info {
+    /*border: solid black;*/
+}
+
+.month-title {
+    /*border: solid black;*/
+    padding-left: 1em;
+}
+
+.month-movie-title-div {
+    /*border: solid blue;*/
+    display: flex;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.month-movie-no {
+    /*border: solid black;*/
+    margin-bottom: 0;
+}
+
+.month-movie-title {
+    /*border: solid red;*/
+    margin-bottom: 0;
+}
+
+.month-movie-year,
+.month-movie-stars {
+    /*border: solid blue;*/
+    margin-top: 0;
+    margin-bottom: 0;
+    
+}
+
+.movie-year-links {
+    /*border: solid red;*/
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.watched-year-form {
+    /*border: solid blue;*/
+    & a {
+        padding: .5em;
+        /*border: solid black;*/
+        text-decoration: none;
+        color: #000;
+        background-color: #c6e0ff;
+    }
+
+    & a:hover {
+        background-color: #1744e5;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    & a:active {
+        background-color: #1744e5;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    & a:visited {
+        background-color: #1744e5;
+        color: #fff;
+        font-weight: bold;
+    }
 }
 
 /* -------- Movie Buddies ----------- */
@@ -649,6 +1377,10 @@ nav {
         grid-template-columns: minmax(3em, 1fr) minmax(30%,1fr) minmax(40%,1fr) minmax(3em, 1fr);
      
     }  
+
+    .login-logo-div {
+        display: none;
+    }
     
     .login-info {
         grid-column: 2;
@@ -670,11 +1402,286 @@ nav {
         }
     }
 
+    .updateprofile-btn {
+        padding-top: .5em;
+        padding-bottom: .5em;
+        padding-inline: 1em;
+        width: 50%;
+        align-self: flex-end;
+        
+
+    }
+
     /* Create Account Page*/ 
     .create-user-div {
         width: 30%;
         
     }
+
+    /* Edit profile Page*/
+    .edit_profile_div {
+        width: 50%;
+        /*border: solid red;*/
+    }
+
+    .edit_profile_nav {
+        width: 70%;
+    }
+
+    .update-profile-form {
+        width: 70%;
+    }
+
+    /* Veirify username div*/
+    .verify-username-div {
+    width: 30%;
+    }
+
+    /* Verify account page*/
+    .verify-account-div {
+       width: 40%;
+    }
+
+    /* New password page*/
+    .new-password-div {
+       width: 30%;
+    }
+
+    /* --- Dashboard --- */
+    
+    .user-dashboard-container {
+        display: grid;
+        grid-template-columns: minmax(10%,1fr) minmax(80%,1fr) ;
+        margin-inline: auto;
+    }
+    
+    .user-menu {
+        grid-column: 1;
+        /*border: solid black;*/
+    }
+    
+    .user-content{
+        grid-column: 2;
+        /*border: solid green;*/
+        margin-top: 2em;
+    }
+
+    /* Home page*/
+    .home-img {
+        display: flex;
+        /*border: solid red;*/
+        padding-top: 5em;
+        height: 40%;
+        width: 25%;
+        & img {
+            /*border: solid red;*/
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    .home-section {
+        /*border: solid 1px red;*/
+        border-radius: 25Px;
+        padding-inline: 2em;
+        padding-top: 1em;
+        padding-bottom: 2em;
+        background-color: #ecf3feff;
+        color: #000;
+        display: flex;
+        width: 97%;
+       
+    }
+    
+    .home-info {
+        /*border: solid black;*/
+        text-align: justify;
+        width: 80%;
+        margin-right: 2em;
+    }
+    
+    /*Search page*/
+    .search-input {
+        width: 50%;
+        padding-left: 2em;
+        padding-top: .7em;
+        padding-bottom: .7em;
+        font-size: 1rem;
+        
+    }
+    
+    .search-input::placeholder {
+        font-size: 1rem;
+    }
+
+    .movie-info-container {
+        width: 90%;
+        padding-inline: 1em;
+        /*border: solid red;*/
+
+        
+    }
+    
+    .movie_info_text,
+    .buddy-notes-movieinfo-text {
+        /*border: solid blue;*/
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: .5em;
+    
+        & * {
+            /*border: solid black;*/
+            margin-bottom: 0;
+            margin-top: 0;
+            
+    
+        }
+    }
+    
+    
+    .movie-info,
+    .buddy-notes-movieinfo {
+        /*border: solid green;*/
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        padding-right: 3em;
+    }
+    
+    .search-movie-title {
+        font-size: 1.2rem;
+        /*margin-top: 0;*/
+    }
+    
+    .movie-year,
+    .movie-stars {
+        font-size: 1rem;
+        
+    }
+    
+        
+    .movie-poster-div,
+    .buddy-notes-movieposter {
+       /*border: solid purple;*/
+       height: 15vh;
+       width: 10%;
+        & img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+            /*border: solid yellow;*/
+        }
+    }
+
+    /* Sections*/
+    .section-header {
+        /*border: solid black;*/
+        padding-left: 4em;
+        flex-direction: row;
+        padding-bottom: 1em;
+        padding-top: 1em;  
+        margin-right:3em ;      
+    }
+    
+    .section-header-img {
+        /*border: solid blue;*/
+        height: 20vh;
+        width: 15%;
+    
+        & img {
+            /*border: greenyellow;*/
+            height: 90%;
+            width: 100%;
+            object-fit: contain;
+            padding-top: 2em;
+        }
+    }
+
+    .section-title {
+        margin-bottom: 0;
+        font-size: 3rem;
+      
+    }
+
+    .section-search {
+        width: 40%;       
+    }
+
+   
+    .watched-view-btns {
+        display: inline;
+        border: black;
+        margin-bottom: 1em;
+    }
+
+    .section-display {
+        /*border: solid red;*/
+        margin-top: 2em;
+    }
+
+    /* Watched by year */
+    .month-movies-div {
+        /*border: solid blue;*/
+        display: grid;
+        grid-template-columns: repeat(3, minmax(28%,1fr));
+    }
+    
+    .month-movie-container {
+        /*border: solid greenyellow;*/
+        grid-column: span 1;
+    
+    }
+
+    .month-movie-container:nth-child(3n+1) {
+        grid-column: 1 / span 1;
+    }
+    
+    .month-movie-poster {
+        /*border: solid purple;*/
+        height: 17vh;
+        width: 30%;
+        & img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+    
+    }
+    
+    .month-movie-info {
+        /*border: solid black;*/
+    }
+    
+    .month-movie-title-div {
+        /*border: solid blue;*/
+        display: flex;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    
+    .month-movie-no {
+       /* border: solid black;*/
+        margin-bottom: 0;
+    }
+    
+    .month-movie-title {
+        /*border: solid red;*/
+        margin-bottom: 0;
+    }
+    
+    .month-movie-year,
+    .month-movie-stars {
+        /*border: solid blue;*/
+        margin-top: 0;
+        margin-bottom: 0;
+        
+    }
+    
+    
+
+    
+
 }
 
 

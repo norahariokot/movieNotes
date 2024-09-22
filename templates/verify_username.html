@@ -1,24 +1,43 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<h2> Verify Username </h2>
 
-<form action="/verify_username" method="POST" class="verify_username" >
-    {{ verify_username_form.csrf_token }}
-      
-        <label for="user_name" class="form-lbl"> {{verify_username_form.user_name.label}} </label>   
-        {{ verify_username_form.user_name }}
+<div class="verification-nav">
+    {% if session.logged_in %}
+    <a href="/" class="nav-btn">Back to Home </a>
+    {% else %} 
+        <a href="/login" class="nav-btn">Login</a>
+    {% endif %}   
+</div>
 
-        {% if verify_username_form.user_name.errors %}
-            <ul class="errors">
-                {% for error in verify_username_form.user_name.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}            
-            </ul>
-       {% endif %} 
 
-       <button type="submit" class="verify-username-btn"> Verify Username </button>
-</form>
+<div class="verify-username-div">
+
+    <div class="create-user-logo-div">
+        <img src="../static/Images/Movie Notes-logo/Movie Notes (4).png" alt="" class="create-user-logo">
+    </div>
+    
+    <h2> Verify Username </h2>
+    
+    <form action="/verify_username" method="POST" class="verify-username-form" >
+        {{ verify_username_form.csrf_token }}
+          
+            <label for="user_name" class="verify-username-form-lbl"> {{verify_username_form.user_name.label}} </label>   
+            {{ verify_username_form.user_name }}
+    
+            {% if verify_username_form.user_name.errors %}
+                <ul class="errors">
+                    {% for error in verify_username_form.user_name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}            
+                </ul>
+           {% endif %} 
+    
+           <button type="submit" class="verify-username-btn"> Verify Username </button>
+    </form>
+    
+
+</div>
 
 
 {% endblock %}

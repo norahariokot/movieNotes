@@ -28,10 +28,10 @@
     
         <form action="/create_account" method="POST" class="create-acc-form">
             {{ reg_form.csrf_token }}
-            <label for="first_name" class="form-div"> {{ reg_form.first_name.label}} </label>
+            <label for="first_name" class="create-acc-form-lbl"> {{ reg_form.first_name.label}} </label>
              {{ reg_form.first_name()}}
             
-            <label for="last_name" class="form-div"> {{ reg_form.last_name.label}} </label>
+            <label for="last_name" class="create-acc-form-lbl"> {{ reg_form.last_name.label}} </label>
             {{ reg_form.last_name()}}
                 
             {% if reg_form.first_name.errors or reg_form.last_name.errors %}
@@ -45,7 +45,7 @@
                 </ul>
             {% endif %}   
             
-            <label for="user-name" class="form-div"> {{ reg_form.user_name.label}} </label>
+            <label for="user-name" class="create-acc-form-lbl"> {{ reg_form.user_name.label}} </label>
             {{ reg_form.user_name()}}
             
             {% if reg_form.user_name.errors %}
@@ -56,8 +56,15 @@
                 </ul>
            {% endif %}   
     
-           <label for="password" class="form-div"> {{ reg_form.password.label }} </label>
+           <label for="password" class="create-acc-form-lbl"> {{ reg_form.password.label }} </label>
             {{ reg_form.password() }}
+
+            <ul class="password-guidelines-div" id="password-guidelines" style="display: none;">
+                <li class="password-guideline"> Password must be contain atleast 8 characters </li>
+                <li class="password-guideline"> Password must contain atleast one number </li>
+                <li class="password-guideline"> Password must contain atleast one lowercase letter and one uppercase letter </li>
+                <li class="password-guideline"> Password must contain atleast one special character </li>
+            </ul>
                 
            {% if reg_form.password.errors %}
            <ul class="errors">
@@ -67,7 +74,7 @@
            </ul>
           {% endif %}   
     
-          <label for="verify_password" class="form-div"> {{ reg_form.verify_password.label }} </label>
+          <label for="verify_password" class="create-acc-form-lbl"> {{ reg_form.verify_password.label }} </label>
            {{ reg_form.verify_password() }}
     
             {% if reg_form.verify_password.errors %}

@@ -2,6 +2,7 @@ import json
 
 from flask import redirect, session, request
 from functools import wraps
+from PIL import Image
 
 
 def login_required(f):
@@ -14,7 +15,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-movie_notes_sections = ["Watched", "Favourites", "Currently watching", "Watchlist", "Recommendations", "Movie Buddies"]
+movie_notes_sections = ["Home", "Watched", "Favourites", "Currently Watching", "Watchlist", "Recommendations", "Movie Buddies"]
 
 # sections to navigate the index page
 section_links = {}
@@ -22,6 +23,8 @@ for section in movie_notes_sections:
     if " " in section:
         new_section = section.replace(" ", "_")
         section_link = "/" + new_section.lower() + "_section"
+    elif section == "Home":
+        section_link = "/"    
     else:
         section_link = "/" + section.lower() + "_section"
     section_links[section] = section_link    
@@ -61,3 +64,10 @@ for key, value in search_options.items():
     buddy_notes_options_list.append(buddy_notes_option)
 #print(buddy_notes_options_list)
 json_buddynotes_options = json.dumps(buddy_notes_options_list)
+
+
+# Helper function for resizing the uploaded profile images of users
+def resize_image(original_path, output_path, size):
+    img = Image.open(original_path)
+    img_resized = img.resize(size)
+    img_resized.save(output_path)

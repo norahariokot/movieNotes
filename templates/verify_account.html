@@ -1,9 +1,24 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<h2> Verify account </h2>
+<div class="verification-nav"></div>
+    {% if session.logged_in %}
+    <a href="/" class="nav-btn">Back to Home </a>
+    {% else %} 
+        <a href="/login" class="nav-btn">Login</a>
+    {% endif %}   
+</div>
 
-<form action="/verify_account" method="POST" class="verify-account-form">
+<div class="verify-account-div">
+
+    <div class="create-user-logo-div">
+        <img src="../static/Images/Movie Notes-logo/Movie Notes (4).png" alt="" class="create-user-logo">
+    </div>
+
+    <h2 class="verification-title"> Verify account </h2>
+    <p class="verification-text"> Answer all 3 questions to verify you are owner of this account </p>
+
+    <form action="/verify_account" method="POST" class="verify-account-form">
     {{ verify_account_form.csrf_token }}
         <label for="question-one" class="form-lbl"> {{verify_account_form.question_one.label}} </label>   
         {{ verify_account_form.question_one }}
@@ -38,10 +53,13 @@
             </ul>
        {% endif %} 
 
-       <button type="submit" class="Verify account-btn"> Verify account </button>
+       <button type="submit" class="verify-account-btn"> Verify account </button>
 
 
 
-</form> 
+    </form> 
+
+
+</div>
 
 {% endblock %}

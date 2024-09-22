@@ -124,8 +124,39 @@ SELECT date_time, message FROM chat_messages WHERE msg_sender = 1 AND msg_recipi
 
 SELECT DISTINCT users.id, first_name, last_name, user_name, profile_pic FROM users JOIN ( SELECT msg_sender AS user_id, MAX(date || ' ' || time) AS latest_message FROM chat_messages WHERE msg_recipient = ? GROUP BY msg_sender UNION SELECT msg_recipient AS user_id, MAX(date || ' ' || time) AS latest_message FROM chat_messages WHERE msg_sender = ? GROUP BY msg_recipient ) AS latest_messages ON users.id = latest_messages.user_id ORDER BY latest_messages.latest_message DESC;
 
+if (event.target.id == 'upload-profile-pic') {
+                    event.preventDefault()
 
+                     console.log("upload-profile-pic-btn-clicked")
+                    let upload = document.getElementById('upload-profile-pic-form');
+                    console.log(upload)
+                    upload.style.display = "block";
+                } 
+                
+                if (event.target.id == 'remove-profile-pic')
+                    event.preventDefault()
 
+                    let data = {
+                        id: document.getElementById("user-profile-pic-id").innerText
+                    }
+                    console.log(data)
 
-
+                    // Send data to server 
+                    fetch("/remove_profile_pic", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response=> response.json())
+                    .then(data => {
+                        alert(data.message);
+                        visible_div.style.display = "none";
+                        let hidden_profile_pic = document.getElementById("default-profile-pic-div");
+                        hidden_profile_pic.style.display = "none";
+                        let visible_profile_pic = document.getElementById("removed-profile-pic");
+                        visible_profile_pic.style.display = "block";
+                    })
+                    .catch((error) => console.error('Error:',error)); 
 

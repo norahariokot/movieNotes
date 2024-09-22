@@ -1186,82 +1186,20 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Function to display movie year info
+// Function to submit the form for clicked movie year when displaying movies by year
 document.addEventListener('click', function(event) {
-    console.log(event.target)
-    let year;
-    if(event.target.id == "watched-movie-year") {
+    console.log(event)
+
+    if(event.target.matches('.watched-year-link')) {
         event.preventDefault();
-        year = event.target.innerText;
-
-        console.log(year)
-        let display_div = document.getElementById("watchedyear-movie-display");
-        console.log(display_div);
-        display_div.innerHTML = " "
-
-        // Send the year to the server to request for watched movies in that year
-        fetch("/watched_in_year", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(year)
-        })
-        .then(response=> response.json())
-        .then(yearwatched_movie_info => {
-            console.log(yearwatched_movie_info)
-
-            // Convert the object to an array of month objects
-            let monthArray = Object.keys(yearwatched_movie_info[0]).map(month => {
-                return {
-                    month: month,
-                    month_number: yearwatched_movie_info[0][month][0].month_number,
-                    movies: yearwatched_movie_info[0][month]
-                };
-            });
-
-            // Sort the array by month_number
-            monthArray.sort((a, b) => a.month_number - b.month_number);
-
-            console.log(monthArray);
-
-            // If you need it back as an object, you can convert it back
-            //let sortedYearWatchedMovieInfo = {};
-            //monthArray.forEach(item => {
-                //sortedYearWatchedMovieInfo[item.month] = item.movies;
-            //});
-            //console.log("Sorted by month",sortedYearWatchedMovieInfo);
-
-
-
-
-            // Create elements to display watched movies by year
-
-         
-            monthArray.forEach(movie_info => {
-                console.log(movie_info)
-                let month = document.createElement("div");
-                month.className = "";
-                month.innerHTML = movie_info["month"];
-                display_div.appendChild(month)
-                movie_info["movies"].forEach(movie => {
-                    console.log("Movie of movie_info", movie)
-                    let title = document.createElement("p");
-                    title.innerText = movie["movie_title"];
-                    display_div.appendChild(title);
-                })
-                
-            })
-
-        })
-        .catch((error) => console.error('Error:', error));
-    } 
-});
-
+        event.target.closest('.watched-year-form').submit();
+    }
+})
 
 // Function to update profile picture in update user profile
 document.addEventListener('click', function(event) {
     let element = event.target;
+    console.log(element)
 
     if (element.id == 'update-profile-pic') {
         event.preventDefault();
@@ -1282,15 +1220,34 @@ document.addEventListener('click', function(event) {
                 if (event.target.id == 'upload-profile-pic') {
                     event.preventDefault()
 
-                     console.log("upload-profile-pic-btn-clicked")
-                    let upload = document.getElementById('upload-profile-pic-form');
-                    console.log(upload)
-                    upload.style.display = "block";
-                }    
+                    document.querySelector('input[name="profile_pic"]')
+                    document.getElementById('update-profilepic-input').click();
+
+                    document.getElementById("update-profilepic-input").addEventListener("change", function() {
+                        document.getElementById('upload-profile-pic-form').submit();
+                    });
+
+                    visible_div.style.display = "none";
+                  
+                } 
+                
+                if (event.target.id == 'remove-profile-pic') {
+                    event.preventDefault()
+
+                    document.getElementById('remove-profile-pic-form').submit()
+                }
+
+                
             });
    
         })
      
+    }
+
+    else if (element.id == "close-update-profilepic" || element.id == "close-update-profile-ctls") {
+        let hidden_div = document.getElementById('update-profile-pic-div')
+        console.log("Div to hide: ", hidden_div)
+        hidden_div.style.display = "none"
     }
 
 })
@@ -1302,8 +1259,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('password-guidelines').style.display = 'block';
         });
     
-        document.getElementById('new-password').addEventListener('focus', function() {
-            document.getElementById('password-guidelines').style.display = 'block';
+        document.getElementById('password').addEventListener('blur', function() {
+            document.getElementById('password-guidelines').style.display = 'none';
         });
     }
 })
@@ -1312,11 +1269,11 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     if (window.location.pathname === "/reset_password") {
         document.getElementById('new-password').addEventListener('focus', function() {
-            document.getElementById('password-guidelines').style.display = 'block';
+            document.getElementById('new-password-guidelines').style.display = 'block';
         });
     
         document.getElementById('new-password').addEventListener('blur', function() {
-            document.getElementById('password-guidelines').style.display = 'none';
+            document.getElementById('new-password-guidelines').style.display = 'none';
         });
     }
 })

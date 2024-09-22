@@ -92,7 +92,7 @@ class UpdateUserProfile(FlaskForm):
 # Create a form class for update profile picture
 class UpdateProficPic(FlaskForm):
     current_user_id = HiddenField()
-    profile_pic = FileField("Upload Profile Picture", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'], 'Images only!')], render_kw={"class": "profile-update-form-img"})
+    profile_pic = FileField("Upload Profile Picture", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'], 'Images only!')], render_kw={"class": "profile-update-form-img", "id": "update-profilepic-input"})
 
 # Custom validators for verify account form
 # Custom validator for verifying user to ensure that their username actually exists in the database
@@ -109,7 +109,7 @@ def verify_username_validator(form, field):
      
 # Create a form class to verify user account before updating password
 class VerifyUsername(FlaskForm):
-    user_name = StringField('User Name', validators=[InputRequired(), verify_username_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
+    user_name = StringField('User Name', validators=[InputRequired(), verify_username_validator], render_kw={"class": "verify-username-form-ctl", "autocomplete": "off"})
 
 # Custom validator for security question 1
 def question_one_validator(form, field):
@@ -179,15 +179,15 @@ def question_three_validator(form, field):
 
 # Security questions Form
 class SecurityQuestions(FlaskForm):
-    question_one = StringField('Enter one of your Favourite movies', validators=[InputRequired(), question_one_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
-    question_two = StringField('Enter one movie on your Watch List', validators=[InputRequired(), question_two_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
-    question_three = StringField('Enter one of movie buddies user name', validators=[InputRequired(), question_three_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"}) 
+    question_one = StringField('Qn.1 Enter one of your Favourite movies', validators=[InputRequired(), question_one_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
+    question_two = StringField('Qn.2 Enter one movie on your Watch List', validators=[InputRequired(), question_two_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
+    question_three = StringField('Qn.3 Enter the user name of one of your movie buddies', validators=[InputRequired(), question_three_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"}) 
 
 
 # New password Form
 class PasswordReset(FlaskForm):
-    new_password = PasswordField('New Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator], render_kw={"class": "create-acc-form-ctl", "id": "new-password"})
-    verify_newpassword = PasswordField('Verify New Password', validators=[InputRequired(message='Please repeat the new password')], render_kw={"class": "create-acc-form-ctl"})
+    new_password = PasswordField('New Password', validators=[InputRequired(), EqualTo('verify_newpassword', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator], render_kw={"class": "update-password-form-ctl", "id": "new-password"})
+    verify_newpassword = PasswordField('Verify New Password', validators=[InputRequired(message='Please repeat the new password')], render_kw={"class": "update-password-form-ctl"})
 
 
 

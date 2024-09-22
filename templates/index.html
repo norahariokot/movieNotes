@@ -6,11 +6,11 @@
         <img class="logo" src="../static/Images/Movie Notes-logo/Movie Notes (4).png" alt="">
 
         <ul class="nav-list">
-            <li>
+            <li class="nav-user-info">
                 <a href="/user_profile" class="dashboard-user-profile">
-                                    <div class="login-user-profile">
+                    <div class="login-user-profile">
                         <div class="login-user-profile-pic">
-                            <img src="{{user_profile['profile_pic']}}" alt="user profile picture" class="login-img">
+                            <img src="{{user_profile['profile_pic']}}" alt="user profile picture" class="login-img" >
                         </div>
                         <div class="login-user-profile-info">
                             <p class="user-name">{{user_profile['user_name']}}</p> 
@@ -20,7 +20,7 @@
                     
                 </a>
             </li>
-            <li><a href="/logout">Log out</a></li>
+            <li class="nav-logout-btn"><a href="/logout">Log out</a></li>
         </ul>
     </nav>
 </header>
@@ -28,14 +28,35 @@
 
 <div class="user-dashboard-container">
     <div class="user-menu">
-        <ul>
-            <li><a href="{{ url_for('search_page')}}" id="index-search">Search</a></li>
-          
-        </ul>
-
-        <ul>
+       
+        <a href="{{ url_for('search_page')}}" id="index-search" class="search-link"><span class="search-icon"><img src="../static/Images/Icons/search (1).png" alt="" srcset=""></span>Search for Movies</a>
+        
+        <h3 class="dashboard-menu-title">Menu</h3>
+    
+        <ul class="dashboard-menu-list">
             {% for dict_item in sections %}
-                <li><a href="{{ sections[dict_item] }}">{{ dict_item }}</a></li>
+                <li class="dashboard-menu-li">
+                    <a href="{{ sections[dict_item] }}" class="dashboard-menu-link"> 
+                        <span class="dashboard-icon">
+                            {% if dict_item == "Watched" %}
+                                <img src="../static/Images/Icons/video.png" alt="dashboard icon">
+                            {% elif dict_item == "Home" %}   
+                                <img src="../static/Images/Icons/home.png" alt="dashboard-icon"> 
+                            {% elif dict_item == "Favourites" %}
+                                <img src="../static/Images/Icons/heart.png" alt="dashboard-icon">  
+                            {% elif dict_item == "Currently Watching" %}
+                                <img src="../static/Images/Icons/cinema.png" alt="dashboard-icon">  
+                            {% elif dict_item == "Watchlist" %}
+                                <img src="../static/Images/Icons/movie.png" alt="dashboard-icon"> 
+                            {% elif dict_item == "Recommendations" %}
+                                <img src="../static/Images/Icons/feedback.png" alt="dashboard-icon">  
+                            {% elif dict_item == "Movie Buddies" %}
+                                <img src="../static/Images/Icons/happy.png" alt="dashboard-icon">  
+                            {% endif %}                                              
+                        </span>
+                        {{ dict_item }}
+                    </a>
+                </li>
         
             {% endfor %}
 
@@ -45,8 +66,38 @@
     </div>
        
     <div class="user-content">
+        {% if home_page %}
+        <div class="home-section">
+            <div class="home-info">
+                <h1 class="home-title"> Hi 👋, {{user_profile['full_name']}} </h1>
+                <p>This is <span class="app-title">Movie Notes!</span> 
+                <br>An app designed to help you keep track of your movie-watching experiences. With Movie Notes, you can easily organize your movie notes into sections: <span class="app-info-span">Watched, Currently Watching, Favourites,</span> and your <span class="app-info-span">Watchlist.</span></p>
+                <h3 class="app-instruction-title"> To get started: </h3>
+                <ol class="app-instruction-list">
+                    <li class="app-instruction">Click on the “Search for Movies” link to search for movies.</li>
+                    <li class="app-instruction">A search bar will appear where you can type in a movie title.</li>
+                    <li class="app-instruction">For each search result, you’ll see three dots <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="app-guide-icon"> on the right . Click on them to reveal a menu with options to add the movie to one of your Movie Notes sections.</li>
+                    <li class="app-instruction">After adding movies, you can find them in the corresponding sections of the Menu.On desktop, the Menu is located on the left side of your screen. On mobile, it’s at the top for easy access.</li>
+                                                            
+                </ol>
+                
+                <h4 class="app-instruction-subtitle"> Discover More</h4>
+                <p class="movie-buddie-instruction">You can connect with friends on the app, known as “Movie Buddies.” Chat with them, share your movie-watching experiences, and recommend movies to each other.</p>
+                <p> Now you're all set! Dive in, explore, and have fun keeping track of your movies! </p>
+               
+            </div>
+            <div class="home-img">
+                <img src="../static/Images/Icons/film-slate.png" alt="">
+                
+            </div>
+
+            
+            
+        </div>
+        {% endif%}
+
         {% if search_page %}
-            <input  autocomplete="off" autofocus placeholder="Search Movie"  type="text" id="searchInput">
+            <input  autocomplete="off" autofocus placeholder="Search for Movies to add to your Movie Notes"  type="text" id="searchInput" class="search-input">
 
             <h3 class="search-history" id="search-history"></h3>
             <div class="movieList"></div>
@@ -514,47 +565,61 @@
         <!-- This conditon displays watched movies -->
         {% if watched_section %}
             <div class="watched-section-wrapper">
-                <h2 class="section-title"> Watched Movies</h2>
+                <div class="section-header">
+                    <div class="section-header-img">
+                        <img src="../static/Images/Icons/film-slate -header.png" alt="movie slate icon">
+                    </div>
+                    <div class="section-header-info">
+                        <h1 class="section-title"> Watched Movies</h1>
+
+                        
+                            <div>
+                                {% if all_watched_movies %}
+                                    <p class="section-total">{{ movie|length }} Movies Watched </p>   
+                                {% elif watched_in_year %}  
+                                    {% for year, count in count_of_movies_watched_inyear.items() %}
+                                        <p class="section-total">{{ count }} Movies Watched In {{ year}}</p> 
+                                    {% endfor %}    
+                                {% endif %}                            
+                            </div>
+                        
+                    </div>
+                    
+
+                </div>
+
+
+                <div class="section-search-wrapper">                         
+                    <input  autocomplete="off" autofocus placeholder="Search Watched Movies"  type="text" id="watched-movie-search" class="section-search">
+                    <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                </div>
 
                 <div class="watched-view-btns">
-                    <a href="/watched_section" id="all-watched-movies">All Watched Movies</a>
-                    <a href="/watched_by_year" id="watched-by-year">Watched Movies by Year</a>
+                    <a href="/watched_section" id="all-watched-movies" class="watch-view-btn">All Watched Movies</a>
+                    <a href="/watched_by_year" id="watched-by-year" class="watch-view-btn">Watched Movies by Year</a>
                 </div>
-
-                {% if all_watched_movies %} 
-                <div>
-                    <p class="section-total">{{ movie|length }} Movies Watched </p>
-                    <div class="section-search-wrapper">
-                        
-                        <input  autocomplete="off" autofocus placeholder="Search Watched Movies"  type="text" id="watched-movie-search" class="section-search">
-                        <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
-                    </div>
-                  
-
-                </div>
-               
-
                 
-
+           
+                {% if all_watched_movies %} 
                 <p style="display: none;" id="watched-options-list" class="movie_data_id">{{ json_watched_options }}</p>
                 <div id="allwatched-movie-display" class="section-display">
                   
                     {% for dict_item in movie %}
-                        <div class="movie-info-container">
+                        <div class="movie-info-container section-info-container">
                             <p style="display: none;">{{dict_item["id"]}}</p>                                                      
-                            <div class="movie-poster-div">
+                            <div class="movie-poster-div section-movie-poster-div">
                                 <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
                             </div>
-                            <div class="movie-info">
-                                <div class="movie_info_text">
-                                    <div class="movie_info_title_wrapper">
+                            <div class="movie-info section-movie-info">
+                                <div class="movie_info_text section-movie-info-text">
+                                    <div class="movie_info_title_wrapper section-movie-info-wrapper">
                                         <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
                                         <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
                                     </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
                                     <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
                                 </div>
-                                <button type="button" class="controls-btn">
+                                <button type="button" class="controls-btn section-ctls">
                                     <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="watched-stn-ctls">
                                 </button>
                             </div>
@@ -569,21 +634,61 @@
                 </div>
 
                 <div class="watched-year-movie-display" >
-                    {% if watched_by_year %}
+                    {% if watched_by_year or watched_in_year %}
                         <h3> Watched movies by year </h3>
-
+                   
                         <div class="watched-movie-years">
+                    {% endif %}    
 
-                            {% for year in movie_watched_years %}
-                                <a href="#" id="watched-movie-year">{{year["watched_year"]}} </a>
-                            {% endfor %}
+                    {% if watched_by_year %}
+                    <div class="movie-year-links">
 
-                        </div>
+                        {% for year in movie_watched_years %}
+                            <form action="/watched_in_year" method="POST" class="watched-year-form">
+                                <input type="hidden" name="watched_year" value="{{year['watched_year']}}">
+                                <a href="#" class="watched-year-link">{{year["watched_year"]}}</a>
+                            </form>
+                        {% endfor %}    
+                    {% elif watched_in_year %}  
+                        {% for year in watched_years %}
+                            <form action="/watched_in_year" method="POST" class="watched-year-form">
+                                <input type="hidden" name="watched_year" value="{{year['watched_year']}}">
+                                <a href="#" class="watched-year-link">{{year["watched_year"]}}</a>
+                            </form>
+                        {% endfor %} 
+                    {% endif %}  
+                    </div>     
+                                        
+                </div>
 
-                        <div id="watchedyear-movie-display">
+                    <div id="watchedyear-movie-display">
+                        
+                    {% if watched_in_year %} 
+                        <h3 class="section-sub-title">Movies watched in {{year_watched}}</h3>
+                        {% for month in group_bymonth %}
+                            <h3 class="month-title">{{month}}</h3>
+                            <div class="month-movies-div">
+                                {% for movie in group_bymonth[month] %}
+                                    <div class="month-movie-container">
+                                        <div class="month-movie-poster">
+                                            <img src="{{movie['movie_poster']}}" alt="movie_poster" sizes="{{movie['movie_poster_sizes']}}" srcset="{{movie['movie_poster_set']}}">
+                                        </div>
+                                        <div class="month-movie-info">
+                                            <div class="month-movie-title-div">
+                                                <h4 class="month-movie-no">{{loop.index}}.</h4>
+                                                <h4 class="month-movie-title">{{movie['movie_title']}}</h4>
+                                            </div>
+                                            <p class="month-movie-year">{{movie['movie_year']}}</p>
+                                            <p class="month-movie-stars">{{movie['movie_stars']}}</p> 
+                                        </div>
 
-                        </div>
-                    {%endif%}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {%endif%}    
+                    </div>
+                    
                     
                 </div>
 
