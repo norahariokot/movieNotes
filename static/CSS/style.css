@@ -515,6 +515,7 @@ nav {
 .login-user-profile-pic {
     border: solid gainsboro 1px;
     border-radius: 50%;
+    padding: .2em;
    
     height: 70px;
     width: 70px;
@@ -687,6 +688,7 @@ nav {
 .user-content{
     grid-column: 2;
     /*border: solid green;*/
+  
    
 }
 
@@ -938,19 +940,67 @@ nav {
     }
 }
 
-.popup-menu-wrapper {
+.popup-menu-wrapper,
+.section-popup-menu-wrapper {
     display: flex;
-    border: solid black 1px;
-    width: fit-content;
+    /*border: solid black 1px;*/
+    /*width: fit-content;*/
     border-radius: 5%;
+    justify-content: flex-end;
+    background-color: #fff;
+  
+
 }
 
-.popup_menu-list {
+.recommendations-popup-menu-wrapper {
+    width: fit-content;
+}
+
+.popup_menu-list,
+.section-popup-menu-list {
     /*border: solid yellow;*/
+    margin-top: 0;
+    list-style: none;
+    padding-left: 0;
+    border: solid 2px gainsboro;
+    padding-top: 1em;
+    padding-bottom: 1em;
+     
+
+}
+
+.recommendations-popup-menu-list {
+    margin-top: 0;
+    list-style: none;
+    padding-left: 0;
+    border: solid 2px gainsboro;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.popup-menu-li {
+    /*border: solid red;*/
+    padding-inline: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+
+    & a {
+        text-decoration: none;
+        color: #000;
+        font-size: .9rem;
+    }
+
+}
+
+.popup-menu-li:hover {
+    background-color: #c6e0ff;
+    font-weight: bold;
 }
 
 .date-div {
     /*border: solid black;*/
+    font-size: .9rem;
+    padding-top: 1.2em;
 
 }
 
@@ -964,6 +1014,14 @@ nav {
     padding-top: 1em;
     border-radius: 25px;
     background-color: #c6e0ff;
+}
+
+.favourite-section-header {
+    background-color: yellow;
+}
+
+.currently-watching-section-header {
+    background-color: #d3d3ff;
 }
 
 .section-header-img {
@@ -1075,6 +1133,15 @@ nav {
     grid-column: 2 / span 1; 
 }
 
+.watched-date-div {
+    /*border: solid blue;*/
+    margin-top: 1.5em;
+}
+
+.section-watched-date {
+    /*border: solid black;*/
+}
+
 /* -------- Watched by year -------- */
 .watchedyear-movie-display {
     /*border: solid black;*/
@@ -1084,21 +1151,26 @@ nav {
     /*border: solid blue;*/
     padding-bottom: 1em;
     border-bottom: solid 1px gainsboro;
+    margin-top: 0;
+    margin-bottom: .8em;
 }
 
 .month-movie-container {
     /*border: solid red;*/
     display: flex;
+    margin-top: 0;
+    margin-bottom: .5em;
 
 }
 .month-movie-poster {
     /*border: solid purple;*/
-    height: 20vh;
-    width: 20%;
+    height: 17vh;
+    width: 25%;
     & img {
         height: 100%;
         width: 100%;
         object-fit: contain;
+        /*border: solid green;*/
     }
 
 }
@@ -1106,11 +1178,13 @@ nav {
 
 .month-movie-info {
     /*border: solid black;*/
+    padding-left: .5em;
 }
 
 .month-title {
     /*border: solid black;*/
     padding-left: 1em;
+    margin-top: 0;
 }
 
 .month-movie-title-div {
@@ -1118,6 +1192,7 @@ nav {
     display: flex;
     padding-bottom: 0;
     margin-bottom: 0;
+    margin-top: 0;
 }
 
 .month-movie-no {
@@ -1141,11 +1216,12 @@ nav {
 .movie-year-links {
     /*border: solid red;*/
     display: flex;
-    flex-wrap: wrap;
+   
 }
 
 .watched-year-form {
-    /*border: solid blue;*/
+    /*border: solid green;*/
+    margin-left: 1em;
     & a {
         padding: .5em;
         /*border: solid black;*/
@@ -1166,11 +1242,117 @@ nav {
         font-weight: bold;
     }
 
-    & a:visited {
-        background-color: #1744e5;
-        color: #fff;
-        font-weight: bold;
+}
+
+/* ---------- Recommendations -----------*/
+.recommendations-section-header {
+    margin-bottom: 2em;
+    /*border: solid red;*/
+}
+
+.recommendations-movie-container {
+    margin-top: 1em;
+    /*border: solid black;*/
+}
+
+.recommendations-movie-info-container {
+    /*border: solid blue;*/
+}
+
+.recommended-movie-poster-div {
+    /*border: solid yellow;*/
+    height: 15vh;
+    width: 45%;
+    & img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        margin-top: 0;
     }
+}
+
+
+
+.recommended-movie-info {
+    /*border: solid green;*/
+    margin-top: 0;
+    & h3 {
+        font-size: .9rem;
+    }
+
+    & p {
+        font-size: .8rem;
+        /*border: solid red;*/
+       
+    }
+
+    & .controls-btn {
+        /*border: solid red;*/
+        height: 6vh;
+        & img {
+            /*border: solid black;*/
+            height: 100%;
+
+        }
+    }
+}
+
+.recommender-div {
+    /*border: solid blue;*/
+    display: flex;
+    flex-direction: column;
+}
+
+.recommender-profile {
+    /*border: solid red;*/
+    display: flex;
+    flex-direction: column;
+}
+
+.recommender-profile-pic {
+    /*border: solid green;*/
+    height: 10vh;
+    width: 20%;
+    margin-top: -1em;
+    
+    
+         
+    & img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        /*border: solid black;*/
+       
+       
+    }
+}
+
+.recommender-info-text {
+   /*border: solid red;*/
+   margin-top: -1em;
+    & p {
+        /*border: solid black;*/
+        margin-top: 0;
+    }
+}
+
+.recommender-info {
+    /*border: solid purple;*/
+    margin-top: .5em;
+   
+}
+
+
+
+.recommendie-info-div {
+    /*border: solid yellow;*/
+}
+
+
+
+.recommender-username {
+    /*border: solid yellow;*/
+    margin-top: 2em;
 }
 
 /* -------- Movie Buddies ----------- */
@@ -1247,10 +1429,6 @@ nav {
     align-items: center;
 }
 
-.recommender-div {
-    /*border: solid blue;*/
-}
-
 .recommendie_profile_div {
     /*border: solid blue;*/
     height: fit-content;
@@ -1277,24 +1455,28 @@ nav {
     margin-bottom: 1em;
     margin-left: 1em;
     margin-right: 5em;
-    border-bottom: solid 1px gainsboro;
-    padding-inline: 1em;
+    border-bottom: solid 1px gainsboro;    
     padding-bottom: .5em;
     justify-content: space-between;
+    width: 100%;
 }
 
 .recommended-movie-info-container {
     display:flex;
+    /*border: solid green;*/
 }
 
-.recommender-profile {
-    display: flex;
-}
 
 .recommender-title {
     /*border: solid black;*/
     margin-top: 0;
     margin-bottom: 0;
+    color: #1744e5;
+    font-weight: bold;
+}
+
+.recommender-username {
+    font-size: .9rem;
 }
 
 /* Chat */
@@ -1453,6 +1635,7 @@ nav {
         display: grid;
         grid-template-columns: minmax(10%,1fr) minmax(80%,1fr) ;
         margin-inline: auto;
+        /*border: solid red;*/
     }
     
     .user-menu {
@@ -1467,6 +1650,11 @@ nav {
     }
 
     /* Home page*/
+
+    .section-search-div {
+        /*border: solid purple;*/
+    }
+
     .home-img {
         display: flex;
         /*border: solid red;*/
@@ -1605,19 +1793,28 @@ nav {
     }
 
     .section-search {
-        width: 40%;       
+        width: 40%;  
+       
+    }
+
+    .watched-section-wrapper {
+         /*border: solid blue;*/
     }
 
    
     .watched-view-btns {
         display: inline;
-        border: black;
         margin-bottom: 1em;
     }
 
     .section-display {
         /*border: solid red;*/
         margin-top: 2em;
+    }
+
+    #search-watched-wrapper {
+        /*border: solid red;*/
+        margin-top: 1.5em;
     }
 
     /* Watched by year */
@@ -1658,16 +1855,19 @@ nav {
         display: flex;
         padding-bottom: 0;
         margin-bottom: 0;
+       
     }
     
     .month-movie-no {
-       /* border: solid black;*/
+       /*border: solid black;*/
         margin-bottom: 0;
+        margin-top: 0;
     }
     
     .month-movie-title {
         /*border: solid red;*/
         margin-bottom: 0;
+        margin-top: 0;
     }
     
     .month-movie-year,
@@ -1677,6 +1877,97 @@ nav {
         margin-bottom: 0;
         
     }
+
+    /* Controls */
+    .popup-menu-wrapper,
+    .section-popup-menu-wrapper
+     {
+        margin-right: 8em;
+    
+    }
+
+    .popup-menu-li {
+           
+        & a {
+           font-size: 1rem;
+        }
+    
+    }
+
+    /* Recommendations*/
+    .recommended-movie-poster-div {
+        /*border: solid yellow;*/
+        height: 18vh;
+        width: 25%;
+        & img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .recommended-movie-info {
+        /*border: solid blue;*/
+        margin-top: 1.5em;
+        & h3 {
+            font-size: 1rem;
+        }
+    
+        & p {
+            font-size: .9rem;
+            /*border: solid red;*/
+           
+        }
+    
+        & .controls-btn {
+            /*border: solid red;*/
+            height: 7vh;
+            & img {
+                /*border: solid black;*/
+                height: 100%;
+    
+            }
+        }
+    }
+
+    .recommended-movie-info {
+        font-size: 1rem;
+    }
+
+    .recommendations-movie-container {
+        padding-inline: 1em;
+        /*border: solid black;*/
+    }
+
+    .recommended-movie-info-container {
+        /*border: solid green;*/
+    }
+
+    .recommender-div {
+        display: flex;
+        flex-wrap: wrap;
+        /*border: solid red;*/
+    }
+
+    .recommender-profile {
+        /*border: solid blue;*/
+        display: flex;
+        flex-direction: row;
+    }
+
+    .recommender-profile-pic {
+        margin-bottom: 1em;
+        /*border: solid green;*/
+        margin-top: 0;
+        
+    }
+
+    .recommender-info-text {
+        /*border: solid black;*/
+        margin-top: 1.5em;
+    }
+
+    
     
     
 

@@ -30,7 +30,7 @@ for section in movie_notes_sections:
     section_links[section] = section_link    
 
 # options for the pop up menu for search
-search_options_list = [section for section in movie_notes_sections if section not in ["Recommendations","Movie Buddies"]]
+search_options_list = [section for section in movie_notes_sections if section not in ["Home", "Recommendations","Movie Buddies"]]
 search_options_list.append("Recommend")
 #print(search_options_list)    
 search_options = {}    
@@ -40,7 +40,11 @@ for option in search_options_list:
         search_option = "/" + new_search_option.lower()
     else:
         search_option = "/" + option.lower()
-    search_options[option] = search_option
+    if option == "Recommend":
+        new_option = "Recommend to Budddy"
+    else:
+        new_option = "Add to" + " "+ option        
+    search_options[new_option] = search_option
 #print(search_options)    
 
 def extract_movie_info(movie_info):

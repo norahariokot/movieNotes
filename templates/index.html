@@ -254,7 +254,7 @@
 
                             search_list_options.forEach(list_option => {
                                 //console.log(list_option.firstChild.innerHTML)
-                                if(list_option.firstChild.innerHTML == "Watched") {
+                                if(list_option.firstChild.innerHTML == "Add to Watched") {
                                     console.log("Watched found")
                              
                                     list_option.addEventListener('mouseover', function() {
@@ -308,10 +308,11 @@
                                 search_list_options[i].firstChild.addEventListener('click', function(event) {
                                     event.preventDefault();
                                     console.log(event.target)
+                                    console.log("search list option is:", search_list_options[i].firstChild.innerText)
                                     
 
-                                    if(search_list_options[i].firstChild.innerText == "Recommend") {
-
+                                    if(search_list_options[i].firstChild.innerText == "Recommend to Buddy") {
+                                        console.log("Search list option found")
                                         fetch("/buddy_recommend_info")
                                         .then(response => {
                                            // Convert the response to JSON
@@ -449,7 +450,7 @@
                                         };
                              
 
-                                    if (search_list_options[i].firstChild.innerHTML == "Watched") {
+                                    if (search_list_options[i].firstChild.innerHTML == "Add to Watched") {
                                         data.date = watched_date;
                                     }
                                     console.log(data);   
@@ -493,6 +494,8 @@
                                     movie_poster_set: event.target.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild.srcset,
                                     date: watched_date                                   
                                 }
+
+                                console.log("data for watched date is:", data)
                                 
                                 fetch("/watched", {
                                 method: 'POST',
@@ -570,9 +573,8 @@
                         <img src="../static/Images/Icons/film-slate -header.png" alt="movie slate icon">
                     </div>
                     <div class="section-header-info">
-                        <h1 class="section-title"> Watched Movies</h1>
+                        <h1 class="section-title"> Movies Watced </h1>
 
-                        
                             <div>
                                 {% if all_watched_movies %}
                                     <p class="section-total">{{ movie|length }} Movies Watched </p>   
@@ -590,7 +592,7 @@
 
 
                 <div class="section-search-wrapper">                         
-                    <input  autocomplete="off" autofocus placeholder="Search Watched Movies"  type="text" id="watched-movie-search" class="section-search">
+                    <input  autocomplete="off" autofocus placeholder="Search Your Watched Movies"  type="text" id="watched-movie-search" class="section-search">
                     <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
                 </div>
 
@@ -624,44 +626,40 @@
                                 </button>
                             </div>
 
-                        </div>
-
-                    
-                        
+                        </div>                        
                     {% endfor %}
+                </div>    
                 {% endif %}    
-
-                </div>
 
                 <div class="watched-year-movie-display" >
                     {% if watched_by_year or watched_in_year %}
                         <h3> Watched movies by year </h3>
                    
-                        <div class="watched-movie-years">
                     {% endif %}    
 
-                    {% if watched_by_year %}
+                {% if watched_by_year %}
                     <div class="movie-year-links">
-
                         {% for year in movie_watched_years %}
                             <form action="/watched_in_year" method="POST" class="watched-year-form">
                                 <input type="hidden" name="watched_year" value="{{year['watched_year']}}">
                                 <a href="#" class="watched-year-link">{{year["watched_year"]}}</a>
                             </form>
-                        {% endfor %}    
-                    {% elif watched_in_year %}  
+                        {% endfor %}   
+                    </div>     
+                {% elif watched_in_year %}  
+                    <div class="movie-year-links">
                         {% for year in watched_years %}
                             <form action="/watched_in_year" method="POST" class="watched-year-form">
                                 <input type="hidden" name="watched_year" value="{{year['watched_year']}}">
                                 <a href="#" class="watched-year-link">{{year["watched_year"]}}</a>
                             </form>
                         {% endfor %} 
-                    {% endif %}  
-                    </div>     
+                    </div>   
+                    {% endif %}    
                                         
                 </div>
 
-                    <div id="watchedyear-movie-display">
+                <div id="watchedyear-movie-display">
                         
                     {% if watched_in_year %} 
                         <h3 class="section-sub-title">Movies watched in {{year_watched}}</h3>
@@ -687,8 +685,7 @@
                             </div>
                         {% endfor %}
                     {%endif%}    
-                    </div>
-                    
+                                       
                     
                 </div>
 
@@ -705,19 +702,26 @@
         <!-- This conditon displays favourite movies -->
         {% if favourite_section %}
             <div class="favourite-section-wrapper">
-                <h2 class="section-title"> Favourite Movies</h2>
-                <div>
-                    <p class="section-total">{{ favourite_movies|length }} Favourite Movies </p>
-                    <div class="section-search-wrapper">
-                        <input  autocomplete="off" autofocus placeholder="Search Favourite Movies"  type="search" id="favourite-movie-search" class="section-search">
-                        <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                <div class="section-header favourite-section-header">
+                    <div class="section-header-img">
+                        <img src="../static/Images/Icons/lover.png" alt="icon of a love heart">
+                    </div>
+                    <div class="section-header-info">
+                        <h1 class="section-title"> Your Favourite Movies</h1>
+                        <p class="section-total">{{ favourite_movies|length }} Favourite Movies </p>    
                     </div>
 
-                            
                 </div>
+                
+                                
+                <div class="section-search-wrapper">
+                    <input  autocomplete="off" autofocus placeholder="Search Your Favourite Movies"  type="search" id="favourite-movie-search" class="section-search">
+                    <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                </div>
+              
                
 
-                <p style="display: none;" id="favourite-options-list">{{ json_favourite_options }}</p>https://www.w3schools.com/html/html_emojis.asp
+                <p style="display: none;" id="favourite-options-list">{{ json_favourite_options }}</p>
             
 
                 <div id="favourite-movie-display" class="section-display">
@@ -761,17 +765,22 @@
         <!-- This section will display currently-watching movies -->
         {% if currently_watching %}
             <div class="currently-watching-section-wrapper">
-                <h2 class="section-title"> Movies I am Currently Watching</h2>
-                <div>
-                    <p class="section-total">{{ currently_watching_movies|length }} Movies You are currently watching </p>
-                    <div class="section-search-wrapper">
-                        <input  autocomplete="off" autofocus placeholder="Search Currently Watching"  type="search" id="currentlyWatching-movie-search" class="section-search">
-                        <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                <div class="section-header currently-watching-section-header">
+                    <div class="section-header-img">
+                        <img src="../static/Images/Icons/watch.png" alt="illustration icon of people sitting on sofa watching tv">
                     </div>
-                    
+                    <div class="secction-header-info">
+                        <h1 class="section-title"> Movies You Are Currently Watching</h1>
+                        <p class="section-total"><span id="currently-watching-count">{{ currently_watching_movies|length }}</span> Movies You are currently watching </p>
+                    </div>
 
                 </div>
-               
+                   
+                <div class="section-search-wrapper">
+                    <input  autocomplete="off" autofocus placeholder="Search Your Currently Watching"  type="search" id="currentlyWatching-movie-search" class="section-search">
+                    <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                </div>
+                    
 
                 <p style="display: none;" id="currentlywatching-options-list">{{ json_currently_watching_options }}</p>
 
@@ -791,7 +800,7 @@
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
                                     <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
                                 </div>
-                                <p class="route" style="display: none;">Currently Watching</p>
+                                <p class="section-route" style="display: none;">Currently Watching</p>
                                 <button type="button" class="controls-btn">
                                     <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="currentlywatching-stn-ctls">
                                 </button>
@@ -812,16 +821,23 @@
         <!-- This section will display movies in watchlist -->
         {% if watchlist %}
             <div class="watchlist-section-wrapper">
-                <h2 class="section-title"> Watch List </h2>
-                <div>
-                    <p class="section-total">{{ movies_in_watchlist|length }} Movies in your Watch List </p>
-                    <div class="section-search-wrapper">
-                        <input  autocomplete="off" autofocus placeholder="Search Watch List"  type="search" id="watchlist-movie-search" class="section-search">
-                        <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                <div class="section-header watchlist-section-header">
+                    <div class="section-header-img">
+                        <img src="../static/Images/Icons/watching-a-movie (1).png" alt="">
+                    </div>
+                    <div class="section-header-info">
+                        <h2 class="section-title"> Your Watch List </h2>
+                        <p class="section-total"><span id="watchlist-count">{{ movies_in_watchlist|length }}</span> Movies in your Watch List </p>
                     </div>
                   
-
                 </div>
+                                   
+                <div class="section-search-wrapper">
+                    <input  autocomplete="off" autofocus placeholder="Search Your Watch List"  type="search" id="watchlist-movie-search" class="section-search">
+                    <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
+                </div>
+                  
+
                
 
                 <p style="display: none;" id="watchlist-options-list">{{ json_watchlist_options }}</p>
@@ -842,7 +858,7 @@
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
                                     <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
                                 </div>
-                                <p class="route" style="display: none;">Watch List</p>
+                                <p class="section-route" style="display: none;">Watch List</p>
                                 <button type="button" class="controls-btn">
                                     <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="watchlist-stn-ctls">
                                 </button>
@@ -863,20 +879,35 @@
         <!-- This section will display movie recommendations -->
         {% if recommendations_section %}
         <div class="recommendations-section-wrapper">
-            <h2 class="section-title">Movie Recommendations from your Movie Buddies </h2>
+            <div class="section-header recommendations-section-header">
+                <div class="section-header-img">
+                    <img src="../static/Images/Icons/recommend.png" alt="illustration of a thumb up" srcset="">
+                </div>
+                <div class="section-header-info">
+                    <h1 class="section-title">Movie Recommendations For You </h1>
+                    <div id="recommendations-movie-display" >
+                        {% if recommendations|length == 0 %}
+                            <p> You dont have any Movie Recommendations. Ask your movie buddies to recommend some. </p>
+                        {% else %}    
+                            <p>{{ recommendations|length }} Movies Recommended To You From Movie Buddies</p>
+                        {% endif %}   
+                    </div>     
+                </div>
+            </div>
+            
+            
 
             <p style="display: none;" id="recommendations-sections-list">{{json_recommendations_options}}</p>
 
-            <div id="recommendations-movie-display" class="section-display">
-                {% if recommendations|length == 0 %}
-                    <p> You dont have any Movie Recommendations. Ask your movie buddies to recommend some. </p>
-                {% else %}    
-                    {% for dict_item in recommendations %}
+            
+                
+                {% for dict_item in recommendations %}
+                    
                     <div class="recommendations-movie-container">
                         
                         <div class="recommended-movie-info-container">
                             <p style="display: none;" class="movie_data_id">{{dict_item["recommendation_id"]}}</p>                                                      
-                            <div class="movie-poster-div">
+                            <div class="recommended-movie-poster-div">
                                 <img src="{{dict_item['movie_poster']}}" alt="movie poster" sizes="{{dict_item['movie_poster_sizes']}}" srcset="{{dict_item['movie_poster_set']}}">
                             </div>
                             <div class="recommended-movie-info">
@@ -888,7 +919,7 @@
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
                                     <p class="section-movie-stars">{{dict_item["movie_stars"]}}</p>
                                 </div>
-                                <!--<p class="route" style="display: none;">Watch List</p>-->
+                                
                                 <button type="button" class="controls-btn">
                                     <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="section-controls" id="recommendations-stn-ctls">
                                 </button>
@@ -896,24 +927,27 @@
                         </div>
                         <div class="recommender-info">
                         <p class="recommender-title">Recommended by;</p>    
-                        {% for user in dict_item["user_name"] %}
+                        
                             <div class="recommender-div">
-                                <p style="display: none;" class="recommender_id">{{user["user_id"]}}</p>
-                                <div class="recommender-profile">
-                                    <div class="recommender-profile-pic">
-                                        <img src="{{user['profile_pic']}}" alt="recommender's profile pic">
-                                    </div>
-                                    <div class="recommender-info-text">
-                                      <p class="recommender-username">{{user["user_name"]}}</p>  
-                                    </div>
-                                </div>                             
+                                {% for user in dict_item["user_name"] %}
+                                <div class="recommendie-info-div">
+                                    <p style="display: none;" class="recommender_id">{{user["user_id"]}}</p>
+                                    <div class="recommender-profile">
+                                        <div class="recommender-profile-pic">
+                                            <img src="{{user['profile_pic']}}" alt="recommender's profile pic">
+                                        </div>
+                                        <div class="recommender-info-text">
+                                            <p class="recommender-username">{{user["user_name"]}}</p>  
+                                        </div>
+                                    </div>                      
+                                </div>
+                            {% endfor %}             
                             </div>
-                        {% endfor %}    
+                        
                         </div>
                     </div>
                     {% endfor %}
-                {% endif %}
-            </div>
+               
         </div>
 
 

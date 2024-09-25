@@ -389,7 +389,14 @@ def watched():
     movie_info = request.get_json()
     print(movie_info)
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
-    watched_date = movie_info["date"]
+
+    if "movie_watched_date" in movie_info and movie_info["movie_watched_date"]:
+        watched_date = movie_info["date"]
+    elif "date" in movie_info and movie_info["date"]:
+        watched_date = movie_info["date"]   
+    else:
+        watched_date = ""  
+    print(watched_date)      
     
     # retrieve data from database to check of data submitted already exists to avoid duplication
     movies_watched = db.execute ("SELECT movie_title, movie_year, movie_stars FROM watched where user_id = ?", session["user_id"])
@@ -406,7 +413,7 @@ def watched():
         print("Not found") 
         db.execute("INSERT INTO watched (movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, movie_watched_date, user_id) VALUES (?,?,?,?,?,?,?,?)", movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set, watched_date,  session["user_id"])
         
-    return jsonify({"message": "Movie added successfully"})   
+    return jsonify({"message": "Movie added to your Watched Notes"})   
 
 
 # Route to handle completed watching
@@ -421,6 +428,7 @@ def completed_watch():
 
     # Extract data from movie_info object
     movie_title, movie_year, movie_stars, movie_poster, movie_poster_sizes, movie_poster_set = extract_movie_info(movie_info)
+    
     watched_date = movie_info["date"]
     watched_route = movie_info["data_route"]
     data_id = int(movie_info["movie_data_id"])
@@ -436,7 +444,11 @@ def completed_watch():
         if movie_title == dict_item["movie_title"] and movie_year == dict_item["movie_year"] and movie_stars == dict_item["movie_stars"]:
             movies_watched_found = True
             print("Movie already exits in this list")
-            return jsonify({"message": "Movie already exists in your watched list"})
+            response_one = {
+                "message": "Movie already exists in your watched list",
+                "status": "Not remove"
+            }
+            return jsonify(response_one)
             break
     if not movies_watched_found:
         print("Not found") 
@@ -448,11 +460,36 @@ def completed_watch():
             print(watched_route)
             db.execute("DELETE FROM currently_watching WHERE id = ?", data_id)
 
+            # Retrieve the current number of movies in currently watching table in database
+            currently_watching_count = db.execute("SELECT COUNT(*) AS count FROM currently_watching WHERE user_id=?", session["user_id"])
+            currently_watching_num = currently_watching_count[0]["count"]
+            print (currently_watching_num)
+
+            response_two = {
+                "section_count": currently_watching_num,
+                "message": f"Movie added successfully added to your Watched List and removed from your {watched_route}",
+                "status": "Remove",
+                "route": watched_route
+            }
+            return jsonify(response_two)
+
         elif watched_route == "Watch List":
             print(watched_route)
-            db.execute("DELETE FROM watchlist WHERE id = ?", data_id)    
-        return jsonify({"message":f"Movie added successfully added to your Watched List and removed from your {watched_route}"})  
+            db.execute("DELETE FROM watchlist WHERE id = ?", data_id) 
 
+            # Retrieve the current number of movies in currently watching table in database
+            watchlist_count = db.execute("SELECT COUNT(*) AS count FROM watchlist WHERE user_id=?", session["user_id"])
+            watchlist_num = watchlist_count[0]["count"]
+            print (watchlist_num)
+
+            response_three = {
+                "section_count": watchlist_num,
+                "message": f"Movie added successfully added to your Watched List and removed from your {watched_route}",
+                "status": "Remove",
+                "route": watched_route
+            }
+            return jsonify(response_three)
+            
 
 # Route to delete watche movie from watched list    
 @app.route("/delete_watched", methods=["POST"])
@@ -488,7 +525,8 @@ def search_watched ():
     #print(search_response) 
     for dict_item in watched_search_response:
         print(dict_item["movie_title"])   
-    ##
+    
+    return jsonify(watched_search_response)
 
 
 # Route to display all watched movies
@@ -502,7 +540,7 @@ def watched_section():
     movie = db.execute ("SELECT *, strftime('%Y', movie_watched_date) AS WatchedYear, strftime('%m', movie_watched_date) AS WatchedMonth FROM watched WHERE user_id = ?", session["user_id"])
     
     # Control options for all watched movies
-    watched_options = [["Favourites", "/favourites"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]
+    watched_options = [["Add to Favourites", "/favourites"], ["Recommend to Buddy", "/buddy_recommend_info"], ["Delete", "/delete_watched"]]
     # Convert the control options to json object
     json_watched_options = json.dumps(watched_options)
     #print(watched_options)
@@ -562,13 +600,17 @@ def watched_in_year():
     print(movieswatched_inyear)
 
     movies_watched_inyear_count  = 0
-    for dict_item in movieswatched_inyear:        
-        month_info = dict_item["watched_month"].split("0")
-        print(type(month_info))
-        month_number = int(month_info[1])
+    for dict_item in movieswatched_inyear:  
+        month_data = dict_item["watched_month"]
+        if month_data[0] == ["0"]:
+            print("Month begins with 0")
+            month_number = int(month_data[1])
+        else:
+            print("Month is a double digit")
+            month_number = int(month_data)
+        
         month = (calendar.month_name[month_number])
 
-        print(month_info)
         print(month_number)
         print(month)
 
@@ -670,7 +712,7 @@ def favourites_section():
     favourite_movies = db.execute("SELECT * FROM favourites WHERE user_id = ?", session["user_id"])
 
     # Control options for movies in the favourites section
-    favourite_ctl_options = [["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_favourite"]]
+    favourite_ctl_options = [["Recommend to Buddy", "/buddy_recommend_info"], ["Delete", "/delete_favourite"]]
     json_favourite_options = json.dumps(favourite_ctl_options)
     return render_template("index.html", favourite_section=favourite_section, sections=sections, favourite_movies=favourite_movies, json_favourite_options=json_favourite_options, user_profile=session.get("user_profile"))
 
@@ -754,7 +796,7 @@ def currently_watching_section():
     print(currently_watching_movies)
 
     # Currently watching options
-    currently_watching_options = [["Completed Watching", "/completed_watch"], ["Recommend", "/buddy_recommend_info"], ["Delete", "/delete_currentlywatching"]] 
+    currently_watching_options = [["Add to Watched", "/completed_watch"], ["Recommend to Buddy", "/buddy_recommend_info"], ["Delete", "/delete_currentlywatching"]] 
     json_currently_watching_options = json.dumps(currently_watching_options)   
 
     return render_template("index.html", sections=sections, currently_watching=currently_watching, currently_watching_movies=currently_watching_movies, json_currently_watching_options=json_currently_watching_options, user_profile=session.get("user_profile")) 
@@ -830,7 +872,7 @@ def delete_watchlist():
 def watchlist_section():
     watchlist = True
     movies_in_watchlist = db.execute("SELECT * FROM watchlist WHERE user_id = ?", session["user_id"])
-    watchlist_options = [["Completed Watching", "/completed_watch"], ["Delete", "/delete_watchlist"]] 
+    watchlist_options = [["Add to Watched", "/completed_watch"], ["Add to Currently Watching", "/currently_watching"], ["Delete", "/delete_watchlist"]] 
     json_watchlist_options = json.dumps(watchlist_options)
     return render_template("index.html", sections=sections, watchlist=watchlist, movies_in_watchlist=movies_in_watchlist, json_watchlist_options=json_watchlist_options, user_profile=session.get("user_profile"))
 
@@ -884,7 +926,7 @@ def recommendations_section():
    
     print(recommendations)               
     
-    recommendations_options = [["Watchlist", "/watchlist"], ["Delete", "/delete_recommendation"]]
+    recommendations_options = [["Add to Watchlist", "/watchlist"], ["Delete", "/delete_recommendation"]]
     json_recommendations_options =json.dumps(recommendations_options)
 
     return render_template("index.html", recommendations_section=recommendations_section, sections=sections, recommendations=recommendations, json_recommendations_options=json_recommendations_options, user_profile=session.get("user_profile"))

@@ -19,9 +19,22 @@ document.addEventListener('click', function(event) {
         } 
         else {
                 section_popup_menu_div = document.createElement("div");
-                section_popup_menu_div.className = "popup-menu-wrapper";
+                if (event.target.id == 'recommendations-stn-ctls') {
+                    section_popup_menu_div.className = "recommendations-popup-menu-wrapper";
+                }
+
+                else {
+                    section_popup_menu_div.className = "section-popup-menu-wrapper";
+                }                
                 section_popup_menu = document.createElement("ul");
-                section_popup_menu.className = "section_popup_menu-list";
+                if (event.target.id == 'recommendations-stn-ctls') {
+                    section_popup_menu.className = "recommendations-popup-menu-list";
+                }
+
+                else {
+                    section_popup_menu.className = "section-popup-menu-list";
+                }  
+                
                 section_popup_menu
                 let section_options_list;
                  
@@ -81,11 +94,13 @@ document.addEventListener('click', function(event) {
                 // Create elements to add watched date elements
                 let section_watched_date = null;
                 let section_date_div = document.createElement("div");
+                section_date_div.className = "watched-date-div";
                 let section_date_lbl = document.createElement("label");
                 let section_date = document.createElement("input");
                 section_date_lbl.innerText = "Include date";
                 section_date.type = "date";
-                section_date.id = "watched-date"
+                section_date.id = "watched-date";
+                section_date.className = "section-watched-date";
                 section_date_div.appendChild(section_date_lbl);
                 section_date_div.appendChild(section_date);
                 section_date_div.style.display = "none"
@@ -93,7 +108,7 @@ document.addEventListener('click', function(event) {
 
                 section_list_options.forEach(list_option => {
                     //console.log(list_option.firstChild.innerText)
-                    if(list_option.firstChild.innerText == "Completed Watching" || list_option.firstChild.innerText == "Watched") {
+                    if(list_option.firstChild.innerText == "Add to Watched") {
                         console.log("Completed watching or watched found")
                  
                         list_option.addEventListener('mouseover', function() {
@@ -138,7 +153,7 @@ document.addEventListener('click', function(event) {
                         event.preventDefault();
                         console.log(event.target);
                         
-                        if(section_list_options[i].firstChild.innerText == "Recommend") {
+                        if(section_list_options[i].firstChild.innerText == "Recommend to Buddy") {
                             fetch("/buddy_recommend_info")
                             .then(response => {
                                // Convert the response to JSON
@@ -292,33 +307,89 @@ document.addEventListener('click', function(event) {
                                 movie_poster_sizes: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.sizes,
                                 movie_poster_set: event.target.parentNode.parentNode.parentNode.previousElementSibling.children[1].firstElementChild.srcset
                                                                
-                                };
+                            };
 
-                                if (section_list_options[i].firstChild.innerText == "Completed Watching") {
-                                    data.date = section_watched_date;
-                                    data.data_route = document.getElementsByClassName('route')[0].innerText;
-                                }         
-                                else if (section_list_options[i].firstChild.innerText == "Watched") {
-                                    data.date = section_watched_date;
-                                }
+                            console.log(data);
 
-                                console.log(data);
-                        let route = section_list_options[i].firstChild
-                        console.log(route)
-                        fetch(route, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data)
-                        })
-                        .then(response=> response.json())
-                        .then(data => {
-                            alert(data.message);
-                        })
-                        .catch((error) => console.error('Error:', error));
+                            let element_to_delete1 = event.target.parentNode.parentNode.parentNode.previousElementSibling;
+                            let element_to_delete2 = event.target.parentNode.parentNode.parentNode;
+    
+
+                            let link_element = section_list_options[i].firstChild;
+                            console.log(link_element);
+                            let route = link_element.getAttribute('href')
+                            console.log(route)
+                            
+
+                            if (route == "/completed_watch") {
+                                console.log("Completed watch route followed.");
+
+                                let section_route_parent = event.target.parentNode.parentNode.parentNode.previousElementSibling.children[2]
+                                console.log(section_route_parent);
+
+                                let section_route = section_route_parent.querySelector('.section-route').innerText;
+
+                                if (section_route) {
+                                console.log("section route existing:",section_route)
+                                data.date = section_watched_date;
+                                data.data_route = section_route
+
+                                fetch("/completed_watch", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(data)
+                                })
+                                    .then(response=> response.json())
+                                    .then(data => {
+                                        console.log(data)
+                                        console.log(data.message)
+                                        console.log(data.status)
+                                        alert(data.message);
+                                        if(data.status == "Remove") {
+                                            element_to_delete2.remove();
+                                            element_to_delete1.remove();
+                                            console.log(data.section_count);
+                                            if (data.route == "Currently Watching") {
+                                                console.log("Update Currently Watching count")
+                                                document.getElementById("currently-watching-count").innerText = data.section_count;
+                                            }
+                                            else if (data.route == "Watch List") {
+                                                console.log("Update Watch List Count")
+                                                document.getElementById("watchlist-count").innerText = data.section_count;
+                                            }
+                                        }
                                         
+                                    })
+                                    .catch((error) => console.error('Error:', error));
+                                }
+                            }    
+
+                            else {
+                                console.log("Not add to watch")
+                                    fetch(route, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(data)
+                                    })
+                                    .then(response=> response.json())
+                                    .then(data => {
+                                        alert(data.message);
+                                    })
+                                    .catch((error) => console.error('Error:', error));
+                            }
+                                   
+                                  
+                                                    
+                                            
+
                         }
+                        
+
+                        
 
                     });
                 }  
@@ -347,23 +418,85 @@ document.addEventListener('click', function(event) {
                     }
                     let url;
 
-                    if (section_list_options[i].firstChild.innerText == "Completed Watching") {
-                        data.data_route = document.getElementsByClassName('route')[0].innerText;
-                        url = "/completed_watch";
+                    console.log("section list item is :", section_list_options[0].firstChild.innerText)
+
+                    let section_route_parent;   
+                    let sibling_element = event.target.parentNode.parentNode  
+                    console.log(sibling_element)   
+                    if (section_list_options[0].firstChild.innerText == "Add to Watched") {
+                        section_route_parent = event.target.parentNode.parentNode.previousElementSibling
+                        console.log("add date to watched,", section_route_parent);
+
+                        let section_route = section_route_parent.querySelector('.section-route').innerText;
+                        console.log(section_route)
+
+                        if (section_route) {
+                            console.log("section route existing:",section_route)
+                            data.data_route = section_route;
+                            url = "/completed_watch";
+                        }
+                        else {
+                            console.log("No section route")
+                            data.date = section_watched_date;
+                             url = "/watch"
+                        }
+
                     } 
-                    else if (section_list_options[i].firstChild.innerText == "Watched") {
-                        data.date = section_watched_date;
-                        url = "/watch"
-                    }
+                   
                     console.log(data)
 
-                    fetch(url, {
-                    method: 'POST',
-                    headers: {
-                             'Content-Type': 'application/json'
+                    if (url == "/completed_watch") {
+
+                        fetch("/completed_watch", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
                             },
-                    body: JSON.stringify(data)
-                    })
+                            body: JSON.stringify(data)
+                        })
+                            .then(response=> response.json())
+                            .then(data => {
+                                console.log(data)
+                                console.log(data.message)
+                                console.log(data.status)
+                                alert(data.message);
+                                if(data.status == "Remove") {
+                                    section_route_parent.remove();
+                                    sibling_element.remove();
+                                    console.log(data.section_count);
+                                    if (data.route == "Currently Watching") {
+                                        console.log("Update Currently Watching count")
+                                        document.getElementById("currently-watching-count").innerText = data.section_count;
+                                    }
+                                    else if (data.route == "Watch List") {
+                                        console.log("Update Watch List Count")
+                                        document.getElementById("watchlist-count").innerText = data.section_count;
+                                    }
+                                }
+                                
+                            })
+                            .catch((error) => console.error('Error:', error));
+                    }
+
+                    else {
+                        url = section_list_options[0].firstChild.getAttribute('href')
+                        console.log("Undate url is",url)
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                     'Content-Type': 'application/json'
+                                    },
+                            body: JSON.stringify(data)
+                            })
+                            .then(response=> response.json())
+                            .then(data => {
+                                    alert(data.message);
+                                })
+                            .catch((error) => console.error('Error:', error));
+                    }
+
+                    
+                    
                     
                 });
                 watched_date = null;
