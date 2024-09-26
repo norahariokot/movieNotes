@@ -131,7 +131,7 @@ document.addEventListener('click', function(event) {
                 buddy_recommendations_div.id = 'recommendations_options';
                 let recommend_btn = document.createElement('button');
                 recommend_btn.innerHTML = 'Recommend';
-                recommend_btn.id = 'recommend_btn';
+                recommend_btn.id = 'section-recommend_btn';
                 let close_recommend = document.createElement('button');
                 let close_img = document.createElement('img');
                 close_img.src = "../static/Images/Icons/close.png";
@@ -378,6 +378,7 @@ document.addEventListener('click', function(event) {
                                     .then(response=> response.json())
                                     .then(data => {
                                         alert(data.message);
+                                        section_popup_menu_div.style.display = "none";
                                     })
                                     .catch((error) => console.error('Error:', error));
                             }
@@ -986,7 +987,9 @@ document.addEventListener("click", function(event) {
 });
 
 document.addEventListener('click', function(event) {
-    if(event.target.id == "recommend_btn" && recommendie_ids.length >= 1) {
+   
+
+    if(event.target.id == "section-recommend_btn" && recommendie_ids.length >= 1) {
         // data to be sent later to the server
         let data = {
             movie_title: event.target.parentNode.previousElementSibling.previousElementSibling.children[2].firstElementChild.firstElementChild.children[1].innerText,
@@ -1011,6 +1014,9 @@ document.addEventListener('click', function(event) {
         .then(response => response.json())
         .then(data => {
                 alert(data.message)
+                let element_to_hide = document.getElementById("recommendations_options");
+                console.log(element_to_hide);
+                element_to_hide.style.display = "none";
             })
         .catch((error) => console.log('Error:',error));
         console.log("recommend movie route has been fired");
@@ -1018,9 +1024,12 @@ document.addEventListener('click', function(event) {
         recommendie_ids = [];
     }
 
-    else if (event.target.id == "recommend_btn" && recommendie_ids.length == 0) {
+    else if (event.target.id == "section-recommend_btn" && recommendie_ids.length == 0) {
             console.log("only recommend_btn clicked");
             alert("No recommendies selected");
+            let element_to_hide = document.getElementById("recommendations_options");
+            console.log(element_to_hide);
+            element_to_hide.style.display = "none";
     }
     else {
         console.log("Not recommend btn clicked");

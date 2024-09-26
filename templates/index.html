@@ -455,8 +455,11 @@
                                     }
                                     console.log(data);   
 
-                                        let route = search_list_options[i].firstChild
+                                        let link_element = search_list_options[i].firstChild
+                                        console.log(link_element)
+                                        let route = link_element.getAttribute('href')
                                         console.log(route)
+
                                         fetch(route, {
                                             method: 'POST',
                                             headers: {
@@ -516,9 +519,14 @@
                     
                 }
             }); 
+            let isEventListenerAdded = false;
+            if(!isEventListenerAdded) {
+                document.addEventListener('click', function(event) {
+                console.log("Event target ID:", event.target.id);
+                console.log("ids_for_recommendies length:", ids_for_recommendies.length); 
 
-            document.addEventListener('click', function(event) {                                                         
                 if(event.target.id == "recommend_btn" && ids_for_recommendies.length >= 1) {
+                    console.log("Recommended movie to be sent to server")
                     // data to be sent to the server
                     let data = {
                         movie_title: event.target.parentNode.previousElementSibling.previousElementSibling.children[1].firstElementChild.children[0].innerText,
@@ -544,6 +552,9 @@
                     .then(response => response.json())
                     .then(data => {
                         alert(data.message)
+                        let element_to_hide = document.getElementById("recommendations_options");
+                        console.log(element_to_hide);
+                        element_to_hide.style.display = "none";
                     })
                     .catch((error) => console.log('Error:',error));
                     data = {};
@@ -551,10 +562,16 @@
                 }
 
                 else if (event.target.id == "recommend_btn" && ids_for_recommendies.length == 0) {
-                    console.log("No recommendies");
+                    console.log("None selected");
+                    let element_to_hide = document.getElementById("recommendations_options");
+                    console.log(element_to_hide);
+                    element_to_hide.style.display = "none";
                 
                 }
-            })
+            });
+            isEventListenerAdded = true;
+            }
+            
 
             
         

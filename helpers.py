@@ -41,7 +41,7 @@ for option in search_options_list:
     else:
         search_option = "/" + option.lower()
     if option == "Recommend":
-        new_option = "Recommend to Budddy"
+        new_option = "Recommend to Buddy"
     else:
         new_option = "Add to" + " "+ option        
     search_options[new_option] = search_option
