@@ -281,6 +281,7 @@
                             recommend_btn.innerHTML = 'Recommend';
                             recommend_btn.id = "recommend_btn";
                             let close_recommend = document.createElement('button');
+                            close_recommend.className = "close-recommend";
                             let close_img = document.createElement('img');
                             close_img.src = "../static/Images/Icons/close.png";
                             close_img.id = "recommendations-close-btn";
@@ -594,7 +595,7 @@
 
                             <div>
                                 {% if all_watched_movies %}
-                                    <p class="section-total">{{ movie|length }} Movies Watched </p>   
+                                    <p class="section-total"><span id="watched-section-count">{{ movie|length }}</span> Movies Watched </p>   
                                 {% elif watched_in_year %}  
                                     {% for year, count in count_of_movies_watched_inyear.items() %}
                                         <p class="section-total">{{ count }} Movies Watched In {{ year}}</p> 
@@ -632,7 +633,7 @@
                             <div class="movie-info section-movie-info">
                                 <div class="movie_info_text section-movie-info-text">
                                     <div class="movie_info_title_wrapper section-movie-info-wrapper">
-                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title-no watched-section-title-no">{{ loop.index }}.</h3>
                                         <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
                                     </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
@@ -725,7 +726,7 @@
                     </div>
                     <div class="section-header-info">
                         <h1 class="section-title"> Your Favourite Movies</h1>
-                        <p class="section-total">{{ favourite_movies|length }} Favourite Movies </p>    
+                        <p class="section-total"><span id="favourites-section-count">{{ favourite_movies|length }}</span> Favourite Movies </p>    
                     </div>
 
                 </div>
@@ -751,7 +752,7 @@
                             <div class="movie-info">
                                 <div class="movie_info_text">
                                     <div class="movie_info_title_wrapper">
-                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title-no favourite-section-title-no">{{ loop.index }}.</h3>
                                         <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
                                     </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
@@ -811,7 +812,7 @@
                             <div class="movie-info">
                                 <div class="movie_info_text">
                                     <div class="movie_info_title_wrapper">
-                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title-no currently-watching-movie-count">{{ loop.index }}.</h3>
                                         <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
                                     </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
@@ -869,7 +870,7 @@
                             <div class="movie-info">
                                 <div class="movie_info_text">
                                     <div class="movie_info_title_wrapper">
-                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title-no watchlist-movie-count">{{ loop.index }}.</h3>
                                         <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
                                     </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>
@@ -906,7 +907,7 @@
                         {% if recommendations|length == 0 %}
                             <p> You dont have any Movie Recommendations. Ask your movie buddies to recommend some. </p>
                         {% else %}    
-                            <p>{{ recommendations|length }} Movies Recommended To You From Movie Buddies</p>
+                            <p><span id="recommendations-count">{{ recommendations|length }}</span> Movies Recommended To You From Movie Buddies</p>
                         {% endif %}   
                     </div>     
                 </div>
@@ -930,7 +931,7 @@
                             <div class="recommended-movie-info">
                                 <div class="movie_info_text">
                                     <div class="movie_info_title_wrapper">
-                                        <h3 class="section-movie-title-no">{{ loop.index }}.</h3>
+                                        <h3 class="section-movie-title-no recommendations-movie-count">{{ loop.index }}.</h3>
                                         <h3 class="section-movie-title">{{dict_item["movie_title"]}}</h3>
                                     </div>
                                     <p class="section-movie-year">{{dict_item["movie_year"]}}</p>

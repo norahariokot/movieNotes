@@ -1,5 +1,16 @@
 let recommendie_ids = []; // This list is being defined here to store ids for recommendie buddies. It is in outer scope to retain state
 
+// Function to update numbering of elements displayed after deleteing some
+function updateSectionMovieCount(element_class_name) {
+    // Select all movies with class name
+    let movie_titles = document.querySelectorAll(element_class_name);
+
+    // Loop through each movie title and update the number based on its index
+    movie_titles.forEach((title, index) => {
+        title.textContent = (index + 1) + '.';
+    });
+}
+
 // Function to create pop menu for section control buttons       
 let isSectionPopupVisible = false;
 let section_popup_menu;
@@ -279,8 +290,15 @@ document.addEventListener('click', function(event) {
                             };
                             console.log(data);
 
-                            let route = section_list_options[i].firstChild
-                            console.log(route);
+                            let element_to_delete_one = event.target.parentNode.parentNode.parentNode;
+                            console.log(element_to_delete_one);
+                            let element_to_delete_two = event.target.parentNode.parentNode.parentNode.previousElementSibling;
+                            console.log(element_to_delete_two);
+                            
+                            let link_element = section_list_options[i].firstChild;
+                            console.log(link_element);
+                            let route = link_element.getAttribute('href')
+                            console.log(route)
 
                             // Send data to server 
                             fetch(route, {
@@ -292,7 +310,18 @@ document.addEventListener('click', function(event) {
                             })
                             .then(response=> response.json())
                             .then(data => {
-                                alert(data.message);
+                                if (route == "/delete_recommendation") {
+                                        console.log("Delete recommendaton")
+                                        document.getElementById("recommendations-count").innerText = data.section_count;
+                                        element_to_delete_one.remove();
+                                        element_to_delete_two.remove();
+                                        updateSectionMovieCount('.recommendations-movie-count');
+                                    }
+                                else {
+                                    alert(data.message);
+                                    section_popup_menu_div.style.display = "none";
+                                }    
+                                
                             })
                             .catch((error) => console.error('Error:',error));                             
                         }
@@ -313,8 +342,8 @@ document.addEventListener('click', function(event) {
 
                             let element_to_delete1 = event.target.parentNode.parentNode.parentNode.previousElementSibling;
                             let element_to_delete2 = event.target.parentNode.parentNode.parentNode;
-    
 
+                            
                             let link_element = section_list_options[i].firstChild;
                             console.log(link_element);
                             let route = link_element.getAttribute('href')
@@ -354,10 +383,13 @@ document.addEventListener('click', function(event) {
                                             if (data.route == "Currently Watching") {
                                                 console.log("Update Currently Watching count")
                                                 document.getElementById("currently-watching-count").innerText = data.section_count;
+                                                updateSectionMovieCount('.currently-watching-movie-count'); 
+
                                             }
                                             else if (data.route == "Watch List") {
                                                 console.log("Update Watch List Count")
                                                 document.getElementById("watchlist-count").innerText = data.section_count;
+                                                updateSectionMovieCount('.watchlist-movie-count');
                                             }
                                         }
                                         
@@ -367,6 +399,13 @@ document.addEventListener('click', function(event) {
                             }    
 
                             else {
+                                let element_to_delete_one = event.target.parentNode.parentNode.parentNode;
+                                console.log(element_to_delete_one);
+                                let element_to_delete_two = event.target.parentNode.parentNode.parentNode.previousElementSibling;
+                                console.log(element_to_delete_two);
+
+                                
+
                                 console.log("Not add to watch")
                                     fetch(route, {
                                         method: 'POST',
@@ -377,15 +416,47 @@ document.addEventListener('click', function(event) {
                                     })
                                     .then(response=> response.json())
                                     .then(data => {
-                                        alert(data.message);
-                                        section_popup_menu_div.style.display = "none";
+                                        if(route == "/delete_watched") {
+                                            //alert(data.message);
+                                            document.getElementById("watched-section-count").innerText = data.section_count;
+                                            element_to_delete_one.remove();
+                                            element_to_delete_two.remove();
+                                            updateSectionMovieCount('.watched-section-title-no');
+                                        }
+
+                                        else if (route == "/delete_favourite") {
+                                            document.getElementById("favourites-section-count").innerText = data.section_count;
+                                            element_to_delete_one.remove();
+                                            element_to_delete_two.remove();
+                                            updateSectionMovieCount('.favourite-section-title-no');
+                                        }
+
+                                        else if (route == "/delete_watchlist") {
+                                            document.getElementById("watchlist-count").innerText = data.section_count;
+                                            element_to_delete_one.remove();
+                                            element_to_delete_two.remove();
+                                            updateSectionMovieCount('.watchlist-movie-count');
+                                        }
+
+                                        else if (route == "/delete_currentlywatching") {
+                                            document.getElementById("currently-watching-count").innerText = data.section_count;
+                                            element_to_delete_one.remove();
+                                            element_to_delete_two.remove();
+                                            updateSectionMovieCount('.currently-watching-movie-count');
+                                        }
+
+                                        
+
+                                        else {
+                                            console.log(route)
+                                            alert(data.message);
+                                            section_popup_menu_div.style.display = "none"; 
+                                        }
+                                        
                                     })
                                     .catch((error) => console.error('Error:', error));
                             }
-                                   
-                                  
-                                                    
-                                            
+                                     
 
                         }
                         
@@ -468,10 +539,12 @@ document.addEventListener('click', function(event) {
                                     if (data.route == "Currently Watching") {
                                         console.log("Update Currently Watching count")
                                         document.getElementById("currently-watching-count").innerText = data.section_count;
+                                        updateSectionMovieCount('.currently-watching-movie-count'); 
                                     }
                                     else if (data.route == "Watch List") {
                                         console.log("Update Watch List Count")
                                         document.getElementById("watchlist-count").innerText = data.section_count;
+                                        updateSectionMovieCount('.watchlist-movie-count');
                                     }
                                 }
                                 

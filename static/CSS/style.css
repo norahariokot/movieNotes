@@ -225,15 +225,17 @@ body {
 .edit-profile-nav-item {
     list-style: none;
     text-decoration: none;
+    background-color: #c6e0ff;
    
     padding-top: .5em;
     padding-bottom: .5em;
     padding-inline: 1em;
-    border: solid black 1px;
+    /*border: solid black 1px;*/
     border-radius: 5%;
 
     & a {
         text-decoration: none;
+        background-color: #c6e0ff;
     }
 }
 
@@ -253,9 +255,10 @@ body {
 }
 
 .update-profile-pic-div {
-    border: solid black 1px;
+    border: solid gainsboro 1px;
     width: 40%;
     padding: 1em;
+  
 }
 
 .profile-pic-update-options {
@@ -277,12 +280,19 @@ body {
 
 .update-profilepic-li {
     list-style: none;
-    border: solid yellowgreen;
+    /*border: solid yellowgreen;*/
     text-align: center;
     margin-bottom: .5em;
     padding-top: .5em;
     padding-bottom: .5em;
     padding-inline: 1em;
+    background-color: #d3d3ff;
+
+    & a {
+        color: #000;
+    }
+
+    
     
 }
 
@@ -298,14 +308,18 @@ body {
     padding-top: .5em;
     padding-bottom: .5em;
     padding-inline: 1em;
-    border: solid black 1px;
+    border: solid gainsboro 1px;
     width: fit-content;
     margin-top: 1em;
     margin-bottom: 1em;
+    color: #fff;
+    background-color: #1b6ef3ff;
 
 
 
 }
+
+
 
 .update-profile-form {
     /*border: solid black;*/
@@ -568,7 +582,7 @@ nav {
     grid-template-columns:minmax(1em, 1fr)  minmax(90%, 1fr) minmax(1em, 1fr);
     margin-inline: auto;
     width:80%;
-    border: solid blue;
+    /*border: solid blue;*/
     margin-bottom: 1em;
 }
 
@@ -580,19 +594,40 @@ nav {
     margin-bottom: 2em;
 }
 
-.user-profile-page-nav-btn {
+.profile-page-header {
+    /*border: solid red;*/
+    grid-column: 2;
+    padding-inline: 1.5em;
+}
+
+.profile-page-title {
+    /*border: solid black;*/
+    color: #1b6ef3ff;
+    margin-bottom: 0;
+}
+
+
+
+.user-profile-page-nav-btn,
+.acc-update-nav-btn {
     text-decoration: none;
     width: fit-content;
     padding: .5em;
     /*border: solid black;*/
     border: solid black 1px;
     border-radius: 5%;
+    background-color: #d3e3fdff;
+    color: #000;
+    border: none;
     
 }
 
 .user-profile-page-img-div {
-    grid-column: 2;
+    margin-top: 0;
     display: flex;
+    /*border: solid red;*/
+    margin-bottom: 1em;
+    
 }
 
 
@@ -607,6 +642,7 @@ nav {
     height: 100px;
     width: 100px;
     margin-top: 1em;
+    border: solid 2px gainsboro;
 }
 
 .user-profile-page-info {
@@ -628,20 +664,22 @@ nav {
 
 .edit-profile-btn {
     text-decoration: none;
-    padding-top: .5em;
-    padding-bottom: .5em;
+    padding: .5em;
     border: solid black 1px;
-    color: gray;
+    color: #fff;
     text-align: center;
-    border-radius: 8%;
+    border: none;
+    background-color: #1744e5;
 
     
 }
 
 .user-profile-page-stats {
-    border: solid black;
+    /*border: solid black;*/
     margin-top: 2em;
     padding-left: 2em;
+    border: solid 2px gainsboro;
+    border-radius: 25px;
 }
 
 
@@ -1355,6 +1393,7 @@ nav {
     margin-top: 2em;
 }
 
+
 /* -------- Movie Buddies ----------- */
 .movie-buddies-title-div {
     display: flex;
@@ -1409,6 +1448,34 @@ nav {
 
 
 /* Recommendations */
+.buddy_recommendations_div {
+    /*border: solid red;*/
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    width: fit-content;
+    margin-right: 0;
+    border: solid 2px gainsboro;
+}
+
+.close-recommend {
+   /*border: solid black;*/
+   align-content: end;
+   margin-bottom: .3em;
+   /*background-color: #c6e0ff;*/
+}
+
+#recommend_btn,
+#section-recommend_btn {
+    /*border: solid black;*/
+    margin-top: .3em;
+    background-color: #1744e5;
+    border: none;
+    padding: .5em;
+    color: #fff;
+}
+
 .recommendie_wrapper,
 .recommendie_div {
     display: flex;
@@ -1417,6 +1484,7 @@ nav {
 .recommendie_wrapper {
     /*border: solid green;*/
     align-items: center;
+    margin-bottom: .5em;
 }
 
 .checkbox-div {
@@ -1425,28 +1493,39 @@ nav {
 
 .recommendie_div {
     /*border: solid red;*/
-    height: fit-content;
+    height: 10vh;
     align-items: center;
 }
 
 .recommendie_profile_div {
     /*border: solid blue;*/
-    height: fit-content;
+    height: 100%;
+    border-radius: 50%;
 }
 
 .recommendie_profile_pic {
     /*border: solid black;*/
+    height: 100%;
+    border-radius: 50%;
+
+    
+}
+
+.recommendie_info {
+    /*border: solid red;*/
+    margin-left: .3em;
 }
 
 .recommendie-name,
 .recommendie_username {
     /*border: solid green;*/
     margin-top: 0;
+    font-size: .9rem;
 
 }
 
 .recommendie-name {
-    margin-bottom: .5rem;
+    margin-bottom: .3rem;
 }
 
 .recommendations-movie-container {
@@ -1590,6 +1669,7 @@ nav {
         padding-inline: 1em;
         width: 50%;
         align-self: flex-end;
+        color: #1744e5;
         
 
     }
@@ -1898,7 +1978,7 @@ nav {
     .recommended-movie-poster-div {
         /*border: solid yellow;*/
         height: 18vh;
-        width: 25%;
+        width: 15%;
         & img {
             height: 100%;
             width: 100%;
@@ -1909,6 +1989,9 @@ nav {
     .recommended-movie-info {
         /*border: solid blue;*/
         margin-top: 1.5em;
+        width: 80%;
+       
+       
         & h3 {
             font-size: 1rem;
         }
@@ -1937,10 +2020,20 @@ nav {
     .recommendations-movie-container {
         padding-inline: 1em;
         /*border: solid black;*/
+        margin-inline: 0;
+       
     }
 
     .recommended-movie-info-container {
         /*border: solid green;*/
+        width: 50%;
+       
+       
+    }
+
+    .recommender-info {
+        /*border: solid blue;*/
+        
     }
 
     .recommender-div {
@@ -1966,6 +2059,61 @@ nav {
         /*border: solid black;*/
         margin-top: 1.5em;
     }
+
+    /* Recommendations popup */
+   
+.buddy_recommendations_div {
+    /*border: solid red;*/
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    width: fit-content;
+    margin-right: 8em;
+    border: solid 2px gainsboro;
+}
+
+.recommendie_wrapper,
+.recommendie_div {
+    display: flex;
+}
+
+.recommendie_wrapper {
+    /*border: solid green;*/
+    align-items: center;
+}
+
+.checkbox-div {
+    /*border: solid blueviolet;*/
+}
+
+.recommendie_div {
+    /*border: solid red;*/
+    height: 10vh;
+    align-items: center;
+}
+
+.recommendie_profile_div {
+    /*border: solid blue;*/
+    height: 100%;
+}
+
+.recommendie_profile_pic {
+    /*border: solid black;*/
+    height: 100%;
+}
+
+.recommendie-name,
+.recommendie_username {
+    /*border: solid green;*/
+    margin-top: 0;
+
+}
+
+.recommendie-name {
+    margin-bottom: .5rem;
+}
+
 
     
     

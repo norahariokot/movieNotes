@@ -71,10 +71,12 @@ class LoginForm(FlaskForm):
 # Custom validator for updating user profile info to ensure that an existing username belongs to current user
 def update_username_validator(form, field):
     user_name = field.data
-    current_user_id = form.current_user_id.data
+    current_user_id = int(form.current_user_id.data)
+    print(f"Current user_id {type(current_user_id)}")
 
     # Query database to find user with the new username
     existing_username = g.db.execute("SELECT id FROM users WHERE user_name = ?", user_name)
+    print(f"Existing user_id {type(existing_username[0]['id'])}")
 
     # Check if username exits and if it already belongs to the current user
     if existing_username and existing_username[0]['id'] != current_user_id:
@@ -95,21 +97,39 @@ class UpdateProficPic(FlaskForm):
     profile_pic = FileField("Upload Profile Picture", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'], 'Images only!')], render_kw={"class": "profile-update-form-img", "id": "update-profilepic-input"})
 
 # Custom validators for verify account form
-# Custom validator for verifying user to ensure that their username actually exists in the database
+# Custom validator for verifying user to ensure that their username actually exists in the database for user not yet logged in
 def verify_username_validator(form, field):
     user_name = field.data
    
     # Query database to find user with the new username
     user_exists = g.db.execute("SELECT id FROM users WHERE user_name = ?", user_name)
 
-    # Check if username exits and if it already belongs to the current user
+    # Check if username exits 
     if not user_exists:
         raise ValidationError('User name is invalid!')
 
-     
 # Create a form class to verify user account before updating password
 class VerifyUsername(FlaskForm):
     user_name = StringField('User Name', validators=[InputRequired(), verify_username_validator], render_kw={"class": "verify-username-form-ctl", "autocomplete": "off"})
+
+# Custom validator for verifying user to ensure that their username actually exists and belongs to logged in user
+def verify_loggedin_username_validator(form, field):
+    user_name = field.data
+    current_user_id = session.get('user_id') 
+
+    # Query database to verify username for logged in user
+    user_exists = g.db.execute("SELECT user_name FROM users WHERE id = ?", current_user_id)
+
+    # Check if username exits and if it already belongs to the current user
+    if user_exists and user_exists[0]['user_name'] != user_name:
+        raise ValidationError('User name is invalid!')       
+
+# Create a form class to verify user account before updating password
+class VerifyLoggedInUsername(FlaskForm):
+    user_name = StringField('User Name', validators=[InputRequired(), verify_loggedin_username_validator], render_kw={"class": "verify-username-form-ctl", "autocomplete": "off"})         
+
+     
+
 
 # Custom validator for security question 1
 def question_one_validator(form, field):

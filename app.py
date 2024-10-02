@@ -11,7 +11,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
-from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic, VerifyUsername, SecurityQuestions, PasswordReset
+from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic, VerifyUsername, SecurityQuestions, PasswordReset, VerifyLoggedInUsername
 from helpers import login_required, section_links, search_options, extract_movie_info, json_buddynotes_options, resize_image
 from scrapper import user_query
 
@@ -102,7 +102,7 @@ def login():
 
 
 
-# View function to verify username
+# View function to verify username for user not yet logged in
 @app.route("/verify_username", methods=["GET", "POST"])
 def verify_username():
     print("Verify username route followed")
@@ -122,7 +122,30 @@ def verify_username():
     else:
         session["logged_in"] = False    
 
-    return render_template("verify_username.html", verify_username_form=verify_username_form, logged_in=session["logged_in"])    
+    return render_template("verify_username.html", verify_username_form=verify_username_form, logged_in=session["logged_in"])   
+
+# View function to verify username for user who is logged in
+@app.route("/verify_loggedin_username", methods=["GET", "POST"])
+@login_required
+def verify_loggedin_username():
+    print("Verify Logged in username route followed")
+
+    verify_loggedin_username_form = VerifyLoggedInUsername()
+
+    # Validate form
+    if verify_loggedin_username_form.validate_on_submit():
+        # Validated username stored in session to be used by account security questions to further verify user
+        session['verified_username'] = verify_loggedin_username_form.user_name.data 
+        print(session['verified_username'])
+
+        return redirect("/verify_account")
+
+    if "user_id" in session:
+        session["logged_in"] = True 
+    else:
+        session["logged_in"] = False    
+
+    return render_template("verify_username.html", verify_loggedin_username_form=verify_loggedin_username_form, logged_in=session["logged_in"])         
 
 
 # View function to verify user account before password reset
@@ -506,7 +529,17 @@ def delete_watched():
 
     # Delete movie from watched table in data base
     db.execute("DELETE FROM watched WHERE id = ?", movie_info_id)
-    return jsonify({"message": "Movie successfully removed from your Watched List"})
+
+    # Retrieve the current number of watched movies after deletion
+    watched_count = db.execute("SELECT COUNT(*) AS count FROM watched WHERE user_id=?", session["user_id"])
+    watched_num = watched_count[0]["count"]
+    print(watched_num)
+
+    data_response = {
+        "message": "Movie successfully removed from your Watched List",
+        "section_count": watched_num
+    }
+    return jsonify(data_response)
 
 
 # Route to search for all watched movies
@@ -698,7 +731,17 @@ def delete_favourite():
 
     # Delete move from favourite table in database
     db.execute("DELETE FROM favourites WHERE id = ?", movie_info_id)
-    return jsonify({"message": "Movie successfully deleted from your Favourites List"})
+
+    # Retrieve the current number of favourites movies after deletion
+    favourite_count = db.execute("SELECT COUNT(*) AS count FROM favourites WHERE user_id=?", session["user_id"])
+    favourite_num = favourite_count[0]["count"]
+    print(favourite_num)
+
+    data_response = {
+        "message": "Movie successfully deleted from your Favourites List",
+        "section_count": favourite_num
+    }
+    return jsonify(data_response)
 
 
 # Route to display movies in the favourites section
@@ -781,8 +824,18 @@ def delete_currentlywatching():
 
     # Delete move from currently_watching table in database
     db.execute("DELETE FROM currently_watching WHERE id = ?", movie_info_id)
-    return jsonify({"message": "Movie successfully deleted from your Currently Watching List"})
 
+    # Retrieve the current number of favourites movies after deletion
+    currently_watching_count = db.execute("SELECT COUNT(*) AS count FROM currently_watching WHERE user_id=?", session["user_id"])
+    currently_watching_num = currently_watching_count[0]["count"]
+    print(currently_watching_num)
+
+    data_response = {
+        "message": "Movie successfully deleted from your Currently Watching List",
+        "section_count": currently_watching_num
+    }
+    return jsonify(data_response)
+ 
 
 # Route to display movies in currently watching list
 @app.route("/currently_watching_section")
@@ -862,10 +915,18 @@ def delete_watchlist():
 
     # Delete movie from watchlist table in database
     db.execute("DELETE FROM watchlist WHERE id = ?", movie_info_id)
-    return jsonify({"message": "Movie successfully deleted from your Watch List"})
 
+    # Retrieve the current number of favourites movies after deletion
+    watchlist_count = db.execute("SELECT COUNT(*) AS count FROM watchlist WHERE user_id=?", session["user_id"])
+    watchlist_num = watchlist_count[0]["count"]
+    print(watchlist_num)
 
-
+    data_response = {
+        "message": "Movie successfully deleted from your Watch List",
+        "section_count": watchlist_num
+    }
+    return jsonify(data_response)
+    
 
 
 @app.route("/watchlist_section", methods=["GET"])
@@ -946,9 +1007,19 @@ def delete_recommendation():
 
     # Delete movie from recommendations table in database
     db.execute("DELETE FROM recommendations WHERE id = ?", recommended_movie_id)
-    
-    return jsonify({"message": "Movie successfully deleted from your Recommendations"})
 
+    # Retrieve the current number of recommended after deletion
+    recommendations_count = db.execute("SELECT COUNT(*) AS count FROM recommendations WHERE recommendie=?", session["user_id"])
+    recommendations_num = recommendations_count[0]["count"]
+    print(recommendations_num)
+
+    data_response = {
+        "message": "Movie successfully removed from your Recommendations List",
+        "section_count": recommendations_num
+    }
+    return jsonify(data_response)
+
+    
 @app.route("/buddy_recommend_info")
 def buddy_recommend_info():
     print("Buddy Recommend Info route followed")

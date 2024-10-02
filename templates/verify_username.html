@@ -4,9 +4,9 @@
 
 <div class="verification-nav">
     {% if session.logged_in %}
-    <a href="/" class="nav-btn">Back to Home </a>
+    <a href="/" class="acc-update-nav-btn">Back to Home </a>
     {% else %} 
-        <a href="/login" class="nav-btn">Login</a>
+        <a href="/login" class="acc-update-nav-btn">Login</a>
     {% endif %}   
 </div>
 
@@ -19,6 +19,25 @@
     
     <h2> Verify Username </h2>
     
+    {% if session.logged_in%}
+    <form action="/verify_loggedin_username" method="POST" class="verify-username-form" >
+        {{ verify_loggedin_username_form.csrf_token }}
+          
+            <label for="user_name" class="verify-username-form-lbl"> {{verify_loggedin_username_form.user_name.label}} </label>   
+            {{ verify_loggedin_username_form.user_name }}
+    
+            {% if verify_loggedin_username_form.user_name.errors %}
+                <ul class="errors">
+                    {% for error in verify_loggedin_username_form.user_name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}            
+                </ul>
+           {% endif %} 
+    
+           <button type="submit" class="verify-username-btn"> Verify Username </button>
+    </form>
+
+    {% else %}
     <form action="/verify_username" method="POST" class="verify-username-form" >
         {{ verify_username_form.csrf_token }}
           
@@ -35,6 +54,7 @@
     
            <button type="submit" class="verify-username-btn"> Verify Username </button>
     </form>
+    {% endif %}
     
 
 </div>
