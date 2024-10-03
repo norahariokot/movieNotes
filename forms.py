@@ -65,7 +65,7 @@ def login_password_validator(form, field):
 # Create a Form Class for the login form
 class LoginForm(FlaskForm):
     user_name = StringField('User Name', validators=[InputRequired(), login_username_validator], render_kw={"class": "login-form-ctl"})
-    password = PasswordField('Password', validators=[InputRequired(), login_password_validator], render_kw={"class": "login-form-ctl"})
+    password = PasswordField('Password', validators=[InputRequired(), login_password_validator], render_kw={"class": "login-form-ctl", "id":"login-password"})
 
 
 # Custom validator for updating user profile info to ensure that an existing username belongs to current user
@@ -76,7 +76,8 @@ def update_username_validator(form, field):
 
     # Query database to find user with the new username
     existing_username = g.db.execute("SELECT id FROM users WHERE user_name = ?", user_name)
-    print(f"Existing user_id {type(existing_username[0]['id'])}")
+    if existing_username:
+        print(f"Existing user_id {type(existing_username[0]['id'])}")
 
     # Check if username exits and if it already belongs to the current user
     if existing_username and existing_username[0]['id'] != current_user_id:

@@ -974,25 +974,33 @@
         <!-- This section will display the movie buddies -->
          {% if movie_buddies_section %}
          <div class="moviebuddies-section-wrapper section-wrapper">
-            <div class="movie-buddies-title-div">
-                <h2 class="section-title movie-buddies-stn-title"> Movie Buddies </h2>
-                <a href="/view_movie_buddyrequests">Movie Buddy Requests</a>
-                <a href="/buddy_chats">Chat with your Movie Buddies </a>
-               
-
+            <div class="section-header">
+                <div class="section-header-img">
+                    <img src="../static/Images/Icons/buddies_2.png" alt="movie slate icon">
+                </div>
+                <div class="movie-buddies-title-div">
+                    <h1 class="section-title movie-buddies-stn-title"> Movie Buddies </h1>            
+                </div>
 
             </div>
             
                       
             <div>
-                <!--<p class="section-total">{{ movie|length }} Movies Watched </p>-->
+                
                 <div class="section-search-wrapper">
                     <input  autocomplete="off" autofocus placeholder="Search for Movie Buddies"  type="search" id="movie-buddies-search" class="section-search">
                     <button id="search-close" style="display: none"><img src="../static/Images/Icons/close.png" alt="close search" ></button>
                 </div>
 
+                <div class="movie-buddy-ctls">
+                    <a href="/view_movie_buddyrequests" class="movie-buddy-ctl">Movie Buddy Requests</a>
+                    <a href="/buddy_chats" class="movie-buddy-ctl">Movie Buddies Chats </a>                 
+                </div>
+
                 <div id="movie-buddies-display" class="section-display">
+                    <h3 class="section-sub-title"> Your Movie Buddies </h3>
                     {% for dict_item in movie_buddies_list %}
+
                         <a href="#" class="view-buddy-notes">
                             <div class="movie-buddies-container">
                                 <div class="movie-buddies-profile">
@@ -1001,7 +1009,7 @@
                                 <div class="movie-buddies-info">
                                     <p class="movie-buddies-id" style="display: none;">{{dict_item["id"]}}</p>
                                     <p class="movie-buddies-name">{{dict_item["name"]}}</p>
-                                    <p class="movie-buddies-name">{{dict_item["user_name"]}} <span class="movie-buddies-status">&#x2022 {{dict_item["buddy_status"]}}</span></p>
+                                    <p class="movie-buddies-username">{{dict_item["user_name"]}} <span class="movie-buddies-status">&#x2022 {{dict_item["buddy_status"]}}</span></p>
                                 </div>
     
                             </div>
@@ -1028,13 +1036,13 @@
          <h2>Movie buddy Requests </h2>
             {% for dict_item in movie_buddy_requests_list %}
                 <div class="movie_buddyrequests_container">
-                    <div class="movie-buddyrequest-profile">
-                        <img src="../static/Images/Icons/user_profile.png" alt="user profile pic">
+                    <div class="movie-buddy-request-profile">
+                        <img src="{{dict_item['profile_pic']}}" alt="user profile pic">
                     </div>
-                    <div class="movie-buddyrequest-info">
+                    <div class="movie-buddy-request-info">
                         <p class="movie-buddyrequest-id" style="display: none;">{{dict_item["id"]}}</p>
-                        <p class="movie-buddyrequest-name">{{dict_item["name"]}}</p>
-                        <p class="movie-buddyrequest-username">{{dict_item["user_name"]}} <button class="accept-buddyrequest" id="accept_buddyrequest_btn">Accept Movie Buddy Request</button> <button class="decline-buddyrequest" id="decline_buddyrequest_btn">Decline Movie Buddy Request</button></p>
+                        <p class="movie-buddy-request-name">{{dict_item["name"]}}</p>
+                        <p class="movie-buddy-request-username">{{dict_item["user_name"]}} <button class="accept-buddyrequest" id="accept_buddyrequest_btn">Accept Movie Buddy Request</button> <button class="decline-buddyrequest" id="decline_buddyrequest_btn">Decline Movie Buddy Request</button></p>
                     </div>
 
                 </div>
@@ -1129,14 +1137,14 @@
                 <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-watched" {% if not view_buddy_favourites and not view_buddy_currentlywatching %}class="active"{% endif %}>Watched</a></li>
                 <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-favourites" {% if view_buddy_favourites %}class="active"{% endif %}>Favourites</a></li>
                 <li><a href="#" class="buddy-notes-nav-item" id="buddy-notes-currently-watching" {% if view_buddy_currentlywatching %}class="active"{% endif %}>Currently Watching</a></li>
-    </ul>
+    
             </ul>
 
             <div class="buddy-notes-display">
            
             {%if view_buddy_watched or (not view_buddy_favourites and not view_buddy_currentlywatching and view_buddynotes) %}
             <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
-                <p>See my watched notes</p>
+                <p class="buddy-notes-subtitle"> My Watched Movies</p>
                 {% for dict_item in buddy_watched_notes %}
                     <div class="buddy-notes-container">
                         <p style="display: none;">{{dict_item["id"]}}</p>
@@ -1165,7 +1173,7 @@
 
             {% if view_buddy_favourites %}
             <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
-                <p>See my Favourite Movies</p>
+                <p class="buddy-notes-subtitle"> My Favourite Movies </p>
                 {% for dict_item in buddy_favourites_notes %}
                     <div class="buddy-notes-container">
                         <p style="display: none;">{{dict_item["id"]}}</p>
@@ -1194,7 +1202,7 @@
 
             {% if view_buddy_currentlywatching %}
             <p style="display: none;" id="buddynotes-options-list" class="buddy-notes-options">{{ json_buddynotes_options }}</p>
-                <p>See what I am currently watching </p>
+                <p class="buddy-notes-subtitle">What I am Currently Watching </p>
                 {% for dict_item in buddy_currentlywatching_notes %}
                     <div class="buddy-notes-container">
                         <p style="display: none;">{{dict_item["id"]}}</p>

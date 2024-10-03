@@ -1,3 +1,13 @@
+// Function to toggle password
+function togglePassword() {
+    let passwordField = document.getElementById("login-password");
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+    } else {
+        passwordField.type = "password";
+    }
+}
+
 let recommendie_ids = []; // This list is being defined here to store ids for recommendie buddies. It is in outer scope to retain state
 
 // Function to update numbering of elements displayed after deleteing some
@@ -691,6 +701,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 let name = feedback[dict_item].full_name;
                 let user_name = feedback[dict_item].user_name;
                 let status = feedback[dict_item].status;
+                let profile_pic = feedback[dict_item].profile_pic;
                 let moviebuddy_container = document.createElement("div");
                 moviebuddy_container.className = "moviebuddy_container";
 
@@ -698,7 +709,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 moviebuddy_profile.className = "moviebuddy_profile";
                 let moviebuddy_profilepic = document.createElement("img")
                 moviebuddy_profilepic.className = "moviebuddy_profilepic";
-                moviebuddy_profilepic.src = "../static/Images/Icons/user_profile.png";
+                moviebuddy_profilepic.src = profile_pic;
                 moviebuddy_profile.appendChild(moviebuddy_profilepic);
 
                 let movie_buddy_info = document.createElement("div");
@@ -765,6 +776,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     movie_buddysearch_link = document.createElement("a");
                     
                     movie_buddysearch_link.href = "";
+                    movie_buddysearch_link.className = "search-movie-buddy-link";
                     movie_buddysearch_link.appendChild(moviebuddy_container);
                     section_search_display.appendChild(movie_buddysearch_link);
                 }
@@ -928,6 +940,13 @@ document.addEventListener("click", function(event) {
         .then(response=> response.json())
         .then(request_recipient => {
             alert(request_recipient.message)
+            if (event.target.id == "accept_buddyrequest_btn") {
+                let element_to_remove = event.target.parentNode.parentNode.parentNode;
+                console.log(element_to_remove);
+                element_to_remove.remove();
+               
+            }
+
         })
         .catch((error) => console.error('Error:', error));
         }
@@ -957,6 +976,12 @@ document.addEventListener("click", function(event) {
         .then(response=> response.json())
         .then(request_recipient => {
             alert(request_recipient.message)
+            if (event.target.id == "decline_buddyrequest_btn") {
+                let element_to_remove = event.target.parentNode.parentNode.parentNode;
+                console.log(element_to_remove);
+                element_to_remove.remove();
+               
+            }
         })
         .catch((error) => console.error('Error:', error));
         }

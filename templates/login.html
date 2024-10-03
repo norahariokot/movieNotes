@@ -30,7 +30,11 @@
 
                     <label for="password" class="login-form-lbl">{{ login_form.password.label }}</label>
                     {{ login_form.password }}
-          
+                    <div class="show-password-div">
+                        <input type="checkbox" onclick="togglePassword()" class="password-toggle">
+                        <label for="" class="toggle-password-lbl">Show Password</label>
+                    </div>
+                    
    
                     {% if login_form.password.errors %}
                         <ul class="errors">

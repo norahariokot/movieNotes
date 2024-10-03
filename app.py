@@ -1124,9 +1124,9 @@ def moviebuddies_section():
         buddy_dict["name"] = name
         buddy_dict["user_name"] = user_name
         buddy_dict["profile_pic"] = profile_pic
-        status = db.execute("SELECT buddy_status from movie_buddies WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND (buddy_request_sender = ? OR buddy_request_recipient = ?)", session["user_id"], session["user_id"], id, id)
-        print(status)
-        buddy_dict["buddy_status"] = status[0]["buddy_status"]
+        #status = db.execute("SELECT buddy_status from movie_buddies WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND (buddy_request_sender = ? OR buddy_request_recipient = ?)", session["user_id"], session["user_id"], id, id)
+        #print(status)
+        buddy_dict["buddy_status"] = "Movie Buddy"
         movie_buddies_list.append(buddy_dict)
     print(movie_buddies_list)    
 
@@ -1138,7 +1138,7 @@ def search_moviebuddies():
     print("Search Movie buddies fired")
     q = request.args.get("q")
     if q:
-        movie_buddies_response = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE user_name LIKE ? AND NOT id = ?", "%" + q + "%", session["user_id"])
+        movie_buddies_response = db.execute("SELECT id, first_name, last_name, user_name, profile_pic FROM users WHERE user_name LIKE ? AND NOT id = ?", "%" + q + "%", session["user_id"])
     else:
         movie_buddies_response = []
     print(movie_buddies_response) 
@@ -1148,6 +1148,14 @@ def search_moviebuddies():
         print(f"Dict item is {dict_item}")
         movie_buddy_status = db.execute("SELECT * FROM movie_buddies WHERE (buddy_request_sender = ? OR buddy_request_recipient = ?) AND (buddy_request_sender = ? OR buddy_request_recipient = ?)", session["user_id"], session["user_id"], dict_item["id"], dict_item["id"])
         print(movie_buddy_status)
+
+        profile_pic = dict_item["profile_pic"]
+        print(profile_pic)
+        if profile_pic == None:
+            print("profile pic empty")
+            dict_item["profile_pic"] = "../static/Images/Icons/user_profile.png"
+        else:
+            dict_item["profile_pic"] =  "../static/Images/user_profilepics/" + profile_pic  
         
         if movie_buddy_status:
             for item in movie_buddy_status:
@@ -1164,6 +1172,9 @@ def search_moviebuddies():
                         dict_item["status"] = "Buddy Request Declined"
                     elif session["user_id"]  == item["buddy_request_recipient"] and dict_item["id"] == item["buddy_request_sender"]:
                         dict_item["status"] = "Send Movie Buddy Request"
+
+                  
+
 
         else:
             print("No status")
@@ -1212,7 +1223,7 @@ def accept_moviebuddy_request():
             
     db.execute("UPDATE movie_buddies SET buddy_status = ? WHERE buddy_request_sender = ? AND buddy_request_recipient = ?", status, request_sender, session["user_id"])
 
-    return jsonify({"message": "Movie Buddies"})
+    return jsonify({"message": "You are now Movie Buddies"})
 
 
 @app.route("/decline_moviebuddy_request", methods=["POST"])
@@ -1244,13 +1255,21 @@ def view_movie_buddyrequests():
 
     movie_buddy_requests_list = []
     for id in request_ids:
-        buddy_request_info = db.execute("SELECT id, first_name, last_name, user_name FROM users WHERE id = ?", id)
+        buddy_request_info = db.execute("SELECT id, first_name, last_name, user_name, profile_pic FROM users WHERE id = ?", id)
 
         #Details of buddy request sender
         buddy_requestdict = {}
         buddy_requestdict["id"] = buddy_request_info[0]["id"]
         buddy_requestdict["name"] = buddy_request_info[0]["first_name"] + " " + buddy_request_info[0]["last_name"]
         buddy_requestdict["user_name"] = buddy_request_info[0]["user_name"]
+        profile_pic = buddy_request_info[0]["profile_pic"]
+        if profile_pic == None:
+            print("profile pic empty")
+            buddy_requestdict["profile_pic"] = "../static/Images/Icons/user_profile.png"
+        else:
+            buddy_requestdict["profile_pic"] =  "../static/Images/user_profilepics/" + profile_pic
+        
+
 
         movie_buddy_requests_list.append(buddy_requestdict)
     
