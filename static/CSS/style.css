@@ -126,9 +126,14 @@ body {
 }
 
 .show-password-div {
-     /*border: solid black;*/
+     /*border: solid black;*/ 
      margin-bottom: 1.3em;
      margin-top: -.7em;
+}
+
+.password-toggle-div {
+    /*border: solid black;*/
+    align-self: flex-start;
 }
 
 
@@ -1438,6 +1443,21 @@ nav {
     font-weight: bold;
 }
 
+.movie-buddy-nav-link {
+    text-decoration: none;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-inline: .5em;
+    /*border: 1px solid black;*/
+    color: #000;
+    background-color: #8cc0ff54;
+    font-weight: 400;
+    margin-bottom: .6em;
+    width: 60%;
+    border-radius: 10px;
+
+}
+
 .movie-buddies-title-div {
     display: flex;
     align-items: center;
@@ -1881,23 +1901,123 @@ nav {
 
 /* Chat */
 .chat-container-div {
-    display: flex;
-    border: solid black;
+    display: grid;
+    grid-template-columns: minmax(100,1fr);
+    /*border: solid black;*/
 }
 
 .chat-nav {
-    width: 30%;
-    border: solid red;
+    grid-column: 1;
+    /*border: solid red;*/
+    padding-inline: 1em;
 }
 
 .chat-area {
-    width: 65%;
-    border: solid blue;
+    grid-column: 1;
+    /*border: solid blue;*/
+    display: none;
+}
+
+.chat-header {
+    border: solid 1px gainsboro;
+    padding: 1em;
 }
 
 .new-chat-menu {
     display: flex;
     flex-direction: column;
+}
+
+.chatbuddy_link {
+    display: block;
+    /*border: solid red;*/
+    text-decoration: none;
+    color: #000;
+    margin-bottom: 1em;
+}
+
+.chatbuddy_div {
+    /*border: solid black;*/
+}
+
+.chatbuddy_profile_div {
+    /*border: solid green;*/
+    height: 10vh;
+    border-radius: 50%;
+    border: solid 1px gainsboro;
+    padding: .1em;
+
+    & img {
+        height: 100%;
+        border-radius: 50%;
+    }
+}
+
+.chats-header {
+    display: flex;
+    /*border: solid green;*/
+    justify-content: space-between;
+    padding-inline: 1em;
+}
+
+.chats-header-title {
+    /*border: solid red;*/
+}
+
+#type-chat-div {
+    border: solid 1px gainsboro;
+    padding-top: .8em;
+    padding-bottom: .8em;
+    padding-inline: 1em;
+}
+
+#type-msg-input {
+    padding-top: .6em;
+    padding-bottom: .6em;
+    padding-inline: 1em;
+    width: 89%;
+    border: solid 2px rgb(209, 208, 208);
+    
+    
+}
+
+#type-msg-input::placeholder {
+    font-family: "Roboto", sans-serif;
+    color: #000;
+    font-weight: 500;
+}
+
+#send-msg-btn {
+    display: none;
+}
+
+#send-msg-btn-icon {
+    display: inline;
+    /*border: solid black;*/
+    margin-left: 1em;
+    
+    
+   
+
+    & img {
+        /*border: solid black;*/
+        height: 100%;
+      
+       
+    }
+}
+
+#newchat-btn {
+    /*border: solid blue;*/
+    align-self: center;
+    text-decoration: none;
+    background-color: #8cc0ff54;
+    color: #000;
+    padding-inline: 1em;
+    padding-top: .3em;
+    padding-bottom: .3em;
+    border: solid 1px #1744e5;
+
 }
 
 .newchatbuddy_div,
@@ -1913,13 +2033,84 @@ nav {
     /*border: solid black;*/
 }
 
+.newchatbuddy-link {
+    /*border: solid purple;*/
+    display: block;
+    text-decoration: none;
+    color: #000;
+    margin-bottom: 1em;
+}
+
+.newchatbuddy_div {
+    /*border: solid green;*/
+}
+
+.newchatbuddy_profile_div {
+    /*border: solid blue;*/
+    height: 10vh;
+    border-radius: 50%;
+    border: solid 1px gainsboro;
+    padding: .1em;
+}
+
+.newchatbuddy_profile_pic {
+    /*border: solid yellow;*/
+    height: 100%;
+    border-radius: 50%;
+}
+
+.newchatbuddy_info,
+.chatbuddy_info {
+    margin-top: 1em;
+    margin-left: .3em;
+    & p {
+        font-size: .9rem;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.newchatbuddy-name,
+.chatbuddy-name {
+    font-weight: bold;
+}
+
+.newchatbuddy_username,
+.chatbuddy_username {
+    color: rgb(160, 153, 153);
+}
+
+#close-chat-btn {
+    text-decoration: none;
+    color: #000;
+    border: solid 1px black;
+    align-self: flex-start;
+    padding-inline: .7em;
+    font-size: .9rem;
+    padding-top: .3em;
+    padding-bottom: .3em;
+    margin-bottom: .2em;
+}
+
+#buddy-chat-search {
+    padding-top: .4em;
+    padding-bottom: .4em;
+    padding-inline: 1em;
+    border-radius: 5px;
+    border: 1px solid rgb(141, 138, 138);
+    margin-bottom: 1em;
+    margin-top: 1em;
+    
+}
+
 .chat-display {
     width: 100%;
     min-height: 50vh;
     max-height: max-content;
-    border: solid red;
+    /*border: solid red;*/
     display: flex;
     flex-direction: column;
+    
 }
 
 .sent-by-user {
@@ -2438,11 +2629,22 @@ nav {
 /* Movie Buddies */
 .movie-buddy-ctls {
     display: inline;
+    /*border: solid black;*/
+    padding-left: 0;
  
 }
 
 .movie-buddy-ctl {
     margin-right: 1em;
+}
+
+.movie-buddy-nav-link {
+    margin-right: 1em;
+    padding-inline: .7em;
+    /*border: solid black;*/
+    
+    
+
 }
 
 .movie-buddies-name {
@@ -2489,6 +2691,45 @@ nav {
         margin-top: 0;
         margin-left: .5em;
     }
+}
+
+/* Chat */
+.chat-container-div {
+    grid-template-columns: minmax(30%,1fr) minmax(70%,1fr) minmax(1em, 1fr);
+    /*border: solid black;*/
+}
+
+.chat-nav {
+    grid-column: 1;
+    border: solid 1px gainsboro;
+    display: block;
+    
+}
+
+.chat-area {
+    grid-column: 2;
+    border-right: #1744e5 solid 1em;
+    border: solid 1px gainsboro;
+    display: block;
+  
+}
+
+#send-msg-btn {
+    display: inline;
+    text-decoration: none;
+    color: #1744e5;
+    margin-left: 1em;
+    padding-inline: 1em;
+    padding-top: .3em;
+    padding-bottom: .3em;
+    border: solid 1px #1744e5;
+    font-size: .9rem;
+    font-weight: bold;
+}
+
+
+#send-msg-btn-icon {
+    display: none;
 }
 
 

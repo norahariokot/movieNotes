@@ -1033,32 +1033,49 @@
 
         <!-- This section will display the movie buddies requests -->
          {% if view_movie_buddyrequests %}
-         <h2>Movie buddy Requests </h2>
-            {% for dict_item in movie_buddy_requests_list %}
-                <div class="movie_buddyrequests_container">
-                    <div class="movie-buddy-request-profile">
-                        <img src="{{dict_item['profile_pic']}}" alt="user profile pic">
-                    </div>
-                    <div class="movie-buddy-request-info">
-                        <p class="movie-buddyrequest-id" style="display: none;">{{dict_item["id"]}}</p>
-                        <p class="movie-buddy-request-name">{{dict_item["name"]}}</p>
-                        <p class="movie-buddy-request-username">{{dict_item["user_name"]}} <button class="accept-buddyrequest" id="accept_buddyrequest_btn">Accept Movie Buddy Request</button> <button class="decline-buddyrequest" id="decline_buddyrequest_btn">Decline Movie Buddy Request</button></p>
-                    </div>
+         <div class="movie-buddy-ctls">
+            <a href="/movie_buddies_section" class="movie-buddy-nav-link">Movie Buddies</a>
+            <a href="/buddy_chats" class="movie-buddy-nav-link">Movie Buddies Chats </a>                 
+        </div>
 
-                </div>
-            {% endfor %}    
+         <h2>Movie buddy Requests </h2>
+            {% if movie_buddy_requests_list|length == 0 %}
+                <p>No Movie Buddy Requests</p>
+            {% else %}
+                   {% for dict_item in movie_buddy_requests_list %}
+                        <div class="movie_buddyrequests_container">
+                            <div class="movie-buddy-request-profile">
+                                <img src="{{dict_item['profile_pic']}}" alt="user profile pic">
+                            </div>
+                            <div class="movie-buddy-request-info">
+                                <p class="movie-buddyrequest-id" style="display: none;">{{dict_item["id"]}}</p>
+                                <p class="movie-buddy-request-name">{{dict_item["name"]}}</p>
+                                <p class="movie-buddy-request-username">{{dict_item["user_name"]}} <button class="accept-buddyrequest" id="accept_buddyrequest_btn">Accept Movie Buddy Request</button> <button class="decline-buddyrequest" id="decline_buddyrequest_btn">Decline Movie Buddy Request</button></p>
+                            </div>
+
+                        </div>
+                    {% endfor %}   
+            {% endif %}         
 
          {% endif %}
 
         <!-- This section will display the message chats --> 
         {% if buddy_chats %} 
-        <h2> View Buddy Chats </h2>
+        <div class="movie-buddy-ctls">
+            <a href="/movie_buddies_section" class="movie-buddy-nav-link">Movie Buddies</a>
+            <a href="/view_movie_buddyrequests" class="movie-buddy-nav-link">Movie Buddy Requests</a>                
+        </div>
+        <h2> Movie Buddy Chats </h2>
        
         <div class="chat-container-div">
-            <div class="chat-nav">
-                <h2>Chats</h2>
+            <div class="chat-nav" id="chat-nav">
+                <div class="chats-header">
+                    <h2 class="chats-header-title">Chats</h2>
+                    <a href="#" id="newchat-btn" >New Chat</a>
+                </div>
+                
                 <div>
-                    <a href="#" id="newchat-btn">New Chat</a>
+                    
                     <div id="defaultchat-profile">
                     {%if buddy_chats %}   
                         {%for dict_item in chat_history_buddies%}
@@ -1080,7 +1097,7 @@
                     </div>
                     <div id="newchatprofile-holder" style="display: none;">
                         <div class="new-chat-menu">
-                            <a href="http://" id="close-chat-btn">Close Chat</a>
+                            <a href="http://" id="close-chat-btn">Close New Chat</a>
                             <input type="search" name="chat-seacrch" id="buddy-chat-search" autocomplete="off" placeholder="Search for Movie Buddy">
                         </div>
                         <div id="newchatbuddies-profile-holder">
@@ -1092,17 +1109,19 @@
            
 
             </div>
-            <div class="chat-area">
-                <div class="chat-header" id="chat-area-header">
+            <div class="chat-area" id="chat-area-div">
+                <div class="chat-header" id="chat-area-header" style="display: none;">
 
                 </div>
                 <div class="chat-display" id="chat-display">
                     <h2>Chat area</h2>
                     
                 </div>
-                <div class="type-chat">
-                    <input type="text" placeholder="Type a message" id="type-msg-input">
-                    <a href="#" id="send-msg-btn">Send Msg Button</a>
+                <div class="type-chat" id="type-chat-div" style="display: none;">
+                    <input type="text" placeholder="Type a message" id="type-msg-input" >
+                    <a href="#" id="send-msg-btn" >Send</a>
+                    <a href="#" id="send-msg-btn-icon"><img src="../static/Images/Icons/send-message.png" alt="send message icon" srcset=""></a>
+                    
                 </div>
 
             </div>

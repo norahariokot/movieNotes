@@ -39,8 +39,8 @@ class CreateUserForm(FlaskForm):
     first_name = StringField('First Name', validators=[InputRequired(), name_validator], render_kw={"class": "create-acc-form-ctl"})
     last_name = StringField('Last Name', validators=[InputRequired(), name_validator], render_kw={"class": "create-acc-form-ctl"})
     user_name = StringField('User Name', validators=[InputRequired(), user_name_validator], render_kw={"class": "create-acc-form-ctl"})
-    password = PasswordField('Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator], render_kw={"class": "create-acc-form-ctl", "id": "password"})
-    verify_password = PasswordField('Verify Password', validators=[InputRequired(message='Please repeat the new password')], render_kw={"class": "create-acc-form-ctl"})
+    password = PasswordField('Password', validators=[InputRequired(), EqualTo('verify_password', message="Passwords do no match"), Length(min=8, message='Password must be atleast 8 characters long'), password_validator], render_kw={"class": "create-acc-form-ctl create-user-password", "id": "password"})
+    verify_password = PasswordField('Verify Password', validators=[InputRequired(message='Please repeat the new password')], render_kw={"class": "create-acc-form-ctl create-user-password"})
 
 
 # Custom validator for username verification at login
@@ -164,9 +164,9 @@ def question_two_validator(form, field):
     title = field.data
 
     # Verify user input to security question
-    watchlist_movie = g.db.execute("SELECT movie_title FROM watchlist WHERE LOWER(movie_title) = LOWER(?) AND user_id = ?", title, id)
+    watched_movie = g.db.execute("SELECT movie_title FROM watched WHERE LOWER(movie_title) = LOWER(?) AND user_id = ?", title, id)
 
-    if not watchlist_movie:
+    if not watched_movie:
         raise ValidationError("Wrong answer, try again")    
 
 
@@ -201,7 +201,7 @@ def question_three_validator(form, field):
 # Security questions Form
 class SecurityQuestions(FlaskForm):
     question_one = StringField('Qn.1 Enter one of your Favourite movies', validators=[InputRequired(), question_one_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
-    question_two = StringField('Qn.2 Enter one movie on your Watch List', validators=[InputRequired(), question_two_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
+    question_two = StringField('Qn.2 Enter one of the movies you have Watched', validators=[InputRequired(), question_two_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"})
     question_three = StringField('Qn.3 Enter the user name of one of your movie buddies', validators=[InputRequired(), question_three_validator], render_kw={"class": "verify-acc-form-ctl", "autocomplete": "off"}) 
 
 

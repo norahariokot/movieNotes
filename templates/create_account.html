@@ -59,6 +59,8 @@
            <label for="password" class="create-acc-form-lbl"> {{ reg_form.password.label }} </label>
             {{ reg_form.password() }}
 
+            
+
             <ul class="password-guidelines-div" id="password-guidelines" style="display: none;">
                 <li class="password-guideline"> Password must be contain atleast 8 characters </li>
                 <li class="password-guideline"> Password must contain atleast one number </li>
@@ -76,6 +78,11 @@
     
           <label for="verify_password" class="create-acc-form-lbl"> {{ reg_form.verify_password.label }} </label>
            {{ reg_form.verify_password() }}
+
+           <div class="password-toggle-div">
+                <input type="checkbox" onclick="togglePassword(event, 'create-user-password')" class="password-toggle" id="create-user-password-toggle">
+                <label for="" class="toggle-password-lbl">Show Password</label>
+           </div>
     
             {% if reg_form.verify_password.errors %}
                 <ul class="errors">

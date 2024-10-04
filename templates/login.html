@@ -31,7 +31,7 @@
                     <label for="password" class="login-form-lbl">{{ login_form.password.label }}</label>
                     {{ login_form.password }}
                     <div class="show-password-div">
-                        <input type="checkbox" onclick="togglePassword()" class="password-toggle">
+                        <input type="checkbox" onclick="togglePassword(event,'login-password')" class="password-toggle" id="toggle-login-password">
                         <label for="" class="toggle-password-lbl">Show Password</label>
                     </div>
                     

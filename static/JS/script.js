@@ -1,11 +1,28 @@
 // Function to toggle password
-function togglePassword() {
-    let passwordField = document.getElementById("login-password");
-    if (passwordField.type === "password") {
-        passwordField.type = "text";
-    } else {
-        passwordField.type = "password";
+function togglePassword(event, password_field_id) {
+
+    let passwordField;
+    let password_field_list;
+    if (event.target.id == "toggle-login-password") {
+       passwordField = document.getElementById(password_field_id); 
+       password_field_list = Array(passwordField)
     }
+    else if (event.target.id == "create-user-password-toggle") {
+        password_field_list = document.getElementsByClassName(password_field_id); 
+       
+     }
+
+    
+    
+    for (let i = 0; i < password_field_list.length; i++) {
+        if (password_field_list[i].type === "password") {
+            password_field_list[i].type = "text";
+        } 
+        else {
+            password_field_list[i].type = "password";
+        }
+    }
+    
 }
 
 let recommendie_ids = []; // This list is being defined here to store ids for recommendie buddies. It is in outer scope to retain state
@@ -1145,7 +1162,45 @@ function chatwith(event) {
     console.log(chatwith_info);
     console.log("Movie Buddy to chat with clicked")
 
+    let typing_element = document.getElementById('type-chat-div');
+    typing_element.style.display = "block";
+
+    let chat_area = document.getElementById("chat-area-div");
+    console.log("chat_area",chat_area);
+    let chat_area_style = window.getComputedStyle(chat_area);
+    console.log(chat_area_style)
+    let hidden_display = document.getElementById("chat-nav");
+
+    window.addEventListener('resize', function() {
+        let width = this.window.innerWidth;
+        console.log("Window width:", width)
+
+        if (width < 600 ) {
+            hidden_display.style.display = "none";
+            chat_area.style.display = "block";
+        }
+
+        else {
+        hidden_display.style.display = "block";
+           
+            
+        }
+    })
+    
+
+    /*if (chat_area_style.display === "none") {
+        console.log("Chat area is hidden");
+        hidden_display.style.display = "none";
+        chat_area.style.display = "block";
+    }
+    else if (chat_area_style.display === "block") {
+        console.log("chat area is not hidden");
+       
+        
+    }*/
+   
     let chat_area_header = document.getElementById('chat-area-header');
+    chat_area_header.style.display = "block";
     chat_area_header.innerHTML = ''; // clear previously added clones from the header div
     console.log(chat_area_header)
 
@@ -1344,7 +1399,7 @@ document.addEventListener("click", function(event) {
 document.addEventListener('click', function(event) {
 
     // Add condition to check for click from particular element
-    if (event.target.id == "send-msg-btn") {
+    if (event.target.id == "send-msg-btn" || event.target.id == "send-msg-btn-icon") {
         console.log("Send message to buddy clicked");
 
         let msgsent_date_time = new Date ();
@@ -1410,7 +1465,7 @@ document.addEventListener('click', function(event) {
             return response.json();
         })
         .then(data => {
-            alert(data.message)
+            //alert(data.message)
         })
         .catch((error) => console.log('Error:', error))
              
