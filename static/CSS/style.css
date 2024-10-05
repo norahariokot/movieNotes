@@ -1923,6 +1923,28 @@ nav {
     padding: 1em;
 }
 
+#back-to-chat-nav-btn {
+    display: flex;
+    /*border: solid black;*/
+    margin-right: 1em;
+    align-self: center;
+}
+
+.header-profile {
+    /*border: solid red;*/
+    display: flex;
+    & .chatbuddy_profile_div {
+        height: 70px;
+        width: 70px;
+    }
+
+    & .chatbuddy_profile_pic {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
+}
+
 .new-chat-menu {
     display: flex;
     flex-direction: column;
@@ -1969,13 +1991,14 @@ nav {
     padding-top: .8em;
     padding-bottom: .8em;
     padding-inline: 1em;
+    display: flex;
 }
 
 #type-msg-input {
     padding-top: .6em;
     padding-bottom: .6em;
     padding-inline: 1em;
-    width: 89%;
+    width: 85%;
     border: solid 2px rgb(209, 208, 208);
     
     
@@ -2713,6 +2736,9 @@ nav {
     display: block;
   
 }
+
+
+
 
 #send-msg-btn {
     display: inline;

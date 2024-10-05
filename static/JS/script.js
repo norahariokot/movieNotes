@@ -1152,6 +1152,8 @@ document.addEventListener('click', function(event) {
     
    })
 
+
+
 // Function to dynamically display and update data in the chat display area
 function chatwith(event) {
     console.log("event.target:", event.target);
@@ -1165,28 +1167,8 @@ function chatwith(event) {
     let typing_element = document.getElementById('type-chat-div');
     typing_element.style.display = "block";
 
-    let chat_area = document.getElementById("chat-area-div");
-    console.log("chat_area",chat_area);
-    let chat_area_style = window.getComputedStyle(chat_area);
-    console.log(chat_area_style)
-    let hidden_display = document.getElementById("chat-nav");
-
-    window.addEventListener('resize', function() {
-        let width = this.window.innerWidth;
-        console.log("Window width:", width)
-
-        if (width < 600 ) {
-            hidden_display.style.display = "none";
-            chat_area.style.display = "block";
-        }
-
-        else {
-        hidden_display.style.display = "block";
-           
-            
-        }
-    })
     
+
 
     /*if (chat_area_style.display === "none") {
         console.log("Chat area is hidden");
@@ -1195,21 +1177,49 @@ function chatwith(event) {
     }
     else if (chat_area_style.display === "block") {
         console.log("chat area is not hidden");
+        hidden_display.style.display = "block";
        
         
     }*/
    
     let chat_area_header = document.getElementById('chat-area-header');
-    chat_area_header.style.display = "block";
+    //chat_area_header.style.display = "block";
+    chat_area_header.style.display = "flex";
     chat_area_header.innerHTML = ''; // clear previously added clones from the header div
     console.log(chat_area_header)
 
     let originalElement = chatwith_info.firstElementChild;
     console.log(originalElement);
     let clone = originalElement.cloneNode(true);
+    clone.className = "header-profile";
     console.log(clone)
 
+    let back_to_chat_btn = document.createElement("a");
+    back_to_chat_btn.style.display = "none";
+    back_to_chat_btn.href = "/buddy_chats";
+    back_to_chat_btn.className = "back-to-chat-nav-btn";
+    back_to_chat_btn.id = "back-to-chat-nav-btn";
+    let back_to_chat_icon = document.createElement("img")
+    back_to_chat_icon.className = "back-to-chat-icon";
+    back_to_chat_icon.src= "../static/Images/Icons/back.png";
+
+    back_to_chat_btn.appendChild(back_to_chat_icon);
+    chat_area_header.appendChild(back_to_chat_btn);
+
+    function handleResize() {
+        let width = this.window.innerWidth;
+        console.log("Window width:", width);
+
+        if(width < 600) {
+            back_to_chat_btn.style.display = "flex";
+        }
+
+    }  
+    window.addEventListener('resize', handleResize); 
+    handleResize();  
+    
     chat_area_header.appendChild(clone);
+    console.log("chat area header elements", chat_area_header)
 
     let visible_div = document.getElementById("newchatprofile-holder");
     visible_div.style.display = "none";
@@ -1477,6 +1487,33 @@ document.addEventListener('click', function(event) {
     console.log(event.target)
     if (event.target.closest("#chatwith_buddy")) {
         console.log("Chat with Buddy clicked")
+
+        let chat_area = document.getElementById("chat-area-div");
+        console.log("chat_area",chat_area);
+        let chat_area_style = window.getComputedStyle(chat_area);
+        console.log(chat_area_style)
+        let hidden_display = document.getElementById("chat-nav");
+                
+        function handleResize() {
+            let width = this.window.innerWidth;
+            console.log("Window width:", width)
+        
+            if (width < 600 ) {
+                console.log("Window is less then 600");
+                hidden_display.style.display = "none";
+                chat_area.style.display = "block";
+                
+            }
+        
+            else {
+                hidden_display.style.display = "block";     
+            }
+                console.log("Updated chat-nav display:", hidden_display.style.display);
+        }
+            
+        window.addEventListener('resize', handleResize); 
+        handleResize();
+        
         chatwith(event)
     }
 });
