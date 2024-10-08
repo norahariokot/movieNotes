@@ -1,3 +1,16 @@
+//Function to open mobile menu
+function showMobileMenu() {
+    let mobile_menu = document.getElementById("mobile-menu");
+    mobile_menu.style.display = "block";
+}
+
+//Function to close mobile menu
+function closeMobileMenu() {
+    let mobile_menu = document.getElementById("mobile-menu");
+    mobile_menu.style.display = "none";
+}
+
+
 // Function to toggle password
 function togglePassword(event, password_field_id) {
 
@@ -1210,7 +1223,7 @@ function chatwith(event) {
         let width = this.window.innerWidth;
         console.log("Window width:", width);
 
-        if(width < 600) {
+        if(width < 900) {
             back_to_chat_btn.style.display = "flex";
         }
 
@@ -1280,8 +1293,10 @@ function chatwith(event) {
                 let text_div = document.createElement("div");   
                 let msg_text = document.createElement("p");
                 msg_text.textContent = msg.message;
+                msg_text.className = "msg-text";
                 let msg_time = document.createElement("p");
                 msg_time.textContent = msg.time;
+                msg_time.className = "msg-time";
                 let msg_sender = document.createElement("span");
                 msg_sender.textContent = msg.msg_sender;
                 msg_text.appendChild(msg_sender);
@@ -1454,11 +1469,13 @@ document.addEventListener('click', function(event) {
         chat_msgdiv.appendChild(msg_time)
 
         //Append chat_msgdiv to the DOM (chat-display)
-        chatmsg_display.appendChild(chat_msgdiv);
+        //chatmsg_display.appendChild(chat_msgdiv);
+
+        console.log("msg-receipeint", chatmsg_display.previousElementSibling.children[1].children[1].firstElementChild.innerText);
 
         let chat_data = {
             chat_msg: text,
-            msg_recipient:chatmsg_display.previousElementSibling.firstElementChild.children[1].firstElementChild.innerText,
+            msg_recipient:chatmsg_display.previousElementSibling.children[1].children[1].firstElementChild.innerText,
             date_time: msgsent_date_time,
             time_zone:time_zone
         }
@@ -1476,6 +1493,8 @@ document.addEventListener('click', function(event) {
         })
         .then(data => {
             //alert(data.message)
+             //Append chat_msgdiv to the DOM (chat-display)
+            chatmsg_display.appendChild(chat_msgdiv);
         })
         .catch((error) => console.log('Error:', error))
              
@@ -1498,8 +1517,8 @@ document.addEventListener('click', function(event) {
             let width = this.window.innerWidth;
             console.log("Window width:", width)
         
-            if (width < 600 ) {
-                console.log("Window is less then 600");
+            if (width < 900 ) {
+                console.log("Window is less then 900");
                 hidden_display.style.display = "none";
                 chat_area.style.display = "block";
                 

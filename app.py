@@ -1507,6 +1507,8 @@ def show_chatmsgs():
     print(session)
     print(session["msg_recipient"])
     msgs = db.execute("SELECT * FROM chat_messages WHERE (msg_sender = ? OR msg_sender = ?) AND (msg_recipient = ?  OR msg_recipient = ?)", session["user_id"], session["msg_recipient"],session["msg_recipient"], session["user_id"] )
+    
+    
     print(msgs)
 
     return jsonify(msgs=msgs)
@@ -1525,6 +1527,22 @@ def previous_chatmsgs():
 
     chat_history = db.execute("SELECT date, time, message, msg_sender FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ? UNION SELECT date, time, message, msg_sender FROM chat_messages WHERE msg_sender = ? AND msg_recipient = ? ", session["user_id"], previous_chatswith, previous_chatswith, session["user_id"] )
     print(chat_history)
+
+    for msg in chat_history:
+        print(msg)
+        date_string = msg["date"]
+        date_object = datetime.strptime(date_string, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%d %B %Y')
+        msg["date"] = formatted_date
+        retrieved_time = msg["time"]
+        date_time_object = datetime.strptime(retrieved_time, '%H:%M:%S' )
+        formatted_time = date_time_object.strftime('%H:%M')
+        print(formatted_time)
+        msg["time"] = formatted_time
+
+    print(chat_history)    
+             
+        
 
     user_sessionid = session["user_id"]
 

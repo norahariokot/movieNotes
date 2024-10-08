@@ -24,6 +24,20 @@ body {
     Layout   
     ============== */  
 /* --- Login Page --- */
+
+.main-header {
+    /*border: solid black;*/
+    position: fixed;
+    width: 100%;
+    z-index: 90;
+    background-color: #fff;
+    height:fit-content;
+    padding-bottom: 0;
+    padding-top: 1em;
+    
+    
+}
+
 .login-grid {
     display: grid;
     grid-template-columns: minmax(1em, 1fr)  minmax(90%, 1fr) minmax(1em, 1fr);
@@ -484,10 +498,10 @@ body {
 /* Navigation */      
 nav {
     display: flex;
-    justify-content: space-between;
     /*border: solid red;*/
-    padding-inline: 2em;
-    margin-top: 1em;
+    justify-content: space-between;
+      
+  
 }  
 
 .logo {
@@ -508,6 +522,7 @@ nav {
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
+    align-self: flex-start;
 
     & li {
         list-style: none;
@@ -518,10 +533,61 @@ nav {
 }
 
 .nav-user-info {
-    margin-left: 4em;
     /*border: solid blue;*/
     margin-bottom: 0;
+    
+   }
+
+
+.mobile-logout {
+    justify-items: left;
+    /*border: red solid;*/
+    width: fit-content;
 }
+
+.mobile-menu {
+    /*border: solid red;*/
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: fit-content;
+    width: 250px;
+    z-index: 999;
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding-bottom: 1em;
+    display: none;
+    padding-inline: 1em;
+    backdrop-filter:blur(8px) ;
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+    
+    
+}
+
+.close-mobile-menu {
+    /*border: solid red;*/
+    margin-right: 1em;
+    margin-top: .5em;
+    margin-bottom: .5em;
+    display: flex;
+    justify-content: right;
+              
+}
+
+.close-mobile-menu-link {
+    /*border: solid blue;*/
+  
+}
+
+.mobile-display-nav {
+    /*border: solid blue;*/
+    display: flex;
+    margin-left: 0;
+  
+   }
 
 .nav-logout-btn {
     align-self: center;
@@ -539,11 +605,16 @@ nav {
 
 }
 
+.desktop-logout {
+    display: none;
+}
+
 /* User profile */
 .login-user-profile {
     /*border: solid green;*/
     margin-top: .1em;
     display: flex;
+    flex-direction: column;
     margin-bottom: 0;
 }
 
@@ -711,6 +782,13 @@ nav {
     grid-template-columns: minmax(1em,1fr) minmax(90%,1fr)  minmax(1em, 1fr) ;
     margin-inline: auto;
     /*border: solid red;*/
+    padding-top: 7em;
+    
+}
+
+main {
+    /*border: solid black;*/
+   
 }
 
 .user-menu {
@@ -718,6 +796,7 @@ nav {
     /*border: solid black;*/
     padding-left: 2em;
     padding-top: 2em;
+    display: none;
    
 }
 
@@ -731,11 +810,20 @@ nav {
     color: #000;
     border-radius: 25px;
     border: solid 1.5px rgb(187, 184, 184);
+    width: 90%;
+    display: block;
+    
+}
+
+.mobile-search-link {
+    /*border: solid black;*/
+    align-self: center;
+    border: none;
 }
 
 .search-icon {
     /*border: solid red;*/
-    margin-right: 1em;
+    margin-right: .5em;
     & img {
         height: 20px;
         width: 20px;
@@ -747,6 +835,7 @@ nav {
 .user-content{
     grid-column: 2;
     /*border: solid green;*/
+    margin-top: 1.5em;
   
    
 }
@@ -756,6 +845,7 @@ nav {
     width: 60%;
     padding-left: 1em;
     margin-top: 2em;
+    display: none;
     
 }
 
@@ -766,6 +856,34 @@ nav {
     /*border: solid blue;*/
     width: 90%;
     
+}
+
+.mobile-home-icon-link {
+    align-self: center;
+    /*border: solid red;*/
+    margin-right: .3em;
+}
+
+.mobile-menu-btn {
+    align-self: center;
+}
+
+.home-icon-mobile-display,
+.search-mobile-icon,
+.menu-icon {
+    height: 25px;
+    width: 25px;
+    object-fit: contain;
+    /*border: solid black;*/
+    
+}
+
+.search-mobile-icon {
+    margin-right: .3em;
+}
+
+.desktop-menu {
+    display: none;
 }
 
 .dashboard-menu-li {
@@ -876,6 +994,13 @@ nav {
     width: 30px;
     margin-bottom: -.6em;
     
+}
+
+.app-guide-icon-search {
+    /*border: solid red;*/
+    height: 20px;
+    width: 20px;
+    margin-bottom: -.3em;
 }
 
 .home-img {
@@ -1992,6 +2117,7 @@ nav {
     padding-bottom: .8em;
     padding-inline: 1em;
     display: flex;
+    margin-top: .7em;
 }
 
 #type-msg-input {
@@ -2133,13 +2259,16 @@ nav {
     /*border: solid red;*/
     display: flex;
     flex-direction: column;
-    
+       
 }
 
 .sent-by-user {
     align-self: end;
-    background-color: aqua;
-    border: solid black;
+    background-color: #8cc0ff54;
+    margin-bottom: .3em;
+    padding: .5em;
+    border-radius: 8px;
+    /*border: solid black;*/
     & * {
         margin-top: 0;
         margin-bottom: 0;
@@ -2148,8 +2277,12 @@ nav {
 
 .chat-msg {
     align-self: start;
-    background-color: yellowgreen;
-    border: solid black;
+    background-color: #efefef;
+    border-radius: 8px;
+    margin-bottom: .3em;
+    padding: .5em;
+    /*border: solid black;*/
+    
     & * {
         margin-top: 0;
         margin-bottom: 0;
@@ -2157,17 +2290,25 @@ nav {
 }
 
 .text-date-title {
-    border: solid black;
+    font-size: 1rem;
     align-self: center;
     padding: .3em;
     border-radius: 15%;
+    margin-bottom: .3em;
 
+}
+
+.msg-time {
+    text-align: right;
+    font-size: .8rem;
+    color: rgb(88, 88, 88);
+    
 }
 
 /* ================
     Media-Queries
     =============== */
-    @media (min-width:600px) {
+    @media (min-width:900px) {
     /* Login page */
     .login-grid {
         grid-template-columns: minmax(3em, 1fr) minmax(30%,1fr) minmax(40%,1fr) minmax(3em, 1fr);
@@ -2207,6 +2348,10 @@ nav {
         color: #1744e5;
         
 
+    }
+
+    .login-user-profile {
+        flex-direction: row;
     }
 
     /* Create Account Page*/ 
@@ -2251,11 +2396,13 @@ nav {
         grid-template-columns: minmax(10%,1fr) minmax(80%,1fr) ;
         margin-inline: auto;
         /*border: solid red;*/
+        padding-top: 5em;
     }
     
     .user-menu {
         grid-column: 1;
         /*border: solid black;*/
+        display: block;
     }
     
     .user-content{
@@ -2756,6 +2903,52 @@ nav {
 
 #send-msg-btn-icon {
     display: none;
+}
+
+/* Navigation */
+
+nav {
+    padding-inline: 2em;
+    justify-content: space-between;
+
+}  
+
+.desktop-logout {
+    display: flex;
+}
+
+
+.desktop-menu {
+    display: block;
+}
+
+.mobile-menu {
+    display: none;
+}
+
+.dashboard-menu-title {
+    display: block;
+    
+}
+
+.mobile-menu-btn {
+    display: none;
+  
+}
+
+.nav-user-info {
+    margin-left: 4em;
+}
+
+
+.mobile-display-nav {
+    display: none;
+}
+
+/* Chats */
+.chat-display {
+    padding-inline: 1em;
+    
 }
 
 

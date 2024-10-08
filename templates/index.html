@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<header>
+
+<header class="main-header">
     <nav>
         <img class="logo" src="../static/Images/Movie Notes-logo/Movie Notes (4).png" alt="">
 
@@ -20,11 +21,50 @@
                     
                 </a>
             </li>
-            <li class="nav-logout-btn"><a href="/logout">Log out</a></li>
+            <li class="nav-logout-btn desktop-logout"><a href="/logout">Log out</a></li>
         </ul>
+        <div class="mobile-display-nav">
+            <a href="/" class="mobile-home-icon-link"><img src="../static/Images/Icons/home.png" alt="icon for a house" class="home-icon-mobile-display"></a>
+            <a href="{{ url_for('search_page')}}" id="index-search" class="search-link mobile-search-link"><img src="../static/Images/Icons/search (2).png" alt="" srcset="" class="search-mobile-icon"></a>
+            <a href="#" class="mobile-menu-btn" onclick="showMobileMenu()" id="mobile-menu-btn"><img src="../static/Images/Icons/menu.png" alt="menu icon" class="menu-icon"></a>
+            
+        </div>
+        
     </nav>
+    <ul class="mobile-menu" id="mobile-menu">
+        <li class="close-mobile-menu" onclick="closeMobileMenu()"><a href=# class="close-mobile-menu-link"><img src="../static/Images/Icons/close.png" alt="icon of an x to symbolise close"></a></li>
+        {% for dict_item in sections %}
+            {% if dict_item != "Home" %}
+            <li class="dashboard-menu-li">
+            <a href="{{ sections[dict_item] }}" class="dashboard-menu-link"> 
+                <span class="dashboard-icon">
+                    {% if dict_item == "Watched" %}
+                        <img src="../static/Images/Icons/video.png" alt="video icon">
+                    {% elif dict_item == "Home" %}   
+                        <img src="../static/Images/Icons/home.png" alt="house icon"> 
+                    {% elif dict_item == "Favourites" %}
+                        <img src="../static/Images/Icons/heart.png" alt="heart shape icon">  
+                    {% elif dict_item == "Currently Watching" %}
+                        <img src="../static/Images/Icons/cinema.png" alt="icon for people watching movie in cinema">  
+                    {% elif dict_item == "Watchlist" %}
+                        <img src="../static/Images/Icons/movie.png" alt="dashboard-icon"> 
+                    {% elif dict_item == "Recommendations" %}
+                        <img src="../static/Images/Icons/feedback.png" alt="dashboard-icon">  
+                    {% elif dict_item == "Movie Buddies" %}
+                        <img src="../static/Images/Icons/happy.png" alt="dashboard-icon">  
+                    {% endif %}                                              
+                </span>
+                {{ dict_item }}
+            </a>
+        </li>
+        {%endif%}
+    {% endfor %}
+    <li class="nav-logout-btn mobile-logout"><a href="/logout">Log out</a></li>
+                        
+</ul>
+    
+    
 </header>
-
 
 <div class="user-dashboard-container">
     <div class="user-menu">
@@ -33,7 +73,7 @@
         
         <h3 class="dashboard-menu-title">Menu</h3>
     
-        <ul class="dashboard-menu-list">
+        <ul class="dashboard-menu-list desktop-menu">
             {% for dict_item in sections %}
                 <li class="dashboard-menu-li">
                     <a href="{{ sections[dict_item] }}" class="dashboard-menu-link"> 
@@ -74,7 +114,7 @@
                 <br>An app designed to help you keep track of your movie-watching experiences. With Movie Notes, you can easily organize your movie notes into sections: <span class="app-info-span">Watched, Currently Watching, Favourites,</span> and your <span class="app-info-span">Watchlist.</span></p>
                 <h3 class="app-instruction-title"> To get started: </h3>
                 <ol class="app-instruction-list">
-                    <li class="app-instruction">Click on the “Search for Movies” link to search for movies.</li>
+                    <li class="app-instruction">Click on the “Search for Movies” link on the left for desktop or search icon <img src="../static/Images/Icons/search.png" class="app-guide-icon-search"> at the top for mobile devices to search for movies.</li>
                     <li class="app-instruction">A search bar will appear where you can type in a movie title.</li>
                     <li class="app-instruction">For each search result, you’ll see three dots <img src="../static/Images/Icons/9022327_dots_three_duotone_icon.png" alt="" class="app-guide-icon"> on the right . Click on them to reveal a menu with options to add the movie to one of your Movie Notes sections.</li>
                     <li class="app-instruction">After adding movies, you can find them in the corresponding sections of the Menu.On desktop, the Menu is located on the left side of your screen. On mobile, it’s at the top for easy access.</li>
@@ -1120,7 +1160,7 @@
                 <div class="type-chat" id="type-chat-div" style="display: none;">
                     <input type="text" placeholder="Type a message" id="type-msg-input" >
                     <a href="#" id="send-msg-btn" >Send</a>
-                    <a href="#" id="send-msg-btn-icon"><img src="../static/Images/Icons/send-message.png" alt="send message icon" srcset=""></a>
+                    <a href="#" ><img src="../static/Images/Icons/send-message.png" alt="send message icon" srcset="" id="send-msg-btn-icon"></a>
                     
                 </div>
 
