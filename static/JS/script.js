@@ -10,10 +10,8 @@ function closeMobileMenu() {
     mobile_menu.style.display = "none";
 }
 
-
 // Function to toggle password
 function togglePassword(event, password_field_id) {
-
     let passwordField;
     let password_field_list;
     if (event.target.id == "toggle-login-password") {
@@ -25,8 +23,6 @@ function togglePassword(event, password_field_id) {
        
      }
 
-    
-    
     for (let i = 0; i < password_field_list.length; i++) {
         if (password_field_list[i].type === "password") {
             password_field_list[i].type = "text";
@@ -1179,21 +1175,6 @@ function chatwith(event) {
 
     let typing_element = document.getElementById('type-chat-div');
     typing_element.style.display = "block";
-
-    
-
-
-    /*if (chat_area_style.display === "none") {
-        console.log("Chat area is hidden");
-        hidden_display.style.display = "none";
-        chat_area.style.display = "block";
-    }
-    else if (chat_area_style.display === "block") {
-        console.log("chat area is not hidden");
-        hidden_display.style.display = "block";
-       
-        
-    }*/
    
     let chat_area_header = document.getElementById('chat-area-header');
     //chat_area_header.style.display = "block";
@@ -1588,12 +1569,9 @@ document.addEventListener('click', function(event) {
                     document.getElementById('remove-profile-pic-form').submit()
                 }
 
-                
             });
-   
-        })
-     
-    }
+           })
+       }
 
     else if (element.id == "close-update-profilepic" || element.id == "close-update-profile-ctls") {
         let hidden_div = document.getElementById('update-profile-pic-div')
