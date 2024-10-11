@@ -72,7 +72,6 @@ SQLAlchemy==2.0.27
 sqlparse==0.4.4
 style50==2.10.3
 submit50==3.1.5
-systemd-python==234
 termcolor==1.1.0
 tomli==2.0.1
 trio==0.25.1
