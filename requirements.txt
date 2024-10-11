@@ -1,5 +1,5 @@
 altgraph==0.17.4
-attrs==20.3.0
+attrs>=18,<24
 autopep8==2.2.0
 Babel==2.8.0
 beautifulsoup4==4.12.3
