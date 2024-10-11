@@ -12,7 +12,6 @@ check50==3.3.11
 clang-format==18.1.8
 click==8.1.7
 colorama==0.4.4
-command-not-found==0.3
 cryptography==3.4.8
 cs50==9.3.4
 dbus-python==1.2.18
