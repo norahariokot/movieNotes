@@ -511,6 +511,7 @@
                                         .then(response=> response.json())
                                         .then(data => {
                                             alert(data.message);
+                                            popup_menu_div.style.display = "none";
                                         })
                                         .catch((error) => console.error('Error:', error));
                                         }
@@ -551,6 +552,8 @@
                                 .then(response=> response.json())
                                 .then(data => {
                                     alert(data.message);
+                                    popup_menu_div.style.display = "none";
+
                                 })
                                 .catch((error) => console.error('Error:', error));
                             });
