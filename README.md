@@ -109,8 +109,15 @@ pip install -r requirements.txt
 ```
 
 - #### Set up Environment Variables:
-Inside the project directory, there is a `.env`file to manage sensitive variables like secret keys. Assign a value to the `app_secret_key` variable. 
-**Note**: Keep the value assigned to this variable confidential and do not share your `.env` file publicly.
+  - ##### Create a `.env` file:
+    In the root of your project directory, create a new file named `.env`.
+  - ##### Add the following variable:
+    Open the .env file and add the required environment variable:
+    ```
+    app_secret_key = 
+    ```  
+  Assign a secure key of your choice to the `app_secret_key` variable. 
+  **Note**: Keep the value assigned to this variable confidential and do not share your `.env` file publicly.
 
 
 - #### Create a branch
