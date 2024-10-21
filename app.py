@@ -21,7 +21,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("app_secret_key")
 app.config['UPLOAD_FOLDER'] =os.path.join("static", "Images", "user_profilepics") #  Set upload folder for profile pic uploads inside the static directory
 
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
