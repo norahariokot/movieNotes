@@ -1,23 +1,23 @@
 <img src="/static/Images/Movie Notes-logo/Movie Notes (4).png" alt="Movie Notes Logo, an illustration of a notebook" width="90" height="90">
 
 # Movie Notes
-**Movie Notes** is a web application that enables users to track their movie-watching experiences. With Movie Notes, users can easily maintain an organized record of movies they have watched, are currently watching, have favorited, and plan to watch all in one place.
+**Movie Notes** is a web application that enables users to track their movie-watching experiences. With Movie Notes, users can easily maintain an organized record of movies they have watched, are currently watching, have favourited, and plan to watch all in one place.
 
 The app also includes social features that allow users to connect with one another, chat, and share movie recommendations and experiences. This fosters a sense of community and helps users discover new movies through personalized recommendations.
 
 Whether you are a casual viewer or a dedicated movie enthusiast, Movie Notes is a must-try!
 
 ## :bulb: Motivation for building Movie Notes
-As a movie enthusiast, I often struggled to keep track of all the movies I had watched, my favorites, and those I planned to see in the future. I wanted a single place where I could organize my movie experiences—what I've watched, what I love, what I'm currently watching, and what I plan to watch next. Additionally, I wanted a way to easily store and access recommendations from friends and family so that I wouldn't forget them. Most importantly, I hoped to connect with fellow movie lovers and share our experiences. Movie Notes was built to bring all these elements together into one platform, making it easier to explore, organize, and enjoy movies while fostering a sense of community among movie enthusiasts.
+As a movie enthusiast, I often struggled to keep track of all the movies I had watched, my favourites, and those I planned to see in the future. I wanted a single place where I could organize my movie experiences—what I've watched, what I love, what I'm currently watching, and what I plan to watch next. Additionally, I wanted a way to easily store and access recommendations from friends and family so that I wouldn't forget them. Most importantly, I hoped to connect with fellow movie lovers and share our experiences. Movie Notes was built to bring all these elements together into one platform, making it easier to explore, organize, and enjoy movies while fostering a sense of community among movie enthusiasts.
 
 
 ## :rocket: Quick Start
 To start using Movie Notes, click this link :link: https://movie-notes.onrender.com
 
 
-## :open_book: Usage - Features of the application
+## :open_book: Features of the application
 **User Account Management:**
-Movie Notes offers secure user authentication using `Flask-WTForms`. Users can create password-protected accounts with validation checks for secure login and logout, ensuring secure access to thier personal data and movie experiences.
+Movie Notes offers secure user authentication using `Flask-WTForms`. Users can create password-protected accounts with validation checks for secure login and logout, ensuring secure access to their personal data and movie experiences.
 
 **Effortless and seamless Movie Discovery:**
 Movie Notes streamlines movie discovery and tracking by allowing users to enter a movie title into a search bar, which triggers an HTTP request to IMDb.com using the `requests` library. The response is then processed with **Beautiful Soup** to extract key details like the title, release date, poster, and cast. This information is immediately displayed, enabling users to effortlessly add movies to their personalized sections: Watched, Currently Watching, Favourites, or Watchlist.
@@ -25,7 +25,7 @@ Movie Notes streamlines movie discovery and tracking by allowing users to enter 
 By utilizing HTTP requests and web scraping, Movie Notes ensures a smooth and intuitive movie-tracking experience for users.
 
 **Dynamic Movie Categorization:**
-Movie Notes lets you easily organize your movie experiences into Watched, Favourites, Watchlist, Currently Watching, and Recommendations sections. To add a movie to any of the sections, a user selects the section from a pop-up menu. The selected option triggers a `fetch` request, sending the movie data and chosen section to the server, where `Flask` processes the request and stores the information in a `SQLite` database, ensuring all sections are updated in real-time.
+Movie Notes lets you easily organize your movie experiences into Watched, Favourites, Watchlist, Currently Watching, and Recommendations sections. To add a movie to any of the sections, a user selects the section from a pop-up menu. The selected option triggers a `fetch` request, sending the movie data and chosen section to the server, where `Flask` processes the request and stores the information in a `SQLite` database, ensuring all sections are updated in real time.
 
 **Organized Watched History**
 Movie Notes allows users to organize movies in the Watched section by the date they were viewed. When selecting a movie to add, a date input menu appears, enabling users to specify when they watched it. This information is stored alongside the movie details in the `SQLite` database. Later, users can easily view their watched movies categorized by year and month, providing insights into their viewing history. 
@@ -35,7 +35,7 @@ Movie Notes allows users to organize movies in the Watched section by the date t
 **Social Connectivity:**
 Movie Notes also has social features that foster interaction among users and community. These social features include:
 - **Friending Feature**  
-  Users can connect with fellow movie enthusiasts by sending friend requests, once accepted , they become "Movie Buddies" and can view each others movie notes. The status of these friendships is stored in the `SQLite` database.
+  Users can connect with fellow movie enthusiasts by sending friend requests, once accepted, they become "Movie Buddies" and can view each other's movie notes. The status of these friendships is stored in the `SQLite` database.
 
 - **In-App Chat**  
   The app features a chat feature that allows users can chat with their "Movie Buddies" directly within the app, fostering social interaction around shared movie experiences. 
@@ -49,9 +49,9 @@ Movie Notes also has social features that foster interaction among users and com
 ## :handshake: Contributing to Movie Notes
 If you would like to contribute to the Movie Notes App, please follow the steps below:
 ### 1. Fork the Repository:
-Visit this url on GitHub [Movie Notes Remote Repository on GitHub](https://github.com/norahariokot/movieNotes). Click on the "Fork" button in the upper right corner. This creates a copy of the repository under your GitHub account.
+Visit this URL on GitHub [Movie Notes Remote Repository on GitHub](https://github.com/norahariokot/movieNotes). Click on the "Fork" button in the upper right corner. This creates a copy of the repository under your GitHub account.
 
-### 2. Set Up Project Locally
+### 2. Set Up the Project Locally
 Here's how to set up the project locally:
 
 - #### Create a parent directory for your projects (if you don't already have one):
@@ -71,7 +71,7 @@ cd your-directory-name
 git clone https://github.com/your-username/repository-name.git
 ```
 > [!NOTE]
-> Remember to replace `repository-name` with the name of the respository being cloned.
+> Remember to replace `repository-name` with the name of the repository being cloned.
 
 - #### Then navigate to the cloned folder 
 ```
@@ -109,7 +109,7 @@ pip install -r requirements.txt
 ```
 
 - #### Set up Environment Variables:
-Inside the project directory, there a `.env`file to manage sensitive variables like secret keys. Assign a value to the `app_secret_key` variable. 
+Inside the project directory, there is a `.env`file to manage sensitive variables like secret keys. Assign a value to the `app_secret_key` variable. 
 **Note**: Keep the value assigned to this variable confidential and do not share your `.env` file publicly.
 
 
