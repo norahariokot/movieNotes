@@ -16,23 +16,23 @@ To start using Movie Notes, click this link :link: https://movie-notes.onrender.
 
 
 ## :open_book: Features of the application
-**User Account Management:**
+**1. User Account Management:**
 Movie Notes offers secure user authentication using `Flask-WTForms`. Users can create password-protected accounts with validation checks for secure login and logout, ensuring secure access to their personal data and movie experiences.
 
-**Effortless and seamless Movie Discovery:**
+**2. Effortless and seamless Movie Discovery:**
 Movie Notes streamlines movie discovery and tracking by allowing users to enter a movie title into a search bar, which triggers an HTTP request to IMDb.com using the `requests` library. The response is then processed with **Beautiful Soup** to extract key details like the title, release date, poster, and cast. This information is immediately displayed, enabling users to effortlessly add movies to their personalized sections: Watched, Currently Watching, Favourites, or Watchlist.
 
 By utilizing HTTP requests and web scraping, Movie Notes ensures a smooth and intuitive movie-tracking experience for users.
 
-**Dynamic Movie Categorization:**
+**3. Dynamic Movie Categorization:**
 Movie Notes lets you easily organize your movie experiences into Watched, Favourites, Watchlist, Currently Watching, and Recommendations sections. To add a movie to any of the sections, a user selects the section from a pop-up menu. The selected option triggers a `fetch` request, sending the movie data and chosen section to the server, where `Flask` processes the request and stores the information in a `SQLite` database, ensuring all sections are updated in real time.
 
-**Organized Watched History**
+**4. Organized Watched History**
 Movie Notes allows users to organize movies in the Watched section by the date they were viewed. When selecting a movie to add, a date input menu appears, enabling users to specify when they watched it. This information is stored alongside the movie details in the `SQLite` database. Later, users can easily view their watched movies categorized by year and month, providing insights into their viewing history. 
 
 **Note:** This feature is available only for movies that have a watched date recorded.
 
-**Social Connectivity:**
+**5. Social Connectivity:**
 Movie Notes also has social features that foster interaction among users and community. These social features include:
 - **Friending Feature**  
   Users can connect with fellow movie enthusiasts by sending friend requests, once accepted, they become "Movie Buddies" and can view each other's movie notes. The status of these friendships is stored in the `SQLite` database.
