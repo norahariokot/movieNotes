@@ -155,6 +155,7 @@
                         document.querySelector(".movieList").innerHTML = '';
                         let response = await fetch('/search?q=' + input.value);
                         let movies = await response.json();
+                        console.log("Queried response from imdb", movies);
                         for (let id in movies) {
                             let title = movies[id].title.replace('<', '&lt;').replace('&', '&amp;');
                             console.log(title)

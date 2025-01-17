@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 
 from forms import CreateUserForm, LoginForm, UpdateUserProfile, UpdateProficPic, VerifyUsername, SecurityQuestions, PasswordReset, VerifyLoggedInUsername
 from helpers import login_required, section_links, search_options, extract_movie_info, json_buddynotes_options, resize_image
-from scrapper import user_query
+from scrapper import get_movie_details
 
 
 # Configure application
@@ -391,9 +391,10 @@ def search_page():
 @app.route("/search")
 def search():
     q = request.args.get("q")
+    print("Search request is", q)
     if q:
-        movies = user_query(q)
-        #print(movies)
+        movies = get_movie_details(q)
+        print(movies)
         #print("movies receieved by flask function")
         #for movie in movies:
             #print(movie['title'])
