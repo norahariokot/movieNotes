@@ -1,5 +1,7 @@
 <img src="/static/Images/Movie Notes-logo/Movie Notes (4).png" alt="Movie Notes Logo, an illustration of a notebook" width="90" height="90">
 
+<div align="justify">
+
 # Movie Notes
 **Movie Notes** is a web application that enables users to track their movie-watching experiences. With Movie Notes, users can easily maintain an organized record of movies they have watched, are currently watching, have favourited, and plan to watch all in one place.
 
@@ -142,6 +144,8 @@ git push origin my-feature-branch
 1. Navigate to the original repository on GitHub.
 2. Click on the "Pull Requests" tab and then on "New Pull Request."
 3. Select the branch from your forked repository and submit your pull request.
+
+</div>
 
 
 
